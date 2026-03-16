@@ -1,9 +1,10 @@
-import express, { Application } from "express";
+import express, { Application, Request, Response } from "express";
 import status from "http-status";
 import { IndexRoutes } from "./routes";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { env } from "./config/env";
+import globalErrorHandler from "./app/middlewares/error-middleware";
 
 const app: Application = express();
 
@@ -22,7 +23,7 @@ app.use(
   }),
 );
 
-app.get("/", (req, res) => {
+app.get("/", (req: Request, res: Response) => {
   res.status(status.OK).json({
     success: true,
     message: "Server is running",
@@ -30,5 +31,15 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1", IndexRoutes);
+
+app.use((req: Request, res: Response) => {
+  res.status(status.NOT_FOUND).json({
+    success: false,
+    message: "Route Not Found",
+    route: req.originalUrl,
+  });
+});
+
+app.use(globalErrorHandler);
 
 export default app;
