@@ -1,0 +1,10 @@
+model Ideas {
+    id          String @id @default(uuid(7))
+    title       String
+    description String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("ideases")
+}
