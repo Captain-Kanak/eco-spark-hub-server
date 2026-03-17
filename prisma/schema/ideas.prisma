@@ -1,10 +1,28 @@
-model Ideas {
-    id          String @id @default(uuid(7))
+model Idea {
+    id          String     @id @default(uuid(7))
     title       String
     description String
+    image       String?
+    isPaid      Boolean    @default(false)
+    price       Float?
+    status      IdeaStatus @default(PENDING)
+    feedback    String?
+    upvotes     Int        @default(0)
+    downvotes   Int        @default(0)
+    isDeleted   Boolean    @default(false)
+    categoryId  String
+    userId      String
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    deletedAt DateTime?
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+
+    category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    user     User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+    votes    Vote[]
+    comments Comment[]
+    payments Payment[]
 
     @@map("ideases")
 }

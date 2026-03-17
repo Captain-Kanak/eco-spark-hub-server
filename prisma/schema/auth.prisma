@@ -1,24 +1,33 @@
 model User {
-    id            String  @id
+    id            String  @id @default(uuid(7))
     name          String
     email         String
     emailVerified Boolean @default(false)
     image         String?
 
-    role UserRole @default(USER)
+    role          UserRole  @default(MEMBER)
+    phone         String?
+    address       String?
+    date_of_birth DateTime?
+    isDeleted     Boolean   @default(false)
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    deletedAt DateTime?
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
 
     sessions Session[]
     accounts Account[]
+    ideas    Idea[]
+    votes    Vote[]
+    comments Comment[]
+    payments Payment[]
 
     @@unique([email])
     @@map("user")
 }
 
 model Session {
-    id        String   @id
+    id        String   @id @default(uuid(7))
     expiresAt DateTime
     token     String
     createdAt DateTime @default(now())
@@ -34,7 +43,7 @@ model Session {
 }
 
 model Account {
-    id                    String    @id
+    id                    String    @id @default(uuid(7))
     accountId             String
     providerId            String
     userId                String
@@ -54,7 +63,7 @@ model Account {
 }
 
 model Verification {
-    id         String   @id
+    id         String   @id @default(uuid(7))
     identifier String
     value      String
     expiresAt  DateTime

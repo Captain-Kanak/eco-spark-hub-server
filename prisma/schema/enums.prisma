@@ -1,4 +1,20 @@
 enum UserRole {
-    USER
     ADMIN
+    MEMBER
+}
+
+enum IdeaStatus {
+    PENDING
+    APPROVED
+    REJECTED
+}
+
+enum VoteType {
+    UP
+    DOWN
+}
+
+enum PaymentStatus {
+    PAID
+    UNPAID
 }

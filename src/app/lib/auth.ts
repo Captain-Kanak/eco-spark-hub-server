@@ -17,7 +17,29 @@ export const auth = betterAuth({
     additionalFields: {
       role: {
         type: "string",
-        defaultValue: UserRole.USER,
+        required: true,
+        defaultValue: UserRole.MEMBER,
+      },
+      phone: {
+        type: "string",
+        required: false,
+      },
+      address: {
+        type: "string",
+        required: false,
+      },
+      date_of_birth: {
+        type: "date",
+        required: false,
+      },
+      isDeleted: {
+        type: "boolean",
+        required: false,
+        defaultValue: false,
+      },
+      deletedAt: {
+        type: "date",
+        required: false,
       },
     },
   },
