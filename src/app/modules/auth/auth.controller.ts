@@ -3,7 +3,6 @@ import { catchAsync } from "../../utils/catch-async";
 import { sendResponse } from "../../utils/send-response";
 import status from "http-status";
 import { AuthServices } from "./auth.service";
-import { cookieUtils } from "../../utils/cookie";
 import { tokenUtils } from "../../utils/token";
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
