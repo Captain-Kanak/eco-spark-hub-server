@@ -3,7 +3,7 @@ model Payment {
     amount        Float
     transactionId String
     status        PaymentStatus @default(UNPAID)
-    paymentMethod String
+    paymentMethod String        @db.VarChar(50)
     isDeleted     Boolean       @default(false)
     ideaId        String
     userId        String

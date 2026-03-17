@@ -1,6 +1,7 @@
 model Category {
     id        String  @id @default(uuid(7))
-    name      String  @unique
+    name      String  @unique @db.VarChar(100)
+    icon      String? @db.Text
     isDeleted Boolean @default(false)
 
     deletedAt DateTime?
