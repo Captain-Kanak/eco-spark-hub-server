@@ -2,17 +2,10 @@ import { Request, Response } from "express";
 import { catchAsync } from "../../utils/catch-async";
 import { sendResponse } from "../../utils/send-response";
 import status from "http-status";
+import { AuthServices } from "./auth.service";
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
-  const result = {
-    statusCode: status.BAD_REQUEST,
-    success: false,
-    message: "Failed to register user",
-  };
-
-  if (!result.success) {
-    sendResponse(res, result);
-  }
+  const result = await AuthServices.registerUser(req.body);
 
   sendResponse(res, {
     statusCode: status.CREATED,
@@ -22,6 +15,9 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const loginUser = catchAsync(async (req: Request, res: Response) => {});
+
 export const AuthControllers = {
   registerUser,
+  loginUser,
 };

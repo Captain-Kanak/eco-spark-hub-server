@@ -1,13 +1,13 @@
 model User {
     id            String  @id @default(uuid(7))
-    name          String
-    email         String
+    name          String  @db.VarChar(50)
+    email         String  @db.VarChar(100)
     emailVerified Boolean @default(false)
-    image         String?
+    image         String? @db.Text
 
     role          UserRole  @default(MEMBER)
-    phone         String?
-    address       String?
+    phone         String?   @db.VarChar(20)
+    address       String?   @db.Text
     date_of_birth DateTime?
     isDeleted     Boolean   @default(false)
 
