@@ -7,7 +7,7 @@ import status from "http-status";
 
 const registerUser = async (
   payload: IRegisterUser,
-): Promise<{ token: null; user: Partial<User> }> => {
+): Promise<{ token: string | null; user: Partial<User> }> => {
   try {
     const { name, email, password } = payload;
 
@@ -38,11 +38,58 @@ const registerUser = async (
       },
     };
   } catch (error: any) {
-    throw new AppError(error.message || "Failed to register user", 400);
+    throw new AppError(
+      error.message || "Failed to register user",
+      status.INTERNAL_SERVER_ERROR,
+    );
   }
 };
 
-const loginUser = async (payload: ILoginUser) => {};
+const loginUser = async (
+  payload: ILoginUser,
+): Promise<{
+  redirect: boolean;
+  token: string;
+  url?: string | undefined;
+  user: Partial<User>;
+}> => {
+  try {
+    const { email, password } = payload;
+
+    const isUserExist = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!isUserExist) {
+      throw new AppError("User not found", status.NOT_FOUND);
+    }
+
+    const result = await auth.api.signInEmail({
+      body: {
+        email,
+        password,
+      },
+    });
+
+    return {
+      redirect: result.redirect,
+      token: result.token,
+      url: result.url,
+      user: {
+        ...result.user,
+        role: result.user.role as UserRole,
+        isDeleted: result.user.isDeleted as boolean,
+      },
+    };
+  } catch (error: any) {
+    throw new AppError(
+      error.message || "Failed to login user",
+      status.INTERNAL_SERVER_ERROR,
+    );
+  }
+};
 
 export const AuthServices = {
   registerUser,
