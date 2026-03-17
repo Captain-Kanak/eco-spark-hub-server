@@ -3,6 +3,7 @@ import AppError from "../../errors/app-error";
 import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
 import { ILoginUser, IRegisterUser } from "./auth.interface";
+import status from "http-status";
 
 const registerUser = async (
   payload: IRegisterUser,
@@ -17,7 +18,7 @@ const registerUser = async (
     });
 
     if (isUserExist) {
-      throw new AppError("User already exist", 400);
+      throw new AppError("User already exist", status.BAD_REQUEST);
     }
 
     const result = await auth.api.signUpEmail({
