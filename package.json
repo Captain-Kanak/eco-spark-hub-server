@@ -10,7 +10,7 @@
     "dev": "tsx watch ./src/server.ts",
     "migrate": "prisma migrate dev",
     "generate": "prisma generate",
-    "seedSuperAdmin": "tsx ./src/app/seeds/seedSuperAdmin.ts"
+    "seedAdmin": "tsx ./src/app/seeds/seedAdmin.ts"
   },
   "type": "module",
   "keywords": [],
