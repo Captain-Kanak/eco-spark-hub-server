@@ -4,6 +4,7 @@ import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
 import { ILoginUser, IRegisterUser } from "./auth.interface";
 import status from "http-status";
+import { tokenUtils } from "../../utils/token";
 
 const registerUser = async (
   payload: IRegisterUser,
@@ -50,6 +51,8 @@ const loginUser = async (
 ): Promise<{
   redirect: boolean;
   token: string;
+  accessToken: string;
+  refreshToken: string;
   url?: string | undefined;
   user: Partial<User>;
 }> => {
@@ -73,9 +76,29 @@ const loginUser = async (
       },
     });
 
+    const accessToken = tokenUtils.generateAccessToken({
+      id: result.user.id,
+      name: result.user.name,
+      email: result.user.email,
+      emailVerified: result.user.emailVerified,
+      role: result.user.role,
+      isDeleted: result.user.isDeleted,
+    });
+
+    const refreshToken = tokenUtils.generateRefreshToken({
+      id: result.user.id,
+      name: result.user.name,
+      email: result.user.email,
+      emailVerified: result.user.emailVerified,
+      role: result.user.role,
+      isDeleted: result.user.isDeleted,
+    });
+
     return {
       redirect: result.redirect,
       token: result.token,
+      accessToken,
+      refreshToken,
       url: result.url,
       user: {
         ...result.user,

@@ -3,6 +3,8 @@ import { catchAsync } from "../../utils/catch-async";
 import { sendResponse } from "../../utils/send-response";
 import status from "http-status";
 import { AuthServices } from "./auth.service";
+import { cookieUtils } from "../../utils/cookie";
+import { tokenUtils } from "../../utils/token";
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthServices.registerUser(req.body);
@@ -17,6 +19,11 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
 
 const loginUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthServices.loginUser(req.body);
+  const { token, accessToken, refreshToken } = result;
+
+  tokenUtils.setAccessTokenCookie(res, accessToken);
+  tokenUtils.setRefreshTokenCookie(res, refreshToken);
+  tokenUtils.setBetterAuthSessionCookie(res, token);
 
   sendResponse(res, {
     statusCode: status.OK,
