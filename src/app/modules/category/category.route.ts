@@ -14,4 +14,6 @@ router.post(
   CategoryControllers.createCategory,
 );
 
+router.get("/", CategoryControllers.getCategories);
+
 export { router as CategoryRoutes };

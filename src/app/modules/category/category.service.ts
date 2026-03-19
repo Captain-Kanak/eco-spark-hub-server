@@ -2,7 +2,12 @@ import status from "http-status";
 import AppError from "../../errors/app-error";
 import { ICreateCategory } from "./category.interface";
 import { prisma } from "../../lib/prisma";
-import { Category } from "@prisma/client";
+import { Category, Prisma } from "@prisma/client";
+import {
+  IQueryParams,
+  QueryResult,
+} from "../../../interfaces/query-builder.interface";
+import { QueryBuilder } from "../../utils/query-builder";
 
 const createCategory = async (payload: ICreateCategory): Promise<Category> => {
   try {
@@ -19,6 +24,22 @@ const createCategory = async (payload: ICreateCategory): Promise<Category> => {
   }
 };
 
+const getCategories = async (query: IQueryParams) => {
+  const queryBuilder = new QueryBuilder<
+    Category,
+    Prisma.CategoryWhereInput,
+    Prisma.CategoryInclude
+  >(prisma.category, query, {});
+
+  const result = await queryBuilder.pagination().execute();
+
+  return {
+    categories: result.data,
+    meta: result.meta,
+  };
+};
+
 export const CategoryServices = {
   createCategory,
+  getCategories,
 };

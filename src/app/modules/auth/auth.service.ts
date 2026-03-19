@@ -8,7 +8,7 @@ import { tokenUtils } from "../../utils/token";
 
 const registerUser = async (
   payload: IRegisterUser,
-): Promise<{ token: string | null; user: Partial<User> }> => {
+): Promise<{ token: null; user: Partial<User> }> => {
   try {
     const { name, email, password } = payload;
 
