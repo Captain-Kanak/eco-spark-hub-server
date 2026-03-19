@@ -33,7 +33,10 @@ const getCategories = async (
     Prisma.CategoryInclude
   >(prisma.category, query, {});
 
-  const result = await queryBuilder.pagination().execute();
+  const result = await queryBuilder
+    .pagination()
+    .where({ isDeleted: false })
+    .execute();
 
   return result;
 };
