@@ -24,5 +24,7 @@ model Idea {
     comments Comment[]
     payments Payment[]
 
+    @@unique([title])
+    @@index([isDeleted], name: "ideas_isDeleted_idx")
     @@map("ideas")
 }

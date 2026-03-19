@@ -16,5 +16,6 @@ model Comment {
 
     replies Comment[] @relation("CommentReplies")
 
+    @@index([isDeleted], name: "comments_isDeleted_idx")
     @@map("comments")
 }

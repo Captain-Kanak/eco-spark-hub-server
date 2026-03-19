@@ -23,6 +23,7 @@ model User {
     payments Payment[]
 
     @@unique([email])
+    @@index([isDeleted], name: "users_isDeleted_idx")
     @@map("user")
 }
 

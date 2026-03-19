@@ -24,7 +24,9 @@ const createCategory = async (payload: ICreateCategory): Promise<Category> => {
   }
 };
 
-const getCategories = async (query: IQueryParams) => {
+const getCategories = async (
+  query: IQueryParams,
+): Promise<QueryResult<Category>> => {
   const queryBuilder = new QueryBuilder<
     Category,
     Prisma.CategoryWhereInput,
@@ -33,10 +35,7 @@ const getCategories = async (query: IQueryParams) => {
 
   const result = await queryBuilder.pagination().execute();
 
-  return {
-    categories: result.data,
-    meta: result.meta,
-  };
+  return result;
 };
 
 export const CategoryServices = {

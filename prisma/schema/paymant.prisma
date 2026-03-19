@@ -16,5 +16,6 @@ model Payment {
     user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     @@unique([ideaId, userId])
+    @@index([isDeleted], name: "payments_isDeleted_idx")
     @@map("payments")
 }
