@@ -8,6 +8,7 @@ import {
   QueryResult,
 } from "../../../interfaces/query-builder.interface";
 import { QueryBuilder } from "../../utils/query-builder";
+import { categorySearchableFields } from "./category.constant";
 
 const createCategory = async (payload: ICreateCategory): Promise<Category> => {
   try {
@@ -31,11 +32,21 @@ const getCategories = async (
     Category,
     Prisma.CategoryWhereInput,
     Prisma.CategoryInclude
-  >(prisma.category, query, {});
+  >(prisma.category, query, {
+    searchableFields: categorySearchableFields,
+    filterableFields: categorySearchableFields,
+  });
 
   const result = await queryBuilder
     .pagination()
     .where({ isDeleted: false })
+    .search()
+    .filter()
+    .sort()
+    .select()
+    .includes({
+      _count: true,
+    })
     .execute();
 
   return result;

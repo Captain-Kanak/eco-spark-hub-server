@@ -28,11 +28,38 @@ export interface PrismaModelDelegate {
 export interface IQueryParams {
   page?: string;
   limit?: string;
+  searchTerm?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+  selectFields?: string;
+  includeFields?: string | undefined;
+  [key: string]: string | undefined;
 }
 
 export interface IQueryConfig {
   searchableFields?: string[];
   filterableFields?: string[];
+}
+
+export interface PrismaSearchString {
+  contains?: string;
+  mode?: "insensitive" | "default";
+  startsWith?: string;
+  endsWith?: string;
+  not?: string | PrismaSearchString;
+  in?: string[];
+  notIn?: string[];
+}
+
+export interface PrismaNumberFilter {
+  equals?: number;
+  gt?: number;
+  gte?: number;
+  lt?: number;
+  lte?: number;
+  not?: number | PrismaNumberFilter;
+  in?: number[];
+  notIn?: number[];
 }
 
 export interface QueryResult<T> {
