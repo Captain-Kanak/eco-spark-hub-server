@@ -26,4 +26,18 @@ router.get(
   CategoryControllers.getCategoryById,
 );
 
+router.patch(
+  "/:id",
+  authMiddleware(UserRole.ADMIN),
+  validateRequestBody(CategoryValidations.updateCategoryZodSchema),
+  CategoryControllers.updateCategoryById,
+);
+
+router.delete(
+  "/:id",
+  authMiddleware(UserRole.ADMIN),
+  validateRequestParams(paramsIdZodSchema),
+  CategoryControllers.deleteCategoryById,
+);
+
 export { router as CategoryRoutes };

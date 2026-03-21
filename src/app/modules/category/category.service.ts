@@ -1,6 +1,6 @@
 import status from "http-status";
 import AppError from "../../errors/app-error";
-import { ICreateCategory } from "./category.interface";
+import { ICreateCategory, IUpdateCategory } from "./category.interface";
 import { prisma } from "../../lib/prisma";
 import { Category, Prisma } from "@prisma/client";
 import {
@@ -77,8 +77,74 @@ const getCategoryById = async (id: string): Promise<Category | null> => {
   }
 };
 
+const updateCategoryById = async (id: string, payload: IUpdateCategory): Promise<Category | null> => {
+  try {
+    const isCategoryExist = await prisma.category.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!isCategoryExist) {
+      throw new AppError("Category not found", status.NOT_FOUND);
+    }
+
+    const category = await prisma.category.update({
+      where: {
+        id,
+      },
+      data: payload,
+    });
+
+    return category;
+  } catch (error: any) {
+    throw new AppError(
+      error.message || "Failed to update category",
+      status.INTERNAL_SERVER_ERROR,
+    );
+  }
+};
+
+const deleteCategoryById = async (id: string): Promise<Category | null> => {
+  try {
+    const isCategoryExist = await prisma.category.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!isCategoryExist) {
+      throw new AppError("Category not found", status.NOT_FOUND);
+    }
+
+    if (isCategoryExist.isDeleted === true) {
+      throw new AppError("Category already deleted", status.BAD_REQUEST);
+    }
+
+    const category = await prisma.category.update({
+      where: {
+        id,
+      },
+      data: {
+        isDeleted: true,
+        deletedAt: new Date(),
+      },
+    });
+
+    return category;
+  } catch (error: any) {
+    throw new AppError(
+      error.message || "Failed to delete category",
+      status.INTERNAL_SERVER_ERROR,
+    );
+  }
+};
+
+
 export const CategoryServices = {
   createCategory,
   getCategories,
   getCategoryById,
+  updateCategoryById,
+  deleteCategoryById
 };
