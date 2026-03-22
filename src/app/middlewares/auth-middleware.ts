@@ -6,9 +6,12 @@ import status from "http-status";
 import { prisma } from "../lib/prisma";
 import { jwtUtils } from "../utils/jwt";
 import { env } from "../../config/env";
+import { DecodedUser } from "../../types/auth.type";
 
 export const authMiddleware = (...roles: UserRole[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
+    const userIds: string[] = [];
+
     try {
       const sessionToken = cookieUtils.getCookie(
         req,
@@ -51,6 +54,8 @@ export const authMiddleware = (...roles: UserRole[]) => {
             status.UNAUTHORIZED,
           );
         }
+
+        userIds.push(session.user.id);
       }
 
       const accessToken = cookieUtils.getCookie(req, "accessToken");
@@ -82,7 +87,8 @@ export const authMiddleware = (...roles: UserRole[]) => {
           );
         }
 
-        req.user = decoded;
+        req.user = decoded as DecodedUser;
+        userIds.push(decoded.id);
       }
 
       const refreshToken = cookieUtils.getCookie(req, "refreshToken");
@@ -113,6 +119,19 @@ export const authMiddleware = (...roles: UserRole[]) => {
             status.UNAUTHORIZED,
           );
         }
+
+        userIds.push(decoded.id);
+      }
+
+      if (req.user) {
+        userIds.map((id) => {
+          if (req.user?.id !== id) {
+            throw new AppError(
+              "Unauthorized: you are not authorized to access this resources",
+              status.UNAUTHORIZED,
+            );
+          }
+        });
       }
 
       next();

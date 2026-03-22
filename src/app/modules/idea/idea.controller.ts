@@ -3,6 +3,8 @@ import { catchAsync } from "../../utils/catch-async";
 import { ideaServices } from "./idea.service";
 import { sendResponse } from "../../utils/send-response";
 import status from "http-status";
+import { IQueryParams } from "../../../interfaces/query-builder.interface";
+import { DecodedUser } from "../../../types/auth.type";
 
 const createIdea = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
@@ -18,4 +20,67 @@ const createIdea = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const ideaControllers = { createIdea };
+const getIdeas = catchAsync(async (req: Request, res: Response) => {
+  const query = req.query;
+
+  const result = await ideaServices.getIdeas(query as IQueryParams);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Ideas fetched successfully",
+    data: result,
+  });
+});
+
+const getIdeaById = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  const result = await ideaServices.getIdeaById(id as string);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Idea fetched successfully",
+    data: result,
+  });
+});
+
+const updateIdeaById = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const payload = req.body;
+
+  const result = await ideaServices.updateIdeaById(id as string, payload);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Idea updated successfully",
+    data: result,
+  });
+});
+
+const deleteIdeaById = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const user = req.user;
+
+  const result = await ideaServices.deleteIdeaById(
+    id as string,
+    user as DecodedUser,
+  );
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Idea deleted successfully",
+    data: result,
+  });
+});
+
+export const ideaControllers = {
+  createIdea,
+  getIdeas,
+  getIdeaById,
+  updateIdeaById,
+  deleteIdeaById,
+};
