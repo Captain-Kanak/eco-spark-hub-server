@@ -21,4 +21,10 @@ router.patch(
   CommentControllers.updateCommentById,
 );
 
+router.delete(
+  "/:id",
+  authMiddleware(UserRole.MEMBER),
+  CommentControllers.deleteCommentById,
+);
+
 export { router as CommentRoutes };

@@ -38,7 +38,25 @@ const updateCommentById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const deleteCommentById = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const { id: userId } = req.user as DecodedUser;
+
+  const result = await CommentServices.deleteCommentById(
+    id as string,
+    userId as string,
+  );
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Comment deleted successfully",
+    data: result,
+  });
+});
+
 export const CommentControllers = {
   createComment,
   updateCommentById,
+  deleteCommentById,
 };

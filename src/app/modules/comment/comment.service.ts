@@ -69,7 +69,40 @@ const updateCommentById = async (
   }
 };
 
+const deleteCommentById = async (
+  id: string,
+  userId: string,
+): Promise<Comment> => {
+  try {
+    const comment = await prisma.comment.findUnique({
+      where: {
+        id,
+        userId,
+      },
+    });
+
+    if (!comment) {
+      throw new AppError("Comment not found", status.NOT_FOUND);
+    }
+
+    const deletedComment = await prisma.comment.delete({
+      where: {
+        id,
+        userId,
+      },
+    });
+
+    return deletedComment;
+  } catch (error: any) {
+    throw new AppError(
+      error.message || "Failed to delete comment",
+      status.INTERNAL_SERVER_ERROR,
+    );
+  }
+};
+
 export const CommentServices = {
   createComment,
   updateCommentById,
+  deleteCommentById,
 };
