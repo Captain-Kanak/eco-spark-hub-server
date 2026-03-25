@@ -6,6 +6,11 @@ const createCommentZodSchema = z.object({
   parentId: z.string().optional(),
 });
 
+const updateCommentZodSchema = z.object({
+  content: z.string(),
+});
+
 export const CommentValidations = {
   createCommentZodSchema,
+  updateCommentZodSchema,
 };

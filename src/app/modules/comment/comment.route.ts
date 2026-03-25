@@ -14,4 +14,11 @@ router.post(
   CommentControllers.createComment,
 );
 
+router.patch(
+  "/:id",
+  authMiddleware(UserRole.MEMBER),
+  validateRequestBody(CommentValidations.updateCommentZodSchema),
+  CommentControllers.updateCommentById,
+);
+
 export { router as CommentRoutes };

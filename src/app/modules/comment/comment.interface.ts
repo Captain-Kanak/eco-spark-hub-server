@@ -3,3 +3,7 @@ export interface ICreateComment {
   ideaId: string;
   parentId?: string;
 }
+
+export interface IUpdateComment {
+  content?: string;
+}
