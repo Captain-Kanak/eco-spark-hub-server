@@ -4,6 +4,7 @@ import { CategoryRoutes } from "../app/modules/category/category.route";
 import { IdeaRoutes } from "../app/modules/idea/idea.route";
 import { VoteRoutes } from "../app/modules/vote/vote.route";
 import { CommentRoutes } from "../app/modules/comment/comment.route";
+import { PaymentRoutes } from "../app/modules/payment/payment.route";
 
 const router: Router = Router();
 
@@ -16,5 +17,7 @@ router.use("/ideas", IdeaRoutes);
 router.use("/votes", VoteRoutes);
 
 router.use("/comments", CommentRoutes);
+
+router.use("/payments", PaymentRoutes);
 
 export { router as IndexRoutes };
