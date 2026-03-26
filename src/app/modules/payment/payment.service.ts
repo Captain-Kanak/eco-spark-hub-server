@@ -1,16 +1,17 @@
 import status from "http-status";
 import Stripe from "stripe";
 import AppError from "../../errors/app-error";
-import { ICreatePaymentIntent } from "./payment.interface";
+import { IConfirmPayment, ICreatePaymentIntent } from "./payment.interface";
 import { prisma } from "../../lib/prisma";
 import { env } from "../../../config/env";
+import { Payment, PaymentStatus } from "@prisma/client";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
 const createPaymentIntent = async (
   payload: ICreatePaymentIntent,
   userId: string,
-) => {
+): Promise<string> => {
   try {
     const { ideaId } = payload;
 
@@ -38,9 +39,7 @@ const createPaymentIntent = async (
       },
     });
 
-    console.log(paymentIntent);
-
-    return paymentIntent.client_secret;
+    return paymentIntent.client_secret as string;
   } catch (error: any) {
     throw new AppError(
       error.message || "Failed to create payment intent",
@@ -49,6 +48,48 @@ const createPaymentIntent = async (
   }
 };
 
+const confirmPayment = async (
+  payload: IConfirmPayment,
+  userId: string,
+): Promise<Payment> => {
+  try {
+    const { ideaId, transactionId, paymentMethod } = payload;
+
+    const idea = await prisma.idea.findUnique({
+      where: {
+        id: ideaId,
+      },
+    });
+
+    if (!idea) {
+      throw new AppError("Idea not found", status.NOT_FOUND);
+    }
+
+    if (!idea.price) {
+      throw new AppError("Idea is free", status.BAD_REQUEST);
+    }
+
+    const createPayment = await prisma.payment.create({
+      data: {
+        amount: idea.price,
+        transactionId,
+        paymentMethod,
+        status: PaymentStatus.PAID,
+        ideaId,
+        userId,
+      },
+    });
+
+    return createPayment;
+  } catch (error: any) {
+    throw new AppError(
+      error.message || "Failed to confirm payment",
+      status.INTERNAL_SERVER_ERROR,
+    );
+  }
+};
+
 export const paymentServices = {
   createPaymentIntent,
+  confirmPayment,
 };

@@ -14,4 +14,11 @@ router.post(
   paymentControllers.createPaymentIntent,
 );
 
+router.post(
+  "/confirm-payment",
+  authMiddleware(UserRole.MEMBER),
+  validateRequestBody(paymentValidations.confirmPaymentSchema),
+  paymentControllers.confirmPayment,
+);
+
 export { router as PaymentRoutes };
