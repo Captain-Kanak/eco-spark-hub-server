@@ -3,6 +3,11 @@ enum UserRole {
     MEMBER
 }
 
+enum UserStatus {
+    ACTIVE
+    DEACTIVE
+}
+
 enum IdeaStatus {
     PENDING
     APPROVED

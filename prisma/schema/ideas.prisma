@@ -1,17 +1,19 @@
 model Idea {
-    id          String     @id @default(uuid(7))
-    title       String     @db.VarChar(100)
-    description String     @db.Text
-    image       String?    @db.Text
-    isPaid      Boolean    @default(false)
-    price       Float?
-    status      IdeaStatus @default(PENDING)
-    feedback    String?    @db.Text
-    upvotes     Int        @default(0)
-    downvotes   Int        @default(0)
-    isDeleted   Boolean    @default(false)
-    categoryId  String
-    userId      String
+    id               String     @id @default(uuid(7))
+    title            String     @db.VarChar(100)
+    description      String     @db.Text
+    problemStatement String     @db.Text
+    solution         String     @db.Text
+    image            String?    @db.Text
+    isPaid           Boolean    @default(false)
+    price            Float      @default(0.0)
+    status           IdeaStatus @default(PENDING)
+    adminFeedback    String?    @db.Text
+    upvotes          Int        @default(0)
+    downvotes        Int        @default(0)
+    isDeleted        Boolean    @default(false)
+    categoryId       String
+    userId           String
 
     deletedAt DateTime?
     createdAt DateTime  @default(now())
