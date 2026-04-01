@@ -1,4 +1,4 @@
-import { User, UserRole } from "@prisma/client";
+import { User, UserRole, UserStatus } from "@prisma/client";
 import AppError from "../../errors/app-error";
 import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
@@ -35,6 +35,7 @@ const registerUser = async (
       user: {
         ...result.user,
         role: result.user.role as UserRole,
+        status: result.user.status as UserStatus,
         isDeleted: result.user.isDeleted as boolean,
       },
     };
@@ -103,6 +104,7 @@ const loginUser = async (
       user: {
         ...result.user,
         role: result.user.role as UserRole,
+        status: result.user.status as UserStatus,
         isDeleted: result.user.isDeleted as boolean,
       },
     };

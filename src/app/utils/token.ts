@@ -27,9 +27,9 @@ const generateRefreshToken = (payload: JwtPayload) => {
 
 const setAccessTokenCookie = (res: Response, token: string) => {
   cookieUtils.setCookie(res, "accessToken", token, {
+    httpOnly: true,
     secure: true,
     sameSite: "none",
-    httpOnly: true,
     path: "/",
     maxAge: Math.floor(ms(env.ACCESS_TOKEN_EXPIRES_IN as StringValue)),
   });
