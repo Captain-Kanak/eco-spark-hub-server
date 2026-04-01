@@ -1,7 +1,7 @@
 import app from "./app.js";
 import { env } from "./config/env.js";
 
-const port = Number(env.PORT);
+const port = process.env.PORT || env.PORT || 5000;
 
 const server = async () => {
   try {

@@ -26,7 +26,7 @@ app.use(
 app.get("/", (req: Request, res: Response) => {
   res.status(status.OK).json({
     success: true,
-    message: "Server is running",
+    message: "Eco Spark Hub Server is running",
   });
 });
 
