@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { catchAsync } from "../../utils/catch-async";
-import { DecodedUser } from "../../../types/auth.type";
-import { paymentServices } from "./payment.service";
-import { sendResponse } from "../../utils/send-response";
+import { catchAsync } from "../../utils/catch-async.js";
+import { DecodedUser } from "../../../types/auth.type.js";
+import { paymentServices } from "./payment.service.js";
+import { sendResponse } from "../../utils/send-response.js";
 
 const createPaymentIntent = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;

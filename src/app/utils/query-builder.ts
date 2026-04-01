@@ -8,7 +8,7 @@ import {
   PrismaSearchString,
   PrismaWhereConditions,
   QueryResult,
-} from "../../interfaces/query-builder.interface";
+} from "../../interfaces/query-builder.interface.js";
 
 export class QueryBuilder<T, TWhereInput, TInclude> {
   private query: PrismaFindManyArgs;

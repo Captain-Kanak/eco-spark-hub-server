@@ -3,7 +3,7 @@ import * as z from "zod";
 import {
   ErrorResponseType,
   ErrorSourceType,
-} from "../../interfaces/error.interface";
+} from "../../interfaces/error.interface.js";
 
 export const handleZodError = (err: z.ZodError): ErrorResponseType => {
   const statusCode: number = status.BAD_REQUEST;

@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { catchAsync } from "../../utils/catch-async";
-import { ideaServices } from "./idea.service";
-import { sendResponse } from "../../utils/send-response";
+import { catchAsync } from "../../utils/catch-async.js";
+import { ideaServices } from "./idea.service.js";
+import { sendResponse } from "../../utils/send-response.js";
 import status from "http-status";
-import { IQueryParams } from "../../../interfaces/query-builder.interface";
-import { DecodedUser } from "../../../types/auth.type";
+import { IQueryParams } from "../../../interfaces/query-builder.interface.js";
+import { DecodedUser } from "../../../types/auth.type.js";
 
 const createIdea = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;

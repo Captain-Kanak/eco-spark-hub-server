@@ -1,7 +1,7 @@
 import status from "http-status";
-import AppError from "../../errors/app-error";
-import { IGiveVote } from "./vote.interface";
-import { prisma } from "../../lib/prisma";
+import AppError from "../../errors/app-error.js";
+import { IGiveVote } from "./vote.interface.js";
+import { prisma } from "../../lib/prisma.js";
 import { Vote, VoteType } from "@prisma/client";
 
 const giveVote = async (userId: string, payload: IGiveVote): Promise<Vote> => {

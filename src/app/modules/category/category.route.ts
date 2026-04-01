@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { CategoryControllers } from "./route.controller";
-import { authMiddleware } from "../../middlewares/auth-middleware";
+import { CategoryControllers } from "./route.controller.js";
+import { authMiddleware } from "../../middlewares/auth-middleware.js";
 import { UserRole } from "@prisma/client";
 import {
   paramsIdZodSchema,
   validateRequestBody,
   validateRequestParams,
-} from "../../middlewares/zod-middleware";
-import { CategoryValidations } from "./category.validation";
+} from "../../middlewares/zod-middleware.js";
+import { CategoryValidations } from "./category.validation.js";
 
 const router: Router = Router();
 

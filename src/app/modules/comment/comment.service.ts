@@ -1,8 +1,8 @@
 import { Comment } from "@prisma/client";
-import { ICreateComment, IUpdateComment } from "./comment.interface";
-import AppError from "../../errors/app-error";
+import { ICreateComment, IUpdateComment } from "./comment.interface.js";
+import AppError from "../../errors/app-error.js";
 import status from "http-status";
-import { prisma } from "../../lib/prisma";
+import { prisma } from "../../lib/prisma.js";
 
 const createComment = async (
   payload: ICreateComment,

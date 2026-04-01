@@ -1,9 +1,9 @@
 import status from "http-status";
 import Stripe from "stripe";
-import AppError from "../../errors/app-error";
-import { IConfirmPayment, ICreatePaymentIntent } from "./payment.interface";
-import { prisma } from "../../lib/prisma";
-import { env } from "../../../config/env";
+import AppError from "../../errors/app-error.js";
+import { IConfirmPayment, ICreatePaymentIntent } from "./payment.interface.js";
+import { prisma } from "../../lib/prisma.js";
+import { env } from "../../../config/env.js";
 import { Payment, PaymentStatus } from "@prisma/client";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);

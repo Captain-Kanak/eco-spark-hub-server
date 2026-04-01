@@ -1,12 +1,12 @@
 import { UserRole } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
-import { cookieUtils } from "../utils/cookie";
-import AppError from "../errors/app-error";
 import status from "http-status";
-import { prisma } from "../lib/prisma";
-import { jwtUtils } from "../utils/jwt";
-import { env } from "../../config/env";
-import { DecodedUser } from "../../types/auth.type";
+import { cookieUtils } from "../utils/cookie.js";
+import AppError from "../errors/app-error.js";
+import { prisma } from "../lib/prisma.js";
+import { jwtUtils } from "../utils/jwt.js";
+import { env } from "../../config/env.js";
+import { DecodedUser } from "../../types/auth.type.js";
 
 export const authMiddleware = (...roles: UserRole[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {

@@ -1,8 +1,8 @@
 import status from "http-status";
-import AppError from "../errors/app-error";
-import { prisma } from "../lib/prisma";
-import { auth } from "../lib/auth";
 import { UserRole } from "@prisma/client";
+import { prisma } from "../lib/prisma.js";
+import AppError from "../errors/app-error.js";
+import { auth } from "../lib/auth.js";
 
 const seedAdmin = async () => {
   try {

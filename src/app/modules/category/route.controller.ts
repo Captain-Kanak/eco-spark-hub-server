@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { catchAsync } from "../../utils/catch-async";
-import { CategoryServices } from "./category.service";
-import { sendResponse } from "../../utils/send-response";
+import { catchAsync } from "../../utils/catch-async.js";
+import { CategoryServices } from "./category.service.js";
+import { sendResponse } from "../../utils/send-response.js";
 import status from "http-status";
-import { IQueryParams } from "../../../interfaces/query-builder.interface";
+import { IQueryParams } from "../../../interfaces/query-builder.interface.js";
 
 const createCategory = catchAsync(async (req: Request, res: Response) => {
   const result = await CategoryServices.createCategory(req.body);
@@ -46,7 +46,10 @@ const updateCategoryById = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   const payload = req.body;
 
-  const result = await CategoryServices.updateCategoryById(id as string, payload);
+  const result = await CategoryServices.updateCategoryById(
+    id as string,
+    payload,
+  );
 
   sendResponse(res, {
     statusCode: status.OK,
@@ -67,12 +70,12 @@ const deleteCategoryById = catchAsync(async (req: Request, res: Response) => {
     message: "Category deleted successfully",
     data: result,
   });
-})
+});
 
 export const CategoryControllers = {
   createCategory,
   getCategories,
   getCategoryById,
   updateCategoryById,
-  deleteCategoryById
+  deleteCategoryById,
 };

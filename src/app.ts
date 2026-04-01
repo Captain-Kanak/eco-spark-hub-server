@@ -1,10 +1,10 @@
 import express, { Application, Request, Response } from "express";
 import status from "http-status";
-import { IndexRoutes } from "./routes";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { env } from "./config/env";
-import globalErrorHandler from "./app/middlewares/error-middleware";
+import { env } from "./config/env.js";
+import { IndexRoutes } from "./routes/index.js";
+import globalErrorHandler from "./app/middlewares/error-middleware.js";
 
 const app: Application = express();
 

@@ -1,16 +1,15 @@
 {
   "compilerOptions": {
-    "module": "esnext",
-    "rootDir": "./",
-    "outDir": "./dist",
-    "moduleResolution": "bundler",
-    "target": "es2023",
+    "target": "ES2020",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "ignoreDeprecations": "5.0"
+    "rootDir": "./",
+    "outDir": "./dist"
   },
-  "include": ["src/**/*.ts", "prisma.config.ts", "data/qb.ts"],
+  "include": ["src/**/*.ts", "prisma.config.ts"],
   "exclude": ["node_modules", "dist"]
 }

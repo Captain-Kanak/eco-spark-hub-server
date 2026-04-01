@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { ideaControllers } from "./idea.controller";
-import { authMiddleware } from "../../middlewares/auth-middleware";
+import { ideaControllers } from "./idea.controller.js";
+import { authMiddleware } from "../../middlewares/auth-middleware.js";
 import { UserRole } from "@prisma/client";
 import {
   paramsIdZodSchema,
   validateRequestBody,
   validateRequestParams,
-} from "../../middlewares/zod-middleware";
-import { IdeaValidations } from "./idea.validation";
+} from "../../middlewares/zod-middleware.js";
+import { IdeaValidations } from "./idea.validation.js";
 
 const router: Router = Router();
 

@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { catchAsync } from "../../utils/catch-async";
-import { sendResponse } from "../../utils/send-response";
+import { catchAsync } from "../../utils/catch-async.js";
+import { sendResponse } from "../../utils/send-response.js";
 import status from "http-status";
-import { AuthServices } from "./auth.service";
-import { tokenUtils } from "../../utils/token";
+import { AuthServices } from "./auth.service.js";
+import { tokenUtils } from "../../utils/token.js";
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthServices.registerUser(req.body);

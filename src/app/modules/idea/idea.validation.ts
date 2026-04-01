@@ -9,6 +9,14 @@ const createIdeaZodSchema = z.object({
     .string("Description is required")
     .min(3, "Description must be at least 3 characters long")
     .max(1000, "Description can't be more than 1000 characters long"),
+  problemStatement: z
+    .string("Problem Statement is required")
+    .min(3, "Problem Statement must be at least 3 characters long")
+    .max(1000, "Problem Statement can't be more than 1000 characters long"),
+  solution: z
+    .string("Solution is required")
+    .min(3, "Solution must be at least 3 characters long")
+    .max(1000, "Solution can't be more than 1000 characters long"),
   image: z.url("Image must be a valid URL").optional(),
   isPaid: z.boolean().optional(),
   price: z.number().optional(),

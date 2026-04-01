@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { catchAsync } from "../../utils/catch-async";
+import { catchAsync } from "../../utils/catch-async.js";
 import status from "http-status";
-import { sendResponse } from "../../utils/send-response";
-import { voteServices } from "./vote.service";
-import { DecodedUser } from "../../../types/auth.type";
+import { sendResponse } from "../../utils/send-response.js";
+import { voteServices } from "./vote.service.js";
+import { DecodedUser } from "../../../types/auth.type.js";
 
 const giveVote = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;

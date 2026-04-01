@@ -1,14 +1,14 @@
 import status from "http-status";
-import AppError from "../../errors/app-error";
-import { ICreateCategory, IUpdateCategory } from "./category.interface";
-import { prisma } from "../../lib/prisma";
+import AppError from "../../errors/app-error.js";
+import { ICreateCategory, IUpdateCategory } from "./category.interface.js";
+import { prisma } from "../../lib/prisma.js";
 import { Category, Prisma } from "@prisma/client";
 import {
   IQueryParams,
   QueryResult,
-} from "../../../interfaces/query-builder.interface";
-import { QueryBuilder } from "../../utils/query-builder";
-import { categorySearchableFields } from "./category.constant";
+} from "../../../interfaces/query-builder.interface.js";
+import { QueryBuilder } from "../../utils/query-builder.js";
+import { categorySearchableFields } from "./category.constant.js";
 
 const createCategory = async (payload: ICreateCategory): Promise<Category> => {
   try {

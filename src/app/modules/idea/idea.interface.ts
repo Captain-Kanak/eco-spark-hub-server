@@ -1,6 +1,8 @@
 export interface ICreateIdea {
   title: string;
   description: string;
+  problemStatement: string;
+  solution: string;
   image?: string;
   isPaid?: boolean;
   price?: number;

@@ -1,8 +1,8 @@
 import ms, { StringValue } from "ms";
-import { env } from "../../config/env";
-import { jwtUtils } from "./jwt";
+import { env } from "../../config/env.js";
+import { jwtUtils } from "./jwt.js";
 import { JwtPayload, SignOptions } from "jsonwebtoken";
-import { cookieUtils } from "./cookie";
+import { cookieUtils } from "./cookie.js";
 import { Response } from "express";
 
 const generateAccessToken = (payload: JwtPayload) => {

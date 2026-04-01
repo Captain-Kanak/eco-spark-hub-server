@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { catchAsync } from "../../utils/catch-async";
-import { CommentServices } from "./comment.service";
-import { sendResponse } from "../../utils/send-response";
+import { catchAsync } from "../../utils/catch-async.js";
+import { CommentServices } from "./comment.service.js";
+import { sendResponse } from "../../utils/send-response.js";
 import status from "http-status";
-import { DecodedUser } from "../../../types/auth.type";
+import { DecodedUser } from "../../../types/auth.type.js";
 
 const createComment = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;

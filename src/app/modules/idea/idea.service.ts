@@ -1,15 +1,15 @@
 import { Idea, Prisma, UserRole } from "@prisma/client";
-import { ICreateIdea, IUpdateIdea } from "./idea.interface";
-import AppError from "../../errors/app-error";
+import { ICreateIdea, IUpdateIdea } from "./idea.interface.js";
+import AppError from "../../errors/app-error.js";
 import status from "http-status";
-import { prisma } from "../../lib/prisma";
+import { prisma } from "../../lib/prisma.js";
 import {
   IQueryParams,
   QueryResult,
-} from "../../../interfaces/query-builder.interface";
-import { QueryBuilder } from "../../utils/query-builder";
-import { ideaFilterableFields, ideaSearchableFields } from "./idea.constant";
-import { DecodedUser } from "../../../types/auth.type";
+} from "../../../interfaces/query-builder.interface.js";
+import { QueryBuilder } from "../../utils/query-builder.js";
+import { ideaFilterableFields, ideaSearchableFields } from "./idea.constant.js";
+import { DecodedUser } from "../../../types/auth.type.js";
 
 const createIdea = async (
   payload: ICreateIdea,
