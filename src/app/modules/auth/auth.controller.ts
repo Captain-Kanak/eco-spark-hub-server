@@ -20,9 +20,9 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthServices.loginUser(req.body);
   const { token, accessToken, refreshToken } = result;
 
+  tokenUtils.setBetterAuthSessionCookie(res, token);
   tokenUtils.setAccessTokenCookie(res, accessToken);
   tokenUtils.setRefreshTokenCookie(res, refreshToken);
-  tokenUtils.setBetterAuthSessionCookie(res, token);
 
   sendResponse(res, {
     statusCode: status.OK,
