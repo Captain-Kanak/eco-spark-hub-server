@@ -1,7 +1,7 @@
 export interface ICreateCategory {
   name: string;
-  icon?: string;
   description?: string;
+  icon?: string;
 }
 
 export interface IUpdateCategory {

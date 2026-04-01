@@ -77,7 +77,10 @@ const getCategoryById = async (id: string): Promise<Category | null> => {
   }
 };
 
-const updateCategoryById = async (id: string, payload: IUpdateCategory): Promise<Category | null> => {
+const updateCategoryById = async (
+  id: string,
+  payload: IUpdateCategory,
+): Promise<Category | null> => {
   try {
     const isCategoryExist = await prisma.category.findUnique({
       where: {
@@ -140,11 +143,10 @@ const deleteCategoryById = async (id: string): Promise<Category | null> => {
   }
 };
 
-
 export const CategoryServices = {
   createCategory,
   getCategories,
   getCategoryById,
   updateCategoryById,
-  deleteCategoryById
+  deleteCategoryById,
 };
