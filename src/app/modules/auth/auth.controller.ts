@@ -32,7 +32,21 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getMe = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user;
+
+  const result = await AuthServices.getMe(user);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "User fetched successfully",
+    data: result,
+  });
+});
+
 export const AuthControllers = {
   registerUser,
   loginUser,
+  getMe,
 };
