@@ -4,6 +4,7 @@ import { sendResponse } from "../../utils/send-response.js";
 import status from "http-status";
 import { AuthServices } from "./auth.service.js";
 import { tokenUtils } from "../../utils/token.js";
+import { User } from "@prisma/client";
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthServices.registerUser(req.body);
@@ -18,11 +19,9 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
 
 const loginUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthServices.loginUser(req.body);
-  const { token, accessToken, refreshToken } = result;
+  const { token } = result;
 
   tokenUtils.setBetterAuthSessionCookie(res, token);
-  tokenUtils.setAccessTokenCookie(res, accessToken);
-  tokenUtils.setRefreshTokenCookie(res, refreshToken);
 
   sendResponse(res, {
     statusCode: status.OK,
@@ -33,7 +32,7 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getMe = catchAsync(async (req: Request, res: Response) => {
-  const user = req.user;
+  const user = req.user as User;
 
   const result = await AuthServices.getMe(user);
 

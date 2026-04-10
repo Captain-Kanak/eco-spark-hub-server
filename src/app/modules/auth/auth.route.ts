@@ -20,4 +20,12 @@ router.post(
 
 router.get("/me", authMiddleware(), AuthControllers.getMe);
 
+// router.post("/refresh-token");
+
+// router.post("/verify-email");
+
+// router.post("/forgot-password");
+
+// router.post("/reset-password");
+
 export { router as AuthRoutes };
