@@ -5,6 +5,7 @@ import status from "http-status";
 import { AuthServices } from "./auth.service.js";
 import { tokenUtils } from "../../utils/token.js";
 import { User } from "@prisma/client";
+import { env } from "../../../config/env.js";
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthServices.registerUser(req.body);
@@ -42,8 +43,49 @@ const getMe = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const googleLogin = catchAsync(async (req: Request, res: Response) => {
+  const redirectPath = req.query.redirect || "/";
+  const encodedRedirectPath = encodeURIComponent(redirectPath as string);
+  const callbackURL = `${env.BETTER_AUTH_URL}/api/v1/auth/google/success?redirect=${encodedRedirectPath}`;
+
+  return res.render("googleRedirect", {
+    callbackURL,
+    betterAuthUrl: env.BETTER_AUTH_URL,
+  });
+});
+
+const googleLoginSuccess = catchAsync(async (req: Request, res: Response) => {
+  const redirectPath = (req.query.redirect as string) || "/";
+  const sessionToken = req.cookies["better-auth.session_token"];
+
+  if (!sessionToken) {
+    return res.redirect(`${env.FRONTEND_URL}/login?error=oauth_failed`);
+  }
+
+  const result = await AuthServices.googleLoginSuccess(sessionToken);
+  const { session, user } = result;
+
+  if (!session) {
+    return res.redirect(`${env.FRONTEND_URL}/login?error=no_session_found`);
+  }
+
+  if (!user) {
+    return res.redirect(`${env.FRONTEND_URL}/login?error=no_user_found`);
+  }
+
+  tokenUtils.setBetterAuthSessionCookie(res, session.token);
+
+  const isValidRedirectPath =
+    redirectPath.startsWith("/") && !redirectPath.startsWith("//");
+  const finalRedirectPath = isValidRedirectPath ? redirectPath : "/";
+
+  return res.redirect(`${env.FRONTEND_URL}${finalRedirectPath}?auth=success`);
+});
+
 export const AuthControllers = {
   registerUser,
   loginUser,
   getMe,
+  googleLogin,
+  googleLoginSuccess,
 };

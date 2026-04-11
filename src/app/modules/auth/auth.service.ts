@@ -116,7 +116,52 @@ const loginUser = async (
   }
 };
 
+const googleLoginSuccess = async (sessionToken: string) => {
+  try {
+    const session = await auth.api.getSession({
+      headers: {
+        Cookie: `better-auth.session_token=${sessionToken}`,
+      },
+    });
+
+    if (!session || !session.user) {
+      return {
+        session: null,
+        user: null,
+        accessToken: null,
+        refreshToken: null,
+      };
+    }
+
+    await prisma.$transaction(async (trx) => {
+      const isUserExists = await trx.user.findUnique({
+        where: { id: session.user.id },
+      });
+
+      if (!isUserExists) {
+        await trx.user.create({
+          data: {
+            userId: session.user.id,
+            name: session.user.name,
+            email: session.user.email,
+          },
+        });
+      }
+    });
+
+    return {
+      ...session,
+    };
+  } catch (error: any) {
+    throw new AppError(
+      error.message || "Failed to google login",
+      status.INTERNAL_SERVER_ERROR,
+    );
+  }
+};
+
 export const AuthServices = {
   registerUser,
   loginUser,
+  googleLoginSuccess,
 };

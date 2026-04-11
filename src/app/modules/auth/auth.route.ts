@@ -20,12 +20,15 @@ router.post(
 
 router.get("/me", authMiddleware(), AuthControllers.getMe);
 
-// router.post("/refresh-token");
-
 // router.post("/verify-email");
 
 // router.post("/forgot-password");
 
 // router.post("/reset-password");
+
+// http://localhost:5000/api/v1/auth/login/google?redirect=/profile
+router.get("/login/google", AuthControllers.googleLogin);
+
+router.get("/google/success", AuthControllers.googleLoginSuccess);
 
 export { router as AuthRoutes };

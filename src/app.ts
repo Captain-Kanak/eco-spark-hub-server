@@ -5,8 +5,12 @@ import cors from "cors";
 import { env } from "./config/env.js";
 import { IndexRoutes } from "./routes/index.js";
 import globalErrorHandler from "./app/middlewares/error-middleware.js";
+import path from "path";
 
 const app: Application = express();
+
+app.set("view engine", "ejs");
+app.set("views", path.resolve(process.cwd(), "src/app/templates"));
 
 app.set("query parser", "extended");
 
