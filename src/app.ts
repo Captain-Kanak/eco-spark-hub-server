@@ -6,6 +6,8 @@ import { env } from "./config/env.js";
 import { IndexRoutes } from "./routes/index.js";
 import globalErrorHandler from "./app/middlewares/error-middleware.js";
 import path from "path";
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "./app/lib/auth.js";
 
 const app: Application = express();
 
@@ -33,6 +35,8 @@ app.get("/", (req: Request, res: Response) => {
     message: "Eco Spark Hub Server is running",
   });
 });
+
+app.use("/api/auth", toNodeHandler(auth));
 
 app.use("/api/v1", IndexRoutes);
 

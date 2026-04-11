@@ -13,7 +13,12 @@ export const auth = betterAuth({
   }),
   secret: env.BETTER_AUTH_SECRET,
   baseURL: env.BETTER_AUTH_URL,
-  trustedOrigins: [env.FRONTEND_URL, env.BETTER_AUTH_URL],
+  trustedOrigins: [
+    env.FRONTEND_URL,
+    env.BETTER_AUTH_URL,
+    "http://localhost:3000",
+    "http://localhost:5000",
+  ],
   redirectURLs: {
     signIn: `${env.BETTER_AUTH_URL}/api/v1/auth/google/success`,
   },
@@ -32,11 +37,11 @@ export const auth = betterAuth({
     },
   },
   advanced: {
-    disableCSRFCheck: true,
+    disableCSRFCheck: env.NODE_ENV === "development",
     cookiePrefix: "better-auth",
     useSecureCookies: env.NODE_ENV === "production",
     crossSubDomainCookies: {
-      enabled: false,
+      enabled: env.NODE_ENV === "production",
     },
     cookies: {
       state: {

@@ -5,6 +5,7 @@ import { prisma } from "../../lib/prisma.js";
 import { ILoginUser, IRegisterUser } from "./auth.interface.js";
 import status from "http-status";
 import { tokenUtils } from "../../utils/token.js";
+import { Session } from "better-auth";
 
 const registerUser = async (
   payload: IRegisterUser,
@@ -116,7 +117,9 @@ const loginUser = async (
   }
 };
 
-const googleLoginSuccess = async (sessionToken: string) => {
+const googleLoginSuccess = async (
+  sessionToken: string,
+): Promise<{ session: Session | null; user: User | null }> => {
   try {
     const session = await auth.api.getSession({
       headers: {
@@ -124,33 +127,13 @@ const googleLoginSuccess = async (sessionToken: string) => {
       },
     });
 
-    if (!session || !session.user) {
-      return {
-        session: null,
-        user: null,
-        accessToken: null,
-        refreshToken: null,
-      };
+    if (!session?.user) {
+      return { session: null, user: null };
     }
 
-    await prisma.$transaction(async (trx) => {
-      const isUserExists = await trx.user.findUnique({
-        where: { id: session.user.id },
-      });
-
-      if (!isUserExists) {
-        await trx.user.create({
-          data: {
-            userId: session.user.id,
-            name: session.user.name,
-            email: session.user.email,
-          },
-        });
-      }
-    });
-
     return {
-      ...session,
+      session: session.session,
+      user: session.user as User,
     };
   } catch (error: any) {
     throw new AppError(
