@@ -48,9 +48,6 @@ const googleLogin = catchAsync(async (req: Request, res: Response) => {
   const encodedRedirectPath = encodeURIComponent(redirectPath as string);
   const callbackURL = `${env.BETTER_AUTH_URL}/api/v1/auth/google/success?redirect=${encodedRedirectPath}`;
 
-  console.log("Google Login - Callback URL:", callbackURL);
-  console.log("Google Login - Better Auth URL:", env.BETTER_AUTH_URL);
-
   return res.render("googleRedirect", {
     betterAuthUrl: env.BETTER_AUTH_URL,
     callbackURL,
@@ -60,8 +57,6 @@ const googleLogin = catchAsync(async (req: Request, res: Response) => {
 const googleLoginSuccess = catchAsync(async (req: Request, res: Response) => {
   const redirectPath = (req.query.redirect as string) || "/";
   const sessionToken = req.cookies["better-auth.session_token"];
-
-  console.log("Google Login Success - Session Token:", sessionToken);
 
   if (!sessionToken) {
     return res.redirect(`${env.FRONTEND_URL}/login?error=oauth_failed`);

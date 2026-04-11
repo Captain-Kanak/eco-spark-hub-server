@@ -19,9 +19,6 @@ export const auth = betterAuth({
     "http://localhost:3000",
     "http://localhost:5000",
   ],
-  redirectURLs: {
-    signIn: `${env.BETTER_AUTH_URL}/api/v1/auth/google/success`,
-  },
   session: {
     expiresIn: Math.floor(
       ms(env.BETTER_AUTH_SESSION_EXPIRES_IN as StringValue) / 1000,
@@ -47,16 +44,16 @@ export const auth = betterAuth({
       state: {
         attributes: {
           secure: true,
-          sameSite: "none",
           httpOnly: true,
+          sameSite: "none",
           path: "/",
         },
       },
       sessionToken: {
         attributes: {
           secure: true,
-          sameSite: "none",
           httpOnly: true,
+          sameSite: "none",
           path: "/",
         },
       },
@@ -75,15 +72,6 @@ export const auth = betterAuth({
     google: {
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
-
-      mapProfileToUser: () => {
-        return {
-          role: UserRole.MEMBER,
-          status: UserStatus.ACTIVE,
-          emailVerified: true,
-          isDeleted: false,
-        };
-      },
     },
   },
   plugins: [
