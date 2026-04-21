@@ -13,14 +13,18 @@ router.post(
 );
 
 router.post(
+  "/verify-email",
+  validateRequestBody(AuthValidations.verifyEmailZodSchema),
+  AuthControllers.verifyEmail,
+);
+
+router.post(
   "/login",
   validateRequestBody(AuthValidations.loginUserZodSchema),
   AuthControllers.loginUser,
 );
 
 router.get("/me", authMiddleware(), AuthControllers.getMe);
-
-// router.post("/verify-email");
 
 // router.post("/forgot-password");
 

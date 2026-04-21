@@ -4,7 +4,6 @@ import { auth } from "../../lib/auth.js";
 import { prisma } from "../../lib/prisma.js";
 import { ILoginUser, IRegisterUser } from "./auth.interface.js";
 import status from "http-status";
-import { tokenUtils } from "../../utils/token.js";
 import { Session } from "better-auth";
 
 const registerUser = async (
@@ -43,6 +42,42 @@ const registerUser = async (
   } catch (error: any) {
     throw new AppError(
       error.message || "Failed to register user",
+      status.INTERNAL_SERVER_ERROR,
+    );
+  }
+};
+
+const verifyEmail = async (payload: {
+  email: string;
+  otp: string;
+}): Promise<void> => {
+  try {
+    const { email, otp } = payload;
+
+    const result = await auth.api.verifyEmailOTP({
+      body: {
+        email,
+        otp,
+      },
+    });
+
+    if (result.status && !result.user.emailVerified) {
+      await prisma.user.update({
+        where: {
+          email,
+        },
+        data: {
+          emailVerified: true,
+        },
+      });
+    }
+  } catch (error: any) {
+    if (error instanceof AppError) {
+      throw error;
+    }
+
+    throw new AppError(
+      error.message || "Failed to verify email",
       status.INTERNAL_SERVER_ERROR,
     );
   }
@@ -123,6 +158,7 @@ const googleLoginSuccess = async (
 
 export const AuthServices = {
   registerUser,
+  verifyEmail,
   loginUser,
   googleLoginSuccess,
 };

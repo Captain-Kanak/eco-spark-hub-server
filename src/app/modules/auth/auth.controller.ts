@@ -18,6 +18,17 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const verifyEmail = catchAsync(async (req: Request, res: Response) => {
+  const result = await AuthServices.verifyEmail(req.body);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Email verified successfully",
+    data: result,
+  });
+});
+
 const loginUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthServices.loginUser(req.body);
   const { token } = result;
@@ -84,6 +95,7 @@ const googleLoginSuccess = catchAsync(async (req: Request, res: Response) => {
 
 export const AuthControllers = {
   registerUser,
+  verifyEmail,
   loginUser,
   getMe,
   googleLogin,
