@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { CategoryControllers } from "./route.controller.js";
+import { CategoryControllers } from "./category.controller.js";
 import { authMiddleware } from "../../middlewares/auth-middleware.js";
 import { UserRole } from "@prisma/client";
 import {

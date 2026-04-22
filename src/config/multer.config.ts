@@ -46,7 +46,7 @@ const storage = new CloudinaryStorage({
       return {
         resource_type: "auto",
         public_id: uniqueFileName,
-        folder: `ph-healthcare/${folderName}`,
+        folder: `eco-spark-hub/${folderName}`,
       };
     } catch (error: any) {
       if (error instanceof AppError) throw error;

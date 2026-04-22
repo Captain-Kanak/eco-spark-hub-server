@@ -6,7 +6,12 @@ import status from "http-status";
 import { IQueryParams } from "../../../interfaces/query-builder.interface.js";
 
 const createCategory = catchAsync(async (req: Request, res: Response) => {
-  const result = await CategoryServices.createCategory(req.body);
+  const payload = {
+    ...req.body,
+    icon: req.file?.path,
+  };
+
+  const result = await CategoryServices.createCategory(payload);
 
   sendResponse(res, {
     statusCode: status.CREATED,
