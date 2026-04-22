@@ -8,12 +8,14 @@ import {
   validateRequestParams,
 } from "../../middlewares/zod-middleware.js";
 import { CategoryValidations } from "./category.validation.js";
+import { multerUpload } from "../../../config/multer.config.js";
 
 const router: Router = Router();
 
 router.post(
   "/",
   authMiddleware(UserRole.ADMIN),
+  multerUpload.single("file"),
   validateRequestBody(CategoryValidations.createCategoryZodSchema),
   CategoryControllers.createCategory,
 );

@@ -7,6 +7,10 @@ export const paramsIdZodSchema = z.object({
 
 export const validateRequestBody = (zodObject: z.ZodObject) => {
   return async (req: Request, res: Response, next: NextFunction) => {
+    if (req.body.data) {
+      req.body = JSON.parse(req.body.data);
+    }
+
     const parsedResult = zodObject.safeParse(req.body);
 
     if (!parsedResult.success) {
