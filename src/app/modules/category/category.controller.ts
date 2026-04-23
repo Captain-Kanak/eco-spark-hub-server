@@ -49,7 +49,10 @@ const getCategoryById = catchAsync(async (req: Request, res: Response) => {
 
 const updateCategoryById = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
-  const payload = req.body;
+  const payload = {
+    ...req.body,
+    icon: req.file?.path,
+  };
 
   const result = await CategoryServices.updateCategoryById(
     id as string,

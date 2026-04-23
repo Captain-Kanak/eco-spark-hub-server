@@ -31,6 +31,7 @@ router.get(
 router.patch(
   "/:id",
   authMiddleware(UserRole.ADMIN),
+  multerUpload.single("file"),
   validateRequestBody(CategoryValidations.updateCategoryZodSchema),
   CategoryControllers.updateCategoryById,
 );
