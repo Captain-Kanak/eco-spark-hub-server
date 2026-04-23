@@ -108,7 +108,7 @@ const updateCategoryById = async (
   }
 };
 
-const deleteCategoryById = async (id: string): Promise<Category | null> => {
+const deleteCategoryById = async (id: string): Promise<Category> => {
   try {
     const isCategoryExist = await prisma.category.findUnique({
       where: {
