@@ -18,8 +18,8 @@ const createIdeaZodSchema = z.object({
     .min(3, "Solution must be at least 3 characters long")
     .max(1000, "Solution can't be more than 1000 characters long"),
   image: z.url("Image must be a valid URL").optional(),
-  isPaid: z.boolean().optional(),
-  price: z.number().optional(),
+  isPaid: z.string().optional(),
+  price: z.string().optional(),
   categoryId: z.uuid("Category ID is invalid or missing"),
 });
 
@@ -34,8 +34,8 @@ const updateIdeaZodSchema = z
       .min(3, "Description must be at least 3 characters long")
       .max(1000, "Description can't be more than 1000 characters long"),
     image: z.url("Image must be a valid URL"),
-    isPaid: z.boolean(),
-    price: z.number(),
+    isPaid: z.string(),
+    price: z.string(),
     categoryId: z.uuid("Category ID is invalid or missing"),
   })
   .partial();

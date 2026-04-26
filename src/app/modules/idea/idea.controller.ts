@@ -7,7 +7,12 @@ import { IQueryParams } from "../../../interfaces/query-builder.interface.js";
 import { DecodedUser } from "../../../types/auth.type.js";
 
 const createIdea = catchAsync(async (req: Request, res: Response) => {
-  const payload = req.body;
+  const payload = {
+    ...req.body,
+    isPaid: Boolean(req.body?.isPaid),
+    price: Number(req.body?.price),
+    image: req.file?.path,
+  };
   const { id } = req.user!;
 
   const result = await ideaServices.createIdea(payload, id as string);

@@ -8,12 +8,14 @@ import {
   validateRequestParams,
 } from "../../middlewares/zod-middleware.js";
 import { IdeaValidations } from "./idea.validation.js";
+import { multerUpload } from "../../../config/multer.config.js";
 
 const router: Router = Router();
 
 router.post(
   "/",
   authMiddleware(UserRole.MEMBER),
+  multerUpload.single("file"),
   validateRequestBody(IdeaValidations.createIdeaZodSchema),
   ideaControllers.createIdea,
 );
