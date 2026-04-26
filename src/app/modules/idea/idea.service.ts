@@ -1,4 +1,4 @@
-import { Idea, Prisma, UserRole } from "@prisma/client";
+import { Idea, Prisma, User, UserRole } from "@prisma/client";
 import { ICreateIdea, IUpdateIdea } from "./idea.interface.js";
 import AppError from "../../errors/app-error.js";
 import status from "http-status";
@@ -9,7 +9,7 @@ import {
 } from "../../../interfaces/query-builder.interface.js";
 import { QueryBuilder } from "../../utils/query-builder.js";
 import { ideaFilterableFields, ideaSearchableFields } from "./idea.constant.js";
-import { DecodedUser } from "../../../types/auth.type.js";
+import { is } from "zod/locales";
 
 const createIdea = async (
   payload: ICreateIdea,
@@ -65,6 +65,24 @@ const getIdeas = async (query: IQueryParams): Promise<QueryResult<Idea>> => {
   }
 };
 
+const getMyIdeas = async (userId: string): Promise<Idea[]> => {
+  try {
+    const ideas = await prisma.idea.findMany({
+      where: {
+        userId,
+        isDeleted: false,
+      },
+    });
+
+    return ideas;
+  } catch (error: any) {
+    throw new AppError(
+      error.message || "Failed to get my ideas",
+      status.INTERNAL_SERVER_ERROR,
+    );
+  }
+};
+
 const getIdeaById = async (id: string): Promise<Idea> => {
   try {
     const idea = await prisma.idea.findUnique({
@@ -105,7 +123,10 @@ const updateIdeaById = async (
       where: {
         id,
       },
-      data: payload,
+      data: {
+        ...payload,
+        price: payload.isPaid ? Number(payload.price) : 0.0,
+      },
     });
 
     return updatedIdea;
@@ -117,7 +138,7 @@ const updateIdeaById = async (
   }
 };
 
-const deleteIdeaById = async (id: string, user: DecodedUser): Promise<Idea> => {
+const deleteIdeaById = async (id: string, user: User): Promise<Idea> => {
   try {
     const isAdmin = user.role === UserRole.ADMIN;
 
@@ -164,6 +185,7 @@ const deleteIdeaById = async (id: string, user: DecodedUser): Promise<Idea> => {
 export const ideaServices = {
   createIdea,
   getIdeas,
+  getMyIdeas,
   getIdeaById,
   updateIdeaById,
   deleteIdeaById,

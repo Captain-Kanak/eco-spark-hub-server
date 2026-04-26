@@ -23,6 +23,12 @@ router.post(
 router.get("/", ideaControllers.getIdeas);
 
 router.get(
+  "/my-ideas",
+  authMiddleware(UserRole.MEMBER),
+  ideaControllers.getMyIdeas,
+);
+
+router.get(
   "/:id",
   validateRequestParams(paramsIdZodSchema),
   ideaControllers.getIdeaById,
@@ -31,6 +37,7 @@ router.get(
 router.patch(
   "/:id",
   authMiddleware(UserRole.MEMBER),
+  multerUpload.single("file"),
   validateRequestParams(paramsIdZodSchema),
   validateRequestBody(IdeaValidations.updateIdeaZodSchema),
   ideaControllers.updateIdeaById,

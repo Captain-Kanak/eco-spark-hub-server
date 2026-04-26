@@ -6,7 +6,7 @@ model Idea {
     solution         String     @db.Text
     image            String?    @db.Text
     isPaid           Boolean    @default(false)
-    price            Float?
+    price            Float?     @default(0.0)
     status           IdeaStatus @default(PENDING)
     adminFeedback    String?    @db.Text
     upvotes          Int        @default(0)
