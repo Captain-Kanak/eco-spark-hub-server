@@ -15,9 +15,6 @@ const createIdea = catchAsync(async (req: Request, res: Response) => {
   };
   const { id } = req.user!;
 
-  console.log("body", req.body);
-  console.log("payload", payload);
-
   const result = await ideaServices.createIdea(payload, id as string);
 
   sendResponse(res, {

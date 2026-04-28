@@ -9,7 +9,6 @@ import {
 } from "../../../interfaces/query-builder.interface.js";
 import { QueryBuilder } from "../../utils/query-builder.js";
 import { ideaFilterableFields, ideaSearchableFields } from "./idea.constant.js";
-import { is } from "zod/locales";
 
 const createIdea = async (
   payload: ICreateIdea,
