@@ -51,6 +51,19 @@ const getMyIdeas = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getPurchasedIdeas = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.user as User;
+
+  const result = await ideaServices.getPurchasedIdeas(id as string);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Ideas fetched successfully",
+    data: result,
+  });
+});
+
 const getIdeaById = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
 
@@ -100,6 +113,7 @@ export const ideaControllers = {
   createIdea,
   getIdeas,
   getMyIdeas,
+  getPurchasedIdeas,
   getIdeaById,
   updateIdeaById,
   deleteIdeaById,

@@ -69,6 +69,10 @@ const confirmPayment = async (
       throw new AppError("Idea is free", status.BAD_REQUEST);
     }
 
+    if (idea.userId === userId) {
+      throw new AppError("You cannot buy your own idea", status.BAD_REQUEST);
+    }
+
     const createPayment = await prisma.payment.create({
       data: {
         amount: idea.price,
@@ -82,6 +86,8 @@ const confirmPayment = async (
 
     return createPayment;
   } catch (error: any) {
+    if (error instanceof AppError) throw error;
+
     throw new AppError(
       error.message || "Failed to confirm payment",
       status.INTERNAL_SERVER_ERROR,

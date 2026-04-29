@@ -1,4 +1,4 @@
-import { Idea, Prisma, User, UserRole } from "@prisma/client";
+import { Idea, Payment, Prisma, User, UserRole } from "@prisma/client";
 import { ICreateIdea, IUpdateIdea } from "./idea.interface.js";
 import AppError from "../../errors/app-error.js";
 import status from "http-status";
@@ -80,6 +80,39 @@ const getMyIdeas = async (userId: string): Promise<Idea[]> => {
       .sort()
       .select()
       .includes({ _count: true })
+      .execute();
+
+    return result.data;
+  } catch (error: any) {
+    throw new AppError(
+      error.message || "Failed to get my ideas",
+      status.INTERNAL_SERVER_ERROR,
+    );
+  }
+};
+
+const getPurchasedIdeas = async (userId: string) => {
+  try {
+    const queryBuilder = new QueryBuilder<
+      Payment,
+      Prisma.PaymentWhereInput,
+      Prisma.PaymentInclude
+    >(prisma.payment, {}, {});
+
+    const result = await queryBuilder
+      .pagination()
+      .where({ isDeleted: false, userId })
+      .search()
+      .filter()
+      .sort()
+      .select()
+      .includes({
+        idea: {
+          include: {
+            category: true,
+          },
+        },
+      })
       .execute();
 
     return result.data;
@@ -194,6 +227,7 @@ export const ideaServices = {
   createIdea,
   getIdeas,
   getMyIdeas,
+  getPurchasedIdeas,
   getIdeaById,
   updateIdeaById,
   deleteIdeaById,

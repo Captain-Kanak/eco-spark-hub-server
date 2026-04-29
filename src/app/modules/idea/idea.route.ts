@@ -29,6 +29,12 @@ router.get(
 );
 
 router.get(
+  "/purchased-ideas",
+  authMiddleware(UserRole.MEMBER),
+  ideaControllers.getPurchasedIdeas,
+);
+
+router.get(
   "/:id",
   validateRequestParams(paramsIdZodSchema),
   ideaControllers.getIdeaById,
