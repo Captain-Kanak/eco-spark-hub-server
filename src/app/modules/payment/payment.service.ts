@@ -25,7 +25,7 @@ const createPaymentIntent = async (
       throw new AppError("Idea not found", status.NOT_FOUND);
     }
 
-    if (!idea.price) {
+    if (!idea.isPaid || !idea.price) {
       throw new AppError("Idea is free", status.BAD_REQUEST);
     }
 
