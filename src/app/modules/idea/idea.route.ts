@@ -9,6 +9,7 @@ import {
 } from "../../middlewares/zod-middleware.js";
 import { IdeaValidations } from "./idea.validation.js";
 import { multerUpload } from "../../../config/multer.config.js";
+import { optionalAuthMiddleware } from "../../middlewares/optional-auth-middleware.js";
 
 const router: Router = Router();
 
@@ -36,6 +37,7 @@ router.get(
 
 router.get(
   "/:id",
+  optionalAuthMiddleware(),
   validateRequestParams(paramsIdZodSchema),
   ideaControllers.getIdeaById,
 );

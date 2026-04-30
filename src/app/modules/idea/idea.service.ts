@@ -124,25 +124,41 @@ const getPurchasedIdeas = async (userId: string) => {
   }
 };
 
-const getIdeaById = async (id: string): Promise<Idea> => {
-  try {
-    const idea = await prisma.idea.findUnique({
-      where: {
-        id,
-      },
-    });
+const getIdeaById = async (id: string, userId?: string): Promise<Idea> => {
+  const idea = await prisma.idea.findUnique({
+    where: { id },
+  });
 
-    if (!idea) {
-      throw new AppError("Idea not found", status.NOT_FOUND);
-    }
-
-    return idea;
-  } catch (error: any) {
-    throw new AppError(
-      error.message || "Failed to get idea",
-      status.INTERNAL_SERVER_ERROR,
-    );
+  if (!idea) {
+    throw new AppError("Idea not found", status.NOT_FOUND);
   }
+
+  if (!idea.isPaid) {
+    return idea;
+  }
+
+  const isOwner = idea.userId === userId;
+
+  if (isOwner) {
+    return idea;
+  }
+
+  if (!userId) {
+    throw new AppError("Please login to access this idea", status.UNAUTHORIZED);
+  }
+
+  const payment = await prisma.payment.findFirst({
+    where: {
+      ideaId: id,
+      userId,
+    },
+  });
+
+  if (!payment) {
+    throw new AppError("You have not purchased this idea", status.FORBIDDEN);
+  }
+
+  return idea;
 };
 
 const updateIdeaById = async (

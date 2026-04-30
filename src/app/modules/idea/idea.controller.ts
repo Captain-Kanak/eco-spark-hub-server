@@ -66,8 +66,9 @@ const getPurchasedIdeas = catchAsync(async (req: Request, res: Response) => {
 
 const getIdeaById = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
+  const userId = req.user?.id;
 
-  const result = await ideaServices.getIdeaById(id as string);
+  const result = await ideaServices.getIdeaById(id as string, userId as string);
 
   sendResponse(res, {
     statusCode: status.OK,
