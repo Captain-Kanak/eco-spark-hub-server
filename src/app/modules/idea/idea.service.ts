@@ -36,6 +36,31 @@ const getIdeas = async (
   userId?: string,
 ): Promise<QueryResult<Partial<Idea>>> => {
   try {
+    const queryBuilder = new QueryBuilder<
+      Idea,
+      Prisma.IdeaWhereInput,
+      Prisma.IdeaInclude
+    >(prisma.idea, query, {
+      searchableFields: ideaSearchableFields,
+      filterableFields: ideaFilterableFields,
+    });
+
+    const result = await queryBuilder
+      .pagination()
+      .where({
+        isDeleted: false,
+        categoryId: query.categoryId,
+      })
+      .search()
+      .filter()
+      .sort()
+      .select()
+      .includes({
+        category: true,
+      })
+      .execute();
+
+    // Check if the user has purchased the idea
     let purchasedIdeaIds = new Set<string>();
 
     if (userId) {
@@ -50,27 +75,6 @@ const getIdeas = async (
 
       purchasedIdeaIds = new Set(payments.map((payment) => payment.ideaId));
     }
-
-    const queryBuilder = new QueryBuilder<
-      Idea,
-      Prisma.IdeaWhereInput,
-      Prisma.IdeaInclude
-    >(prisma.idea, query, {
-      searchableFields: ideaSearchableFields,
-      filterableFields: ideaFilterableFields,
-    });
-
-    const result = await queryBuilder
-      .pagination()
-      .where({ isDeleted: false })
-      .search()
-      .filter()
-      .sort()
-      .select()
-      .includes({
-        category: true,
-      })
-      .execute();
 
     const sanitizedIdeas = result.data.map((idea) => {
       if (!idea.isPaid) {
