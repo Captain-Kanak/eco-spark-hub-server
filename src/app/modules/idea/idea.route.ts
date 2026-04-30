@@ -21,7 +21,7 @@ router.post(
   ideaControllers.createIdea,
 );
 
-router.get("/", ideaControllers.getIdeas);
+router.get("/", optionalAuthMiddleware(), ideaControllers.getIdeas);
 
 router.get(
   "/my-ideas",

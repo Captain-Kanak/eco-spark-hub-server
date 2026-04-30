@@ -27,8 +27,12 @@ const createIdea = catchAsync(async (req: Request, res: Response) => {
 
 const getIdeas = catchAsync(async (req: Request, res: Response) => {
   const query = req.query;
+  const userId = req.user?.id;
 
-  const result = await ideaServices.getIdeas(query as IQueryParams);
+  const result = await ideaServices.getIdeas(
+    query as IQueryParams,
+    userId as string,
+  );
 
   sendResponse(res, {
     statusCode: status.OK,

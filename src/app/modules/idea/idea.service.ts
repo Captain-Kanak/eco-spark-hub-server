@@ -31,8 +31,26 @@ const createIdea = async (
   }
 };
 
-const getIdeas = async (query: IQueryParams): Promise<QueryResult<Idea>> => {
+const getIdeas = async (
+  query: IQueryParams,
+  userId?: string,
+): Promise<QueryResult<Partial<Idea>>> => {
   try {
+    let purchasedIdeaIds = new Set<string>();
+
+    if (userId) {
+      const payments = await prisma.payment.findMany({
+        where: {
+          userId,
+        },
+        select: {
+          ideaId: true,
+        },
+      });
+
+      purchasedIdeaIds = new Set(payments.map((payment) => payment.ideaId));
+    }
+
     const queryBuilder = new QueryBuilder<
       Idea,
       Prisma.IdeaWhereInput,
@@ -49,11 +67,44 @@ const getIdeas = async (query: IQueryParams): Promise<QueryResult<Idea>> => {
       .filter()
       .sort()
       .select()
-      .includes({ _count: true })
+      .includes({
+        category: true,
+      })
       .execute();
 
+    const sanitizedIdeas = result.data.map((idea) => {
+      if (!idea.isPaid) {
+        return {
+          ...idea,
+        };
+      }
+
+      const isOwner = idea.userId === userId;
+      const hasPurchased = purchasedIdeaIds.has(idea.id);
+
+      if (isOwner || hasPurchased) {
+        return {
+          ...idea,
+        };
+      }
+
+      return {
+        id: idea.id,
+        title: idea.title,
+        image: idea.image,
+        isPaid: idea.isPaid,
+        price: idea.price,
+        status: idea.status,
+        upvotes: idea.upvotes,
+        downvotes: idea.downvotes,
+        categoryId: idea.categoryId,
+        createdAt: idea.createdAt,
+        updatedAt: idea.updatedAt,
+      };
+    });
+
     return {
-      data: result.data,
+      data: sanitizedIdeas,
       meta: result.meta,
     };
   } catch (error: any) {
@@ -124,7 +175,10 @@ const getPurchasedIdeas = async (userId: string) => {
   }
 };
 
-const getIdeaById = async (id: string, userId?: string): Promise<Idea> => {
+const getIdeaById = async (
+  id: string,
+  userId?: string,
+): Promise<Partial<Idea>> => {
   const idea = await prisma.idea.findUnique({
     where: { id },
   });
@@ -155,7 +209,10 @@ const getIdeaById = async (id: string, userId?: string): Promise<Idea> => {
   });
 
   if (!payment) {
-    throw new AppError("You have not purchased this idea", status.FORBIDDEN);
+    return {
+      id: idea.id,
+      price: idea.price,
+    };
   }
 
   return idea;
