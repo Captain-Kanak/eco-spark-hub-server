@@ -4,7 +4,12 @@ import AppError from "../../errors/app-error.js";
 import { IConfirmPayment, ICreatePaymentIntent } from "./payment.interface.js";
 import { prisma } from "../../lib/prisma.js";
 import { env } from "../../../config/env.js";
-import { Payment, PaymentStatus } from "@prisma/client";
+import { Payment, PaymentStatus, Prisma } from "@prisma/client";
+import {
+  IQueryParams,
+  QueryResult,
+} from "../../../interfaces/query-builder.interface.js";
+import { QueryBuilder } from "../../utils/query-builder.js";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -95,7 +100,46 @@ const confirmPayment = async (
   }
 };
 
+const getSales = async (
+  query: IQueryParams,
+  userId: string,
+): Promise<QueryResult<Partial<Payment>>> => {
+  try {
+    const queryBuilder = new QueryBuilder<
+      Payment,
+      Prisma.PaymentWhereInput,
+      Prisma.PaymentInclude
+    >(prisma.payment, query, {});
+
+    const result = await queryBuilder
+      .pagination()
+      .where({
+        isDeleted: false,
+        idea: {
+          userId,
+        },
+      })
+      .search()
+      .filter()
+      .sort()
+      .select()
+      .includes({
+        idea: true,
+        user: true,
+      })
+      .execute();
+
+    return result;
+  } catch (error: any) {
+    throw new AppError(
+      error.message || "Failed to get sales",
+      status.INTERNAL_SERVER_ERROR,
+    );
+  }
+};
+
 export const paymentServices = {
   createPaymentIntent,
   confirmPayment,
+  getSales,
 };

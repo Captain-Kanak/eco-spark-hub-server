@@ -21,4 +21,10 @@ router.post(
   paymentControllers.confirmPayment,
 );
 
+router.get(
+  "/get-sales",
+  authMiddleware(UserRole.MEMBER),
+  paymentControllers.getSales,
+);
+
 export { router as PaymentRoutes };
