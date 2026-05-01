@@ -5,21 +5,20 @@ import { JwtPayload, SignOptions } from "jsonwebtoken";
 import { cookieUtils } from "./cookie.js";
 import { Response } from "express";
 
+const secret = "secret";
+const expiresIn = "1d";
+
 const generateAccessToken = (payload: JwtPayload) => {
-  const accessToken = jwtUtils.createToken(payload, env.ACCESS_TOKEN_SECRET, {
-    expiresIn: Math.floor(
-      ms(env.ACCESS_TOKEN_EXPIRES_IN as StringValue) / 1000,
-    ),
+  const accessToken = jwtUtils.createToken(payload, secret, {
+    expiresIn: Math.floor(ms(expiresIn as StringValue) / 1000),
   } as SignOptions);
 
   return accessToken;
 };
 
 const generateRefreshToken = (payload: JwtPayload) => {
-  const refreshToken = jwtUtils.createToken(payload, env.REFRESH_TOKEN_SECRET, {
-    expiresIn: Math.floor(
-      ms(env.REFRESH_TOKEN_EXPIRES_IN as StringValue) / 1000,
-    ),
+  const refreshToken = jwtUtils.createToken(payload, secret, {
+    expiresIn: Math.floor(ms(expiresIn as StringValue) / 1000),
   } as SignOptions);
 
   return refreshToken;
@@ -41,7 +40,7 @@ const setAccessTokenCookie = (res: Response, token: string) => {
     secure: true,
     sameSite: "none",
     path: "/",
-    maxAge: Math.floor(ms(env.ACCESS_TOKEN_EXPIRES_IN as StringValue)),
+    maxAge: Math.floor(ms(expiresIn as StringValue)),
   });
 };
 
@@ -51,7 +50,7 @@ const setRefreshTokenCookie = (res: Response, token: string) => {
     sameSite: "none",
     httpOnly: true,
     path: "/",
-    maxAge: Math.floor(ms(env.REFRESH_TOKEN_EXPIRES_IN as StringValue)),
+    maxAge: Math.floor(ms(expiresIn as StringValue)),
   });
 };
 
