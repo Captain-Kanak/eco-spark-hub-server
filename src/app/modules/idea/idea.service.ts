@@ -149,13 +149,16 @@ const getMyIdeas = async (
   }
 };
 
-const getPurchasedIdeas = async (userId: string) => {
+const getPurchasedIdeas = async (
+  query: IQueryParams,
+  userId: string,
+): Promise<QueryResult<Partial<Payment>>> => {
   try {
     const queryBuilder = new QueryBuilder<
       Payment,
       Prisma.PaymentWhereInput,
       Prisma.PaymentInclude
-    >(prisma.payment, {}, {});
+    >(prisma.payment, query, {});
 
     const result = await queryBuilder
       .pagination()
@@ -165,15 +168,11 @@ const getPurchasedIdeas = async (userId: string) => {
       .sort()
       .select()
       .includes({
-        idea: {
-          include: {
-            category: true,
-          },
-        },
+        idea: true,
       })
       .execute();
 
-    return result.data;
+    return result;
   } catch (error: any) {
     throw new AppError(
       error.message || "Failed to get my ideas",

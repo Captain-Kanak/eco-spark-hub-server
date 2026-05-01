@@ -60,9 +60,13 @@ const getMyIdeas = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getPurchasedIdeas = catchAsync(async (req: Request, res: Response) => {
+  const query = req.query;
   const { id } = req.user as User;
 
-  const result = await ideaServices.getPurchasedIdeas(id as string);
+  const result = await ideaServices.getPurchasedIdeas(
+    query as IQueryParams,
+    id as string,
+  );
 
   sendResponse(res, {
     statusCode: status.OK,
