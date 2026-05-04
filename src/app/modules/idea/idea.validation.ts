@@ -1,3 +1,4 @@
+import { IdeaStatus } from "@prisma/client";
 import * as z from "zod";
 
 const createIdeaZodSchema = z.object({
@@ -40,7 +41,12 @@ const updateIdeaZodSchema = z
   })
   .partial();
 
+const updateIdeaStatusZodSchema = z.object({
+  status: z.enum([IdeaStatus.APPROVED, IdeaStatus.REJECTED]),
+});
+
 export const IdeaValidations = {
   createIdeaZodSchema,
   updateIdeaZodSchema,
+  updateIdeaStatusZodSchema,
 };

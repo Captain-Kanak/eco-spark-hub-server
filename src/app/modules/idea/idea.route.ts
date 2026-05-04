@@ -21,6 +21,12 @@ router.post(
   ideaControllers.createIdea,
 );
 
+router.get(
+  "/pending-ideas",
+  authMiddleware(UserRole.ADMIN),
+  ideaControllers.getPendingIdeas,
+);
+
 router.get("/", optionalAuthMiddleware(), ideaControllers.getIdeas);
 
 router.get(
@@ -49,6 +55,14 @@ router.patch(
   validateRequestParams(paramsIdZodSchema),
   validateRequestBody(IdeaValidations.updateIdeaZodSchema),
   ideaControllers.updateIdeaById,
+);
+
+router.patch(
+  "/update-idea-status/:id",
+  authMiddleware(UserRole.ADMIN),
+  validateRequestParams(paramsIdZodSchema),
+  validateRequestBody(IdeaValidations.updateIdeaStatusZodSchema),
+  ideaControllers.updateIdeaStatus,
 );
 
 router.delete(

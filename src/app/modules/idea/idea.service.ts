@@ -1,4 +1,11 @@
-import { Idea, Payment, Prisma, User, UserRole } from "@prisma/client";
+import {
+  Idea,
+  IdeaStatus,
+  Payment,
+  Prisma,
+  User,
+  UserRole,
+} from "@prisma/client";
 import { ICreateIdea, IUpdateIdea } from "./idea.interface.js";
 import AppError from "../../errors/app-error.js";
 import status from "http-status";
@@ -31,6 +38,38 @@ const createIdea = async (
   }
 };
 
+const getPendingIdeas = async (
+  query: IQueryParams,
+): Promise<QueryResult<Partial<Idea>>> => {
+  try {
+    const queryBuilder = new QueryBuilder<
+      Idea,
+      Prisma.IdeaWhereInput,
+      Prisma.IdeaInclude
+    >(prisma.idea, query, {
+      searchableFields: ideaSearchableFields,
+      filterableFields: ideaFilterableFields,
+    });
+
+    const result = await queryBuilder
+      .pagination()
+      .where({ isDeleted: false, status: IdeaStatus.PENDING })
+      .search()
+      .filter()
+      .sort()
+      .select()
+      .includes({ user: true })
+      .execute();
+
+    return result;
+  } catch (error: any) {
+    throw new AppError(
+      error.message || "Failed to get pending ideas",
+      status.INTERNAL_SERVER_ERROR,
+    );
+  }
+};
+
 const getIdeas = async (
   query: IQueryParams,
   userId?: string,
@@ -49,6 +88,7 @@ const getIdeas = async (
       .pagination()
       .where({
         isDeleted: false,
+        status: IdeaStatus.APPROVED,
         categoryId: query.categoryId,
       })
       .search()
@@ -132,7 +172,11 @@ const getMyIdeas = async (
 
     const result = await queryBuilder
       .pagination()
-      .where({ isDeleted: false, userId })
+      .where({
+        isDeleted: false,
+        status: IdeaStatus.APPROVED,
+        userId,
+      })
       .search()
       .filter()
       .sort()
@@ -186,7 +230,7 @@ const getIdeaById = async (
   userId?: string,
 ): Promise<Partial<Idea>> => {
   const idea = await prisma.idea.findUnique({
-    where: { id },
+    where: { id, status: IdeaStatus.APPROVED },
   });
 
   if (!idea) {
@@ -258,6 +302,36 @@ const updateIdeaById = async (
   }
 };
 
+const updateIdeaStatus = async (id: string, IdeaStatus: IdeaStatus) => {
+  try {
+    const idea = await prisma.idea.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!idea) {
+      throw new AppError("Idea not found", status.NOT_FOUND);
+    }
+
+    const updatedIdea = await prisma.idea.update({
+      where: {
+        id,
+      },
+      data: {
+        status: IdeaStatus,
+      },
+    });
+
+    return updatedIdea;
+  } catch (error: any) {
+    throw new AppError(
+      error.message || "Failed to update idea status",
+      status.INTERNAL_SERVER_ERROR,
+    );
+  }
+};
+
 const deleteIdeaById = async (id: string, user: User): Promise<Idea> => {
   try {
     const isAdmin = user.role === UserRole.ADMIN;
@@ -304,10 +378,12 @@ const deleteIdeaById = async (id: string, user: User): Promise<Idea> => {
 
 export const ideaServices = {
   createIdea,
+  getPendingIdeas,
   getIdeas,
   getMyIdeas,
   getPurchasedIdeas,
   getIdeaById,
   updateIdeaById,
+  updateIdeaStatus,
   deleteIdeaById,
 };

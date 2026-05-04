@@ -25,6 +25,19 @@ const createIdea = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getPendingIdeas = catchAsync(async (req: Request, res: Response) => {
+  const query = req.query;
+
+  const result = await ideaServices.getPendingIdeas(query as IQueryParams);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Ideas fetched successfully",
+    data: result,
+  });
+});
+
 const getIdeas = catchAsync(async (req: Request, res: Response) => {
   const query = req.query;
   const userId = req.user?.id;
@@ -108,6 +121,20 @@ const updateIdeaById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateIdeaStatus = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const { status: IdeaStatus } = req.body;
+
+  const result = await ideaServices.updateIdeaStatus(id as string, IdeaStatus);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Idea status updated successfully",
+    data: result,
+  });
+});
+
 const deleteIdeaById = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   const user = req.user;
@@ -124,10 +151,12 @@ const deleteIdeaById = catchAsync(async (req: Request, res: Response) => {
 
 export const ideaControllers = {
   createIdea,
+  getPendingIdeas,
   getIdeas,
   getMyIdeas,
   getPurchasedIdeas,
   getIdeaById,
   updateIdeaById,
+  updateIdeaStatus,
   deleteIdeaById,
 };
