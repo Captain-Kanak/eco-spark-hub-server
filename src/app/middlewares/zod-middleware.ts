@@ -7,8 +7,6 @@ export const paramsIdZodSchema = z.object({
 
 export const validateRequestBody = (zodObject: z.ZodObject) => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.body);
-
     if (req.body?.data) {
       req.body = JSON.parse(req.body.data);
     }

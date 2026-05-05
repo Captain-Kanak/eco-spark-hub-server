@@ -40,11 +40,11 @@ const getPendingIdeas = catchAsync(async (req: Request, res: Response) => {
 
 const getIdeas = catchAsync(async (req: Request, res: Response) => {
   const query = req.query;
-  const userId = req.user?.id;
+  const user = req.user;
 
   const result = await ideaServices.getIdeas(
     query as IQueryParams,
-    userId as string,
+    user as User,
   );
 
   sendResponse(res, {
