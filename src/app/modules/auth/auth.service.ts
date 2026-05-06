@@ -97,6 +97,7 @@ const loginUser = async (
     const isUserExist = await prisma.user.findUnique({
       where: {
         email,
+        isDeleted: false,
       },
     });
 
