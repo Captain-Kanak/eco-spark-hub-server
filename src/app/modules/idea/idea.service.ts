@@ -72,9 +72,9 @@ const getPendingIdeas = async (
 
 const getIdeas = async (
   query: IQueryParams,
-  user: User,
+  user?: User,
 ): Promise<QueryResult<Partial<Idea>>> => {
-  const userId = user.id;
+  const userId = user?.id;
 
   try {
     const queryBuilder = new QueryBuilder<
@@ -127,7 +127,7 @@ const getIdeas = async (
         };
       }
 
-      const isAdmin = user.role === UserRole.ADMIN;
+      const isAdmin = user?.role === UserRole.ADMIN;
       const isOwner = idea.userId === userId;
       const hasPurchased = purchasedIdeaIds.has(idea.id);
 
