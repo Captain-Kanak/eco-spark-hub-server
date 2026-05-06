@@ -53,8 +53,22 @@ const getSales = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllPayments = catchAsync(async (req: Request, res: Response) => {
+  const query = req.query;
+
+  const result = await paymentServices.getAllPayments(query as IQueryParams);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "All payments fetched successfully",
+    data: result,
+  });
+});
+
 export const paymentControllers = {
   createPaymentIntent,
   confirmPayment,
   getSales,
+  getAllPayments,
 };

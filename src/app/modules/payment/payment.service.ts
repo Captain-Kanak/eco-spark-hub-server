@@ -138,8 +138,45 @@ const getSales = async (
   }
 };
 
+const getAllPayments = async (
+  query: IQueryParams,
+): Promise<QueryResult<Payment>> => {
+  try {
+    const queryBuilder = new QueryBuilder<
+      Payment,
+      Prisma.PaymentWhereInput,
+      Prisma.PaymentInclude
+    >(prisma.payment, query, {});
+
+    const result = await queryBuilder
+      .pagination()
+      .where({ isDeleted: false })
+      .search()
+      .filter()
+      .sort()
+      .select()
+      .includes({
+        idea: {
+          include: {
+            user: true,
+          },
+        },
+        user: true,
+      })
+      .execute();
+
+    return result;
+  } catch (error: any) {
+    throw new AppError(
+      error.message || "Failed to get payments",
+      status.INTERNAL_SERVER_ERROR,
+    );
+  }
+};
+
 export const paymentServices = {
   createPaymentIntent,
   confirmPayment,
   getSales,
+  getAllPayments,
 };

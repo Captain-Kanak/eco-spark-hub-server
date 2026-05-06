@@ -27,4 +27,10 @@ router.get(
   paymentControllers.getSales,
 );
 
+router.get(
+  "/get-all-payments",
+  authMiddleware(UserRole.ADMIN),
+  paymentControllers.getAllPayments,
+);
+
 export { router as PaymentRoutes };
