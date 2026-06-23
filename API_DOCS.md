@@ -2,11 +2,11 @@
 
 ### Authentication (Managed by Better Auth)
 
-| Method | Endpoint                  | Access | Description           |
-| ------ | ------------------------- | ------ | --------------------- |
-| POST   | /api/v1/auth/register     | Public | Sign Up User          |
-| POST   | /api/v1/auth/verify-email | Public | Verify User Email     |
-| POST   | /api/v1/auth/login        | Public | Sign In Verified User |
+| Method | Endpoint                  | Access | Description          |
+| ------ | ------------------------- | ------ | -------------------- |
+| POST   | /api/v1/auth/register     | public | register new user    |
+| POST   | /api/v1/auth/verify-email | public | verify user email    |
+| POST   | /api/v1/auth/login        | public | log in verified user |
 
 ---
 
