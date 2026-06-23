@@ -2,12 +2,12 @@ import { User, UserRole, UserStatus } from "@prisma/client";
 import AppError from "../../errors/app-error.js";
 import { auth } from "../../lib/auth.js";
 import { prisma } from "../../lib/prisma.js";
-import { ILoginUser, IRegisterUser } from "./auth.interface.js";
+import { LoginUser, RegisterUser } from "./auth.interface.js";
 import status from "http-status";
 import { Session } from "better-auth";
 
 const registerUser = async (
-  payload: IRegisterUser,
+  payload: RegisterUser,
 ): Promise<{ token: null; user: Partial<User> }> => {
   try {
     const { name, email, password } = payload;
@@ -84,7 +84,7 @@ const verifyEmail = async (payload: {
 };
 
 const loginUser = async (
-  payload: ILoginUser,
+  payload: LoginUser,
 ): Promise<{
   redirect: boolean;
   token: string;
