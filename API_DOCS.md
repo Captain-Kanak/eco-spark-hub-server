@@ -1,31 +1,58 @@
-# Ticket Booking API
+# 🔗 API Endpoints
 
-Backend service for managing users, tickets, bookings, and payments.
+### Authentication (Managed by Better Auth)
 
-## Tech Stack
+| Method | Endpoint                  | Access | Description           |
+| ------ | ------------------------- | ------ | --------------------- |
+| POST   | /api/v1/auth/register     | Public | Sign Up User          |
+| POST   | /api/v1/auth/verify-email | Public | Verify User Email     |
+| POST   | /api/v1/auth/login        | Public | Sign In Verified User |
 
-- Node.js
-- Express.js
-- PostgreSQL
-- Prisma
-- JWT
+---
 
-## Features
+### User
 
-- Authentication
-- User management
-- Ticket CRUD
-- Booking system
-- Payment integration
+| Method | Endpoint                     | Access         | Description                     |
+| ------ | ---------------------------- | -------------- | ------------------------------- |
+| GET    | /api/v1/users/get-users      | ADMIN          | Get All Users                   |
+| PATCH  | /api/v1/users/update-profile | Logged in User | Update User Information         |
+| DELETE | /api/v1/users/:id            | ADMIN          | Delete User by id (soft delete) |
 
-## Installation
+---
 
-npm install
+### Category
 
-## Environment Setup
+| Method | Endpoint               | Access | Description                         |
+| ------ | ---------------------- | ------ | ----------------------------------- |
+| POST   | /api/v1/categories     | ADMIN  | Create Category                     |
+| GET    | /api/v1/categories     | Public | Get all Categories                  |
+| GET    | /api/v1/categories/:id | Public | Get Category by id                  |
+| PATCH  | /api/v1/categories/:id | ADMIN  | Update Category by id               |
+| DELETE | /api/v1/categories/:id | ADMIN  | Delete Category by id (soft delete) |
 
-Create .env file
+---
 
-## Run Project
+### Medicine
 
-npm run dev
+| Method | Endpoint                             | Access         | Description                       |
+| ------ | ------------------------------------ | -------------- | --------------------------------- |
+| POST   | /api/v1/ideas                        | MEMBER         | Add new Idea                      |
+| GET    | /api/v1/ideas                        | Public         | Get all Ideas                     |
+| GET    | /api/v1/ideas/pending-ideas          | ADMIN          | Get all pending Ideas             |
+| GET    | /api/v1/ideas/my-ideas               | MEMBER         | Get user specific Ideas           |
+| GET    | /api/v1/ideas/purchased-ideas        | MEMBER         | Get user specific purchased Ideas |
+| GET    | /api/v1/ideas/:id                    | Public         | Get Idea by id                    |
+| PATCH  | /api/v1/ideas/:id                    | MEMBER         | Update Idea by id                 |
+| PATCH  | /api/v1/ideas/update-idea-status/:id | ADMIN          | Update Idea status by id          |
+| DELETE | /api/v1/ideas/:id                    | SELLER / ADMIN | Delete Idea by id (soft delete)   |
+
+---
+
+### Payment
+
+| Method | Endpoint                               | Access | Description           |
+| ------ | -------------------------------------- | ------ | --------------------- |
+| POST   | /api/v1/payments/create-payment-intent | MEMBER | Create Payment Intent |
+| POST   | /api/v1/payments/confirm-payment       | MEMBER | Confirm Payment       |
+
+---
