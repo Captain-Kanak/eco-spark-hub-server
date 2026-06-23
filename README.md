@@ -4,14 +4,18 @@ A high-integrity, multi-role backend built for a specialized Environmental Innov
 
 ---
 
+**[🟢 LIVE LINK](https://drive.google.com/file/d/1j3ANDqFYj20Nu6VDs8lQYnDMitSW76Z5/view)**
+
+---
+
 ## 📌 Overview
 
 This backend system powers a structured environmental incubator:
 
 - Unified Authentication: Powered by Better Auth for secure, session-based identity management.
-- Role-Based Access Control (RBAC): Distinct permissions for ADMIN, INNOVATOR, and SUPPORTER.
+- Role-Based Access Control (RBAC): Distinct permissions for ADMIN and MEMBER.
 - Innovation Taxonomy: Only Admins can define the global environmental sectors (Categories).
-- Project Inventory: Innovators manage their own project blueprints, funding goals, and pricing.
+- Project Inventory: Innovators (MEMBER) manage their own project blueprints, funding goals, and pricing.
 - Transactional Funding: Atomic "Impact Purchase" process using Prisma Transactions to ensure data integrity between orders and project availability.
 - Clean Architecture: Modular service-controller pattern built with TypeScript and Express.
 
@@ -19,11 +23,12 @@ This backend system powers a structured environmental incubator:
 
 ## 🛠 Technology Stack
 
-- Runtime: Node.js & TypeScript
+- Runtime: Node.js
+- Language: TypeScript
 - Framework: Express.js
 - Database: PostgreSQL (Neon DB)
 - ORM: Prisma
-- Authentication: Better Auth
+- Authentication: Better Auth & JWT
 
 ---
 
@@ -40,13 +45,13 @@ The system utilizes Better Auth for modern security:
 ### Role-Based Access Control (RBAC)
 
 - ADMIN – Manage Eco-Categories, Global User Audit, Platform Analytics, Inventory Oversight.
-- MEMBER – Create/Update/Delete own Project Ideas, Track Sales/Funding, Manage Project Status.
+- MEMBER – Create/Update/Delete own Ideas, Track Sales/Funding, Manage Project Status.
 
 ---
 
 ## 🔒 Security Considerations
 
-- Atomic Transactions: Project capacity/stock is adjusted using prisma.$transaction to prevent over-funding beyond project limits.
+- Atomic Transactions: Project capacity is adjusted using prisma.$transaction to prevent over-funding beyond project limits.
 - Price Integrity: Contribution totals are validated against the DB to prevent frontend price manipulation.
 - Unique Constraints: @@unique([name, categoryId]) prevents duplicate innovation entries within the same sector.
 - Security Headers: Better Auth handles secure cookie management and session validation.
@@ -54,79 +59,6 @@ The system utilizes Better Auth for modern security:
 ---
 
 ## 🗄️ Database Schema
-
-**ERD Link:** [ERD Link](https://drive.google.com/file/d/1j3ANDqFYj20Nu6VDs8lQYnDMitSW76Z5/view)
-
-### User
-
-| Field         | Description       |
-| ------------- | ----------------- |
-| id            | UUID (PK)         |
-| name          | String            |
-| email         | String (unique)   |
-| emailVerified | Boolean (false)   |
-| image         | String?           |
-| role          | ADMIN / MEMBER    |
-| status        | ACTIVE / DEACTIVE |
-| phone         | String?           |
-| address       | String?           |
-| date_of_birth | DateTime?         |
-| isDeleted     | Boolean (false)   |
-| deletedAt     | DateTime?         |
-| createdAt     | DateTime (now())  |
-| updatedAt     | DateTime          |
-
-### Category
-
-| Field       | Description      |
-| ----------- | ---------------- |
-| id          | UUID (PK)        |
-| name        | String (unique)  |
-| icon        | String?          |
-| description | String?          |
-| isDeleted   | Boolean (false)  |
-| deletedAt   | DateTime?        |
-| createdAt   | DateTime (now()) |
-| updatedAt   | DateTime         |
-
-### Idea
-
-| Field            | Description                   |
-| ---------------- | ----------------------------- |
-| id               | UUID (PK)                     |
-| title            | String (unique)               |
-| description      | String                        |
-| problemStatement | String                        |
-| solution         | String                        |
-| image            | String?                       |
-| isPaid           | Boolean (false)               |
-| price            | Float?                        |
-| status           | PENDING / APPROVED / REJECTED |
-| adminFeedback    | String?                       |
-| upvotes          | Int                           |
-| downvotes        | Int                           |
-| categoryId       | String (FK)                   |
-| userId           | String (FK)                   |
-| isDeleted        | Boolean (false)               |
-| deletedAt        | DateTime?                     |
-| createdAt        | DateTime (now())              |
-| updatedAt        | DateTime                      |
-
-### Payment
-
-| Field         | Description      |
-| ------------- | ---------------- |
-| id            | UUID (PK)        |
-| amount        | Float            |
-| transactionId | String           |
-| status        | PAID / UNPAID    |
-| paymentMethod | String           |
-| ideaId        | String (FK)      |
-| userId        | String (FK)      |
-| isDeleted     | Boolean (false)  |
-| deletedAt     | DateTime?        |
-| createdAt     | DateTime (now()) |
-| updatedAt     | DateTime         |
 
 ---
 
