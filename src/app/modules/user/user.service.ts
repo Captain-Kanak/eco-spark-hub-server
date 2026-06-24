@@ -1,5 +1,5 @@
 import { Prisma, User, UserRole } from "@prisma/client";
-import { IUpdateUser } from "./user.interface.js";
+import { UpdateUser } from "./user.interface.js";
 import AppError from "../../errors/app-error.js";
 import status from "http-status";
 import { prisma } from "../../lib/prisma.js";
@@ -19,7 +19,10 @@ const getUsers = async (query: IQueryParams): Promise<QueryResult<User>> => {
 
     const result = await queryBuilder
       .pagination()
-      .where({ isDeleted: false, role: UserRole.MEMBER })
+      .where({
+        isDeleted: false,
+        role: UserRole.MEMBER,
+      })
       .search()
       .filter()
       .sort()
@@ -28,16 +31,13 @@ const getUsers = async (query: IQueryParams): Promise<QueryResult<User>> => {
       .execute();
 
     return result;
-  } catch (error: any) {
-    throw new AppError(
-      error.message || "Failed to get users",
-      status.INTERNAL_SERVER_ERROR,
-    );
+  } catch (error) {
+    throw new AppError("Failed to get users", status.INTERNAL_SERVER_ERROR);
   }
 };
 
 const updateProfile = async (
-  payload: IUpdateUser,
+  payload: UpdateUser,
   userId: string,
 ): Promise<User> => {
   try {
@@ -59,13 +59,10 @@ const updateProfile = async (
     });
 
     return user;
-  } catch (error: any) {
+  } catch (error) {
     if (error instanceof AppError) throw error;
 
-    throw new AppError(
-      error.message || "Failed to update user",
-      status.INTERNAL_SERVER_ERROR,
-    );
+    throw new AppError("Failed to update user", status.INTERNAL_SERVER_ERROR);
   }
 };
 

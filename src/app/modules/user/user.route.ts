@@ -11,7 +11,7 @@ const router: Router = Router();
 router.get("/", authMiddleware(UserRole.ADMIN), userController.getUsers);
 
 router.patch(
-  "/update-profile",
+  "/update",
   authMiddleware(),
   multerUpload.single("file"),
   validateRequestBody(userValidation.updateProfileZodSchema),
