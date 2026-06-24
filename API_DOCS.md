@@ -18,7 +18,7 @@
 | ------ | -------------------- | ------ | ------------------------------- |
 | GET    | /api/v1/users        | ADMIN  | get all users                   |
 | PATCH  | /api/v1/users/update | SECURE | update user informations        |
-| DELETE | /api/v1/users/:id    | ADMIN  | Delete User by id (soft delete) |
+| DELETE | /api/v1/users/:id    | ADMIN  | delete user by id (soft delete) |
 
 ---
 

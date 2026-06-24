@@ -8,6 +8,7 @@ import {
   IQueryParams,
   QueryResult,
 } from "../../../interfaces/query-builder.interface.js";
+import { UserResponse, userResponse } from "../auth/auth.interface.js";
 
 const getUsers = async (query: IQueryParams): Promise<QueryResult<User>> => {
   try {
@@ -39,7 +40,7 @@ const getUsers = async (query: IQueryParams): Promise<QueryResult<User>> => {
 const updateProfile = async (
   payload: UpdateUser,
   userId: string,
-): Promise<User> => {
+): Promise<UserResponse> => {
   try {
     const isUserExist = await prisma.user.findUnique({
       where: {
@@ -58,7 +59,7 @@ const updateProfile = async (
       data: payload,
     });
 
-    return user;
+    return userResponse(user);
   } catch (error) {
     if (error instanceof AppError) throw error;
 
@@ -87,11 +88,10 @@ const deleteUser = async (id: string): Promise<void> => {
         deletedAt: new Date(),
       },
     });
-  } catch (error: any) {
-    throw new AppError(
-      error instanceof Error ? error.message : "Failed to delete user",
-      status.INTERNAL_SERVER_ERROR,
-    );
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+
+    throw new AppError("Failed to delete user", status.INTERNAL_SERVER_ERROR);
   }
 };
 
