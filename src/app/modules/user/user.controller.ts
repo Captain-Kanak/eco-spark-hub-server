@@ -5,6 +5,19 @@ import { sendResponse } from "../../utils/send-response.js";
 import status from "http-status";
 import { IQueryParams } from "../../../interfaces/query-builder.interface.js";
 
+const getUsers = catchAsync(async (req: Request, res: Response) => {
+  const query = req.query;
+
+  const result = await userService.getUsers(query as IQueryParams);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Users fetched successfully",
+    data: result,
+  });
+});
+
 const updateProfile = catchAsync(async (req: Request, res: Response) => {
   const payload = {
     ...req.body,
@@ -23,19 +36,6 @@ const updateProfile = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getUsers = catchAsync(async (req: Request, res: Response) => {
-  const query = req.query;
-
-  const result = await userService.getUsers(query as IQueryParams);
-
-  sendResponse(res, {
-    statusCode: status.OK,
-    success: true,
-    message: "Users fetched successfully",
-    data: result,
-  });
-});
-
 const deleteUser = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
 
@@ -50,7 +50,7 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const userController = {
-  updateProfile,
   getUsers,
+  updateProfile,
   deleteUser,
 };

@@ -9,7 +9,7 @@ const seedAdmin = async () => {
     const adminData = {
       name: "Admin",
       email: "admin@gmail.com",
-      password: "password123",
+      password: "12345678",
     };
 
     const isAdminExist = await prisma.user.findUnique({
@@ -41,11 +41,10 @@ const seedAdmin = async () => {
     } else {
       throw new AppError("Failed to seed admin", status.INTERNAL_SERVER_ERROR);
     }
-  } catch (error: any) {
-    throw new AppError(
-      error.message || "Failed to seed admin",
-      status.INTERNAL_SERVER_ERROR,
-    );
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+
+    throw new AppError("Failed to seed admin", status.INTERNAL_SERVER_ERROR);
   }
 };
 

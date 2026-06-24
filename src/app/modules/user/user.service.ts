@@ -9,6 +9,33 @@ import {
   QueryResult,
 } from "../../../interfaces/query-builder.interface.js";
 
+const getUsers = async (query: IQueryParams): Promise<QueryResult<User>> => {
+  try {
+    const queryBuilder = new QueryBuilder<
+      User,
+      Prisma.UserWhereInput,
+      Prisma.UserInclude
+    >(prisma.user, query, {});
+
+    const result = await queryBuilder
+      .pagination()
+      .where({ isDeleted: false, role: UserRole.MEMBER })
+      .search()
+      .filter()
+      .sort()
+      .select()
+      .includes({ _count: true })
+      .execute();
+
+    return result;
+  } catch (error: any) {
+    throw new AppError(
+      error.message || "Failed to get users",
+      status.INTERNAL_SERVER_ERROR,
+    );
+  }
+};
+
 const updateProfile = async (
   payload: IUpdateUser,
   userId: string,
@@ -37,33 +64,6 @@ const updateProfile = async (
 
     throw new AppError(
       error.message || "Failed to update user",
-      status.INTERNAL_SERVER_ERROR,
-    );
-  }
-};
-
-const getUsers = async (query: IQueryParams): Promise<QueryResult<User>> => {
-  try {
-    const queryBuilder = new QueryBuilder<
-      User,
-      Prisma.UserWhereInput,
-      Prisma.UserInclude
-    >(prisma.user, query, {});
-
-    const result = await queryBuilder
-      .pagination()
-      .where({ isDeleted: false, role: UserRole.MEMBER })
-      .search()
-      .filter()
-      .sort()
-      .select()
-      .includes({ _count: true })
-      .execute();
-
-    return result;
-  } catch (error: any) {
-    throw new AppError(
-      error.message || "Failed to get users",
       status.INTERNAL_SERVER_ERROR,
     );
   }
@@ -99,7 +99,7 @@ const deleteUser = async (id: string): Promise<void> => {
 };
 
 export const userService = {
-  updateProfile,
   getUsers,
+  updateProfile,
   deleteUser,
 };

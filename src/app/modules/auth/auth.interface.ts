@@ -20,7 +20,6 @@ export interface UserResponse {
   id: string;
   name: string;
   email: string;
-  emailVerified: boolean;
   role: UserRole;
   status: UserStatus;
   image: string | null;
@@ -36,7 +35,6 @@ export const userResponse = (user: User): UserResponse => {
     id: user.id,
     name: user.name,
     email: user.email,
-    emailVerified: user.emailVerified,
     role: user.role as UserRole,
     status: user.status as UserStatus,
     image: user.image,

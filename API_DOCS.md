@@ -4,21 +4,21 @@
 
 | Method | Endpoint                   | Access | Description                    |
 | ------ | -------------------------- | ------ | ------------------------------ |
-| POST   | /api/v1/auth/register      | public | register new user              |
-| POST   | /api/v1/auth/verify-email  | public | verify user email              |
-| POST   | /api/v1/auth/login         | public | log in verified user           |
-| GET    | /api/v1/auth//login/google | public | google login by api call       |
-| GET    | /api/v1/auth/get-me        | secure | get user data by session token |
+| POST   | /api/v1/auth/register      | PUBLIC | register new user              |
+| POST   | /api/v1/auth/verify-email  | PUBLIC | verify user email              |
+| POST   | /api/v1/auth/login         | PUBLIC | log in verified user           |
+| GET    | /api/v1/auth//login/google | PUBLIC | google login by api call       |
+| GET    | /api/v1/auth/get-me        | SECURE | get user data by session token |
 
 ---
 
 ### User
 
-| Method | Endpoint                     | Access         | Description                     |
-| ------ | ---------------------------- | -------------- | ------------------------------- |
-| GET    | /api/v1/users/get-users      | ADMIN          | Get All Users                   |
-| PATCH  | /api/v1/users/update-profile | Logged in User | Update User Information         |
-| DELETE | /api/v1/users/:id            | ADMIN          | Delete User by id (soft delete) |
+| Method | Endpoint                     | Access | Description                     |
+| ------ | ---------------------------- | ------ | ------------------------------- |
+| GET    | /api/v1/users                | ADMIN  | get all users                   |
+| PATCH  | /api/v1/users/update-profile | SECURE | update user informations        |
+| DELETE | /api/v1/users/:id            | ADMIN  | Delete User by id (soft delete) |
 
 ---
 

@@ -139,7 +139,7 @@ pnpm dev
 
 - Kanak Ray
 - Software Engineer
-- (TypeScript · Express.js · PostgreSQL · Docker · GO)
+- (TypeScript | Express.js | PostgreSQL | Docker | GO | Echo)
 
 ---
 
