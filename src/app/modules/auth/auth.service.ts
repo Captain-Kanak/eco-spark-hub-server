@@ -121,7 +121,7 @@ const googleLoginSuccess = async (
       },
     });
 
-    if (!session?.user) {
+    if (!session?.session || !session?.user) {
       return { session: null, user: null };
     }
 

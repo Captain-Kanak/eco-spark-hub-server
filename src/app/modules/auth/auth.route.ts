@@ -30,7 +30,7 @@ router.get("/get-me", authMiddleware(), AuthControllers.getMe);
 
 // router.post("/reset-password");
 
-// http://localhost:5000/api/v1/auth/login/google?redirect=/
+// type on browser: http://localhost:5000/api/v1/auth/login/google?redirect=/
 router.get("/login/google", AuthControllers.googleLogin);
 
 router.get("/google/success", AuthControllers.googleLoginSuccess);

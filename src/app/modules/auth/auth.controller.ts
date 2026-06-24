@@ -73,17 +73,16 @@ const googleLoginSuccess = catchAsync(async (req: Request, res: Response) => {
   }
 
   const result = await AuthServices.googleLoginSuccess(sessionToken);
-  const { session, user } = result;
 
-  if (!session) {
+  if (!result.session) {
     return res.redirect(`${env.FRONTEND_URL}/login?error=no_session_found`);
   }
 
-  if (!user) {
+  if (!result.user) {
     return res.redirect(`${env.FRONTEND_URL}/login?error=no_user_found`);
   }
 
-  tokenUtils.setBetterAuthSessionCookie(res, session.token);
+  tokenUtils.setBetterAuthSessionCookie(res, result.session.token);
 
   const isValidRedirectPath =
     redirectPath.startsWith("/") && !redirectPath.startsWith("//");
