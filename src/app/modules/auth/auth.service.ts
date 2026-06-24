@@ -2,24 +2,25 @@ import { User, UserRole, UserStatus } from "@prisma/client";
 import AppError from "../../errors/app-error.js";
 import { auth } from "../../lib/auth.js";
 import { prisma } from "../../lib/prisma.js";
-import { LoginUser, RegisterUser } from "./auth.interface.js";
+import { LoginUser, RegisterUser, UserResponse } from "./auth.interface.js";
 import status from "http-status";
 import { Session } from "better-auth";
 
 const registerUser = async (
   payload: RegisterUser,
-): Promise<{ token: null; user: Partial<User> }> => {
+): Promise<{ user: UserResponse }> => {
   try {
     const { name, email, password } = payload;
 
     const isUserExist = await prisma.user.findUnique({
-      where: {
-        email,
-      },
+      where: { email },
     });
 
     if (isUserExist) {
-      throw new AppError("User already exist", status.BAD_REQUEST);
+      throw new AppError(
+        "User already exist with this email",
+        status.BAD_REQUEST,
+      );
     }
 
     const result = await auth.api.signUpEmail({
@@ -31,19 +32,23 @@ const registerUser = async (
     });
 
     return {
-      token: null,
       user: {
-        ...result.user,
+        id: result.user.id,
+        name: result.user.name,
+        email: result.user.email,
+        emailVerified: result.user.emailVerified,
+        image: result.user.image || "",
         role: result.user.role as UserRole,
         status: result.user.status as UserStatus,
-        isDeleted: result.user.isDeleted as boolean,
+        phone: result.user.phone || "",
+        address: result.user.address || "",
+        date_of_birth: result.user.date_of_birth ?? undefined,
+        createdAt: result.user.createdAt,
+        updatedAt: result.user.updatedAt,
       },
     };
-  } catch (error: any) {
-    throw new AppError(
-      error.message || "Failed to register user",
-      status.INTERNAL_SERVER_ERROR,
-    );
+  } catch (error) {
+    throw new AppError("Failed to register user", status.INTERNAL_SERVER_ERROR);
   }
 };
 

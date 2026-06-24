@@ -10,7 +10,7 @@ const registerUserZodSchema = z.object({
     .max(255, "Email can't be more than 255 characters long"),
   password: z
     .string("Password is required")
-    .min(6, "Password must be at least 6 characters long")
+    .min(8, "Password must be at least 8 characters long")
     .max(50, "Password can't be more than 50 characters long"),
 });
 
@@ -30,7 +30,7 @@ const loginUserZodSchema = z.object({
     .max(255, "Email can't be more than 255 characters long"),
   password: z
     .string("Password is required")
-    .min(6, "Password must be at least 6 characters long")
+    .min(8, "Password must be at least 8 characters long")
     .max(50, "Password can't be more than 50 characters long"),
 });
 
