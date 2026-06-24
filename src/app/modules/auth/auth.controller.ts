@@ -14,26 +14,24 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
     statusCode: status.CREATED,
     success: true,
     message: "User registered successfully",
-    data: result.user,
+    data: result,
   });
 });
 
 const verifyEmail = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthServices.verifyEmail(req.body);
+  await AuthServices.verifyEmail(req.body);
 
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
     message: "Email verified successfully",
-    data: result,
   });
 });
 
 const loginUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthServices.loginUser(req.body);
-  const { token } = result;
 
-  tokenUtils.setBetterAuthSessionCookie(res, token);
+  tokenUtils.setBetterAuthSessionCookie(res, result.token);
 
   sendResponse(res, {
     statusCode: status.OK,

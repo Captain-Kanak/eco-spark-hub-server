@@ -2,13 +2,16 @@ import { User, UserRole, UserStatus } from "@prisma/client";
 import AppError from "../../errors/app-error.js";
 import { auth } from "../../lib/auth.js";
 import { prisma } from "../../lib/prisma.js";
-import { LoginUser, RegisterUser, UserResponse } from "./auth.interface.js";
+import {
+  LoginUser,
+  RegisterUser,
+  UserResponse,
+  VerifyEmail,
+} from "./auth.interface.js";
 import status from "http-status";
 import { Session } from "better-auth";
 
-const registerUser = async (
-  payload: RegisterUser,
-): Promise<{ user: UserResponse }> => {
+const registerUser = async (payload: RegisterUser): Promise<UserResponse> => {
   try {
     const { name, email, password } = payload;
 
@@ -31,31 +34,30 @@ const registerUser = async (
       },
     });
 
-    return {
-      user: {
-        id: result.user.id,
-        name: result.user.name,
-        email: result.user.email,
-        emailVerified: result.user.emailVerified,
-        image: result.user.image || "",
-        role: result.user.role as UserRole,
-        status: result.user.status as UserStatus,
-        phone: result.user.phone || "",
-        address: result.user.address || "",
-        date_of_birth: result.user.date_of_birth ?? undefined,
-        createdAt: result.user.createdAt,
-        updatedAt: result.user.updatedAt,
-      },
+    const user: UserResponse = {
+      id: result.user.id,
+      name: result.user.name,
+      email: result.user.email,
+      emailVerified: result.user.emailVerified,
+      image: result.user.image || "",
+      role: result.user.role as UserRole,
+      status: result.user.status as UserStatus,
+      phone: result.user.phone || "",
+      address: result.user.address || "",
+      date_of_birth: result.user.date_of_birth ?? undefined,
+      createdAt: result.user.createdAt,
+      updatedAt: result.user.updatedAt,
     };
+
+    return user;
   } catch (error) {
+    if (error instanceof AppError) throw error;
+
     throw new AppError("Failed to register user", status.INTERNAL_SERVER_ERROR);
   }
 };
 
-const verifyEmail = async (payload: {
-  email: string;
-  otp: string;
-}): Promise<void> => {
+const verifyEmail = async (payload: VerifyEmail): Promise<void> => {
   try {
     const { email, otp } = payload;
 
@@ -76,15 +78,8 @@ const verifyEmail = async (payload: {
         },
       });
     }
-  } catch (error: any) {
-    if (error instanceof AppError) {
-      throw error;
-    }
-
-    throw new AppError(
-      error.message || "Failed to verify email",
-      status.INTERNAL_SERVER_ERROR,
-    );
+  } catch (error) {
+    throw new AppError("Failed to verify email", status.INTERNAL_SERVER_ERROR);
   }
 };
 
@@ -94,7 +89,7 @@ const loginUser = async (
   redirect: boolean;
   token: string;
   url?: string | undefined;
-  user: Partial<User>;
+  user: UserResponse;
 }> => {
   try {
     const { email, password } = payload;
@@ -117,22 +112,31 @@ const loginUser = async (
       },
     });
 
+    const user: UserResponse = {
+      id: result.user.id,
+      name: result.user.name,
+      email: result.user.email,
+      emailVerified: result.user.emailVerified,
+      image: result.user.image || "",
+      role: result.user.role as UserRole,
+      status: result.user.status as UserStatus,
+      phone: result.user.phone || "",
+      address: result.user.address || "",
+      date_of_birth: result.user.date_of_birth ?? undefined,
+      createdAt: result.user.createdAt,
+      updatedAt: result.user.updatedAt,
+    };
+
     return {
       redirect: result.redirect,
       token: result.token,
       url: result.url,
-      user: {
-        ...result.user,
-        role: result.user.role as UserRole,
-        status: result.user.status as UserStatus,
-        isDeleted: result.user.isDeleted as boolean,
-      },
+      user,
     };
-  } catch (error: any) {
-    throw new AppError(
-      error.message || "Failed to login user",
-      status.INTERNAL_SERVER_ERROR,
-    );
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+
+    throw new AppError("Failed to login user", status.INTERNAL_SERVER_ERROR);
   }
 };
 

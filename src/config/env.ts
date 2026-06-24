@@ -16,7 +16,6 @@ interface EnvConfig {
   EMAIL_SENDER_SMTP_PASS: string;
   EMAIL_SENDER_SMTP_HOST: string;
   EMAIL_SENDER_SMTP_PORT: string;
-  EMAIL_SENDER_SMTP_FROM: string;
   STRIPE_SECRET_KEY: string;
   GOOGLE_CLIENT_ID: string;
   GOOGLE_CLIENT_SECRET: string;
@@ -40,7 +39,6 @@ const envVariablesLoader = (): EnvConfig => {
     "EMAIL_SENDER_SMTP_PASS",
     "EMAIL_SENDER_SMTP_HOST",
     "EMAIL_SENDER_SMTP_PORT",
-    "EMAIL_SENDER_SMTP_FROM",
     "STRIPE_SECRET_KEY",
     "GOOGLE_CLIENT_ID",
     "GOOGLE_CLIENT_SECRET",
@@ -73,7 +71,6 @@ const envVariablesLoader = (): EnvConfig => {
     EMAIL_SENDER_SMTP_PASS: process.env.EMAIL_SENDER_SMTP_PASS as string,
     EMAIL_SENDER_SMTP_HOST: process.env.EMAIL_SENDER_SMTP_HOST as string,
     EMAIL_SENDER_SMTP_PORT: process.env.EMAIL_SENDER_SMTP_PORT as string,
-    EMAIL_SENDER_SMTP_FROM: process.env.EMAIL_SENDER_SMTP_FROM as string,
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY as string,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID as string,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET as string,

@@ -5,16 +5,6 @@ import ejs from "ejs";
 import { env } from "../../config/env.js";
 import AppError from "../errors/app-error.js";
 
-const transporter = nodemailer.createTransport({
-  host: env.EMAIL_SENDER_SMTP_HOST,
-  port: Number(env.EMAIL_SENDER_SMTP_PORT),
-  secure: true,
-  auth: {
-    user: env.EMAIL_SENDER_SMTP_USER,
-    pass: env.EMAIL_SENDER_SMTP_PASS,
-  },
-});
-
 interface SendEmailOptions {
   to: string;
   subject: string;
@@ -26,6 +16,16 @@ interface SendEmailOptions {
     contentType: string;
   }[];
 }
+
+const transporter = nodemailer.createTransport({
+  host: env.EMAIL_SENDER_SMTP_HOST,
+  port: Number(env.EMAIL_SENDER_SMTP_PORT),
+  secure: true,
+  auth: {
+    user: env.EMAIL_SENDER_SMTP_USER,
+    pass: env.EMAIL_SENDER_SMTP_PASS,
+  },
+});
 
 export const sendEmail = async ({
   to,
@@ -43,7 +43,7 @@ export const sendEmail = async ({
     const html = await ejs.renderFile(templatePath, templateData);
 
     const info = await transporter.sendMail({
-      from: env.EMAIL_SENDER_SMTP_FROM,
+      from: env.EMAIL_SENDER_SMTP_USER,
       to,
       subject,
       html,
@@ -54,13 +54,10 @@ export const sendEmail = async ({
       })),
     });
 
-    console.log(`SUCCESS: email send to ${to} : ${info.messageId}`);
-  } catch (error: any) {
+    console.log(`email send to ${to} : ${info.messageId}`);
+  } catch (error) {
     console.log("Email Sending Error:", error);
 
-    throw new AppError(
-      error.message || "Failed to send email",
-      status.INTERNAL_SERVER_ERROR,
-    );
+    throw new AppError("Failed to send email", status.INTERNAL_SERVER_ERROR);
   }
 };
