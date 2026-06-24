@@ -6,7 +6,7 @@ import { AuthServices } from "./auth.service.js";
 import { tokenUtils } from "../../utils/token.js";
 import { User } from "@prisma/client";
 import { env } from "../../../config/env.js";
-import { userResponse, UserResponse } from "./auth.interface.js";
+import { userResponse } from "./auth.interface.js";
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthServices.registerUser(req.body);

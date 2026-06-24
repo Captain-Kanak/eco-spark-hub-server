@@ -2,11 +2,13 @@
 
 ### Authentication (Managed by Better Auth)
 
-| Method | Endpoint                  | Access | Description          |
-| ------ | ------------------------- | ------ | -------------------- |
-| POST   | /api/v1/auth/register     | public | register new user    |
-| POST   | /api/v1/auth/verify-email | public | verify user email    |
-| POST   | /api/v1/auth/login        | public | log in verified user |
+| Method | Endpoint                   | Access | Description                    |
+| ------ | -------------------------- | ------ | ------------------------------ |
+| POST   | /api/v1/auth/register      | public | register new user              |
+| POST   | /api/v1/auth/verify-email  | public | verify user email              |
+| POST   | /api/v1/auth/login         | public | log in verified user           |
+| GET    | /api/v1/auth//login/google | public | google login by api call       |
+| GET    | /api/v1/auth/get-me        | secure | get user data by session token |
 
 ---
 

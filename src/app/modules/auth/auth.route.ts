@@ -26,7 +26,7 @@ router.post(
 
 router.get("/get-me", authMiddleware(), AuthControllers.getMe);
 
-// router.post("/forgot-password");
+// router.post("/forget-password");
 
 // router.post("/reset-password");
 

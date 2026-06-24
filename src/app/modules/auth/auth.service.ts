@@ -1,4 +1,4 @@
-import { User, UserRole, UserStatus } from "@prisma/client";
+import { User } from "@prisma/client";
 import AppError from "../../errors/app-error.js";
 import { auth } from "../../lib/auth.js";
 import { prisma } from "../../lib/prisma.js";
