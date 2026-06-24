@@ -14,10 +14,9 @@ model Idea {
     isDeleted        Boolean    @default(false)
     categoryId       String
     userId           String
-
-    deletedAt DateTime?
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
+    deletedAt        DateTime?
+    createdAt        DateTime   @default(now())
+    updatedAt        DateTime   @updatedAt
 
     category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     user     User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -27,6 +26,6 @@ model Idea {
     payments Payment[]
 
     @@unique([title])
-    @@index([isDeleted], name: "ideas_isDeleted_idx")
-    @@map("ideas")
+    @@index([isDeleted], name: "idea_isDeleted_idx")
+    @@map("idea")
 }
