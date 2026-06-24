@@ -102,7 +102,7 @@ const loginUser = async (
     });
 
     if (!isUserExist) {
-      throw new AppError("User not found", status.NOT_FOUND);
+      throw new AppError("User not exist with this email", status.NOT_FOUND);
     }
 
     const result = await auth.api.signInEmail({
