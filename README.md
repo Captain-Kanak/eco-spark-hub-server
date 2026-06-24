@@ -4,8 +4,8 @@ A high-integrity, multi-role backend built for a specialized Environmental Innov
 
 ---
 
-- **[LIVE LINK](https://eco-spark-hub-client.vercel.app)**
-- **[CLIENT REPO LINK](https://github.com/Captain-Kanak/eco-spark-hub-client)**
+- **[LIVE](https://eco-spark-hub-client.vercel.app)**
+- **[CLIENT REPOSITORY](https://github.com/Captain-Kanak/eco-spark-hub-client)**
 
 ---
 

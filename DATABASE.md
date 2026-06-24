@@ -1,6 +1,6 @@
 # 🗄️ Database Schema
 
-**[ERD LINK](https://drive.google.com/file/d/1j3ANDqFYj20Nu6VDs8lQYnDMitSW76Z5/view)**
+**[ERD](https://drive.google.com/file/d/1j3ANDqFYj20Nu6VDs8lQYnDMitSW76Z5/view)**
 
 ### User
 
