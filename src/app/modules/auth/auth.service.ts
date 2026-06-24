@@ -5,6 +5,7 @@ import { prisma } from "../../lib/prisma.js";
 import {
   LoginUser,
   RegisterUser,
+  userResponse,
   UserResponse,
   VerifyEmail,
 } from "./auth.interface.js";
@@ -34,22 +35,7 @@ const registerUser = async (payload: RegisterUser): Promise<UserResponse> => {
       },
     });
 
-    const user: UserResponse = {
-      id: result.user.id,
-      name: result.user.name,
-      email: result.user.email,
-      emailVerified: result.user.emailVerified,
-      image: result.user.image || "",
-      role: result.user.role as UserRole,
-      status: result.user.status as UserStatus,
-      phone: result.user.phone || "",
-      address: result.user.address || "",
-      date_of_birth: result.user.date_of_birth ?? undefined,
-      createdAt: result.user.createdAt,
-      updatedAt: result.user.updatedAt,
-    };
-
-    return user;
+    return userResponse(result.user as User);
   } catch (error) {
     if (error instanceof AppError) throw error;
 
@@ -112,26 +98,11 @@ const loginUser = async (
       },
     });
 
-    const user: UserResponse = {
-      id: result.user.id,
-      name: result.user.name,
-      email: result.user.email,
-      emailVerified: result.user.emailVerified,
-      image: result.user.image || "",
-      role: result.user.role as UserRole,
-      status: result.user.status as UserStatus,
-      phone: result.user.phone || "",
-      address: result.user.address || "",
-      date_of_birth: result.user.date_of_birth ?? undefined,
-      createdAt: result.user.createdAt,
-      updatedAt: result.user.updatedAt,
-    };
-
     return {
       redirect: result.redirect,
       token: result.token,
       url: result.url,
-      user,
+      user: userResponse(result.user as User),
     };
   } catch (error) {
     if (error instanceof AppError) throw error;

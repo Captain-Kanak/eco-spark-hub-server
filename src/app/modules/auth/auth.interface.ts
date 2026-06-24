@@ -1,4 +1,4 @@
-import { UserRole, UserStatus } from "@prisma/client";
+import { User, UserRole, UserStatus } from "@prisma/client";
 
 export interface RegisterUser {
   name: string;
@@ -21,12 +21,29 @@ export interface UserResponse {
   name: string;
   email: string;
   emailVerified: boolean;
-  image?: string;
   role: UserRole;
   status: UserStatus;
-  phone?: string;
-  address?: string;
-  date_of_birth?: Date;
+  image: string | null;
+  phone: string | null;
+  address: string | null;
+  date_of_birth: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }
+
+export const userResponse = (user: User): UserResponse => {
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    emailVerified: user.emailVerified,
+    role: user.role as UserRole,
+    status: user.status as UserStatus,
+    image: user.image,
+    phone: user.phone,
+    address: user.address,
+    date_of_birth: user.date_of_birth,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  };
+};

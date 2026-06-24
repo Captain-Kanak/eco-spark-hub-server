@@ -24,7 +24,7 @@ router.post(
   AuthControllers.loginUser,
 );
 
-router.get("/me", authMiddleware(), AuthControllers.getMe);
+router.get("/get-me", authMiddleware(), AuthControllers.getMe);
 
 // router.post("/forgot-password");
 
