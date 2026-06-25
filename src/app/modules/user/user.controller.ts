@@ -4,6 +4,7 @@ import { userService } from "./user.service.js";
 import { sendResponse } from "../../utils/send-response.js";
 import status from "http-status";
 import { IQueryParams } from "../../../interfaces/query-builder.interface.js";
+import { User } from "@prisma/client";
 
 const getUsers = catchAsync(async (req: Request, res: Response) => {
   const query = req.query;
@@ -24,7 +25,7 @@ const updateProfile = catchAsync(async (req: Request, res: Response) => {
     date_of_birth: req.body?.date_of_birth && new Date(req.body?.date_of_birth),
     image: req.file?.path,
   };
-  const { id } = req.user as { id: string };
+  const { id } = req.user as User;
 
   const result = await userService.updateProfile(payload, id);
 

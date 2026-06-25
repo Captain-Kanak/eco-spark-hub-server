@@ -6,7 +6,7 @@ import {
   User,
   UserRole,
 } from "@prisma/client";
-import { ICreateIdea, IUpdateIdea } from "./idea.interface.js";
+import { CreateIdea, UpdateIdea } from "./idea.interface.js";
 import AppError from "../../errors/app-error.js";
 import status from "http-status";
 import { prisma } from "../../lib/prisma.js";
@@ -18,7 +18,7 @@ import { QueryBuilder } from "../../utils/query-builder.js";
 import { ideaFilterableFields, ideaSearchableFields } from "./idea.constant.js";
 
 const createIdea = async (
-  payload: ICreateIdea,
+  payload: CreateIdea,
   userId: string,
 ): Promise<Idea> => {
   try {
@@ -30,11 +30,8 @@ const createIdea = async (
     });
 
     return idea;
-  } catch (error: any) {
-    throw new AppError(
-      error.message || "Failed to create idea",
-      status.INTERNAL_SERVER_ERROR,
-    );
+  } catch (error) {
+    throw new AppError("Failed to create idea", status.INTERNAL_SERVER_ERROR);
   }
 };
 
@@ -62,9 +59,9 @@ const getPendingIdeas = async (
       .execute();
 
     return result;
-  } catch (error: any) {
+  } catch (error) {
     throw new AppError(
-      error.message || "Failed to get pending ideas",
+      "Failed to get pending ideas",
       status.INTERNAL_SERVER_ERROR,
     );
   }
@@ -234,48 +231,59 @@ const getIdeaById = async (
   id: string,
   userId?: string,
 ): Promise<Partial<Idea>> => {
-  const idea = await prisma.idea.findUnique({
-    where: { id, status: IdeaStatus.APPROVED },
-  });
+  try {
+    const idea = await prisma.idea.findUnique({
+      where: { id, status: IdeaStatus.APPROVED },
+      include: { user: true },
+    });
 
-  if (!idea) {
-    throw new AppError("Idea not found", status.NOT_FOUND);
-  }
+    if (!idea) {
+      throw new AppError("Idea not found", status.NOT_FOUND);
+    }
 
-  if (!idea.isPaid) {
+    if (!idea.isPaid) {
+      return idea;
+    }
+
+    const isOwner = idea.userId === userId;
+
+    if (isOwner) {
+      return idea;
+    }
+
+    if (!userId) {
+      throw new AppError(
+        "Please login to access this idea",
+        status.UNAUTHORIZED,
+      );
+    }
+
+    const payment = await prisma.payment.findFirst({
+      where: {
+        ideaId: id,
+        userId,
+      },
+    });
+
+    if (!payment) {
+      return {
+        id: idea.id,
+        price: idea.price,
+      };
+    }
+
     return idea;
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+
+    throw new AppError("Failed to get idea", status.INTERNAL_SERVER_ERROR);
   }
-
-  const isOwner = idea.userId === userId;
-
-  if (isOwner) {
-    return idea;
-  }
-
-  if (!userId) {
-    throw new AppError("Please login to access this idea", status.UNAUTHORIZED);
-  }
-
-  const payment = await prisma.payment.findFirst({
-    where: {
-      ideaId: id,
-      userId,
-    },
-  });
-
-  if (!payment) {
-    return {
-      id: idea.id,
-      price: idea.price,
-    };
-  }
-
-  return idea;
 };
 
 const updateIdeaById = async (
   id: string,
-  payload: IUpdateIdea,
+  payload: UpdateIdea,
+  userId: string,
 ): Promise<Idea> => {
   try {
     const idea = await prisma.idea.findUnique({
@@ -288,26 +296,33 @@ const updateIdeaById = async (
       throw new AppError("Idea not found", status.NOT_FOUND);
     }
 
+    if (idea.userId !== userId) {
+      throw new AppError(
+        "You are not authorized to update this idea",
+        status.UNAUTHORIZED,
+      );
+    }
+
+    if (idea.isDeleted) {
+      throw new AppError("Idea already deleted", status.BAD_REQUEST);
+    }
+
     const updatedIdea = await prisma.idea.update({
       where: {
         id,
       },
-      data: {
-        ...payload,
-        price: payload.isPaid ? Number(payload.price) : 0.0,
-      },
+      data: payload,
     });
 
     return updatedIdea;
-  } catch (error: any) {
-    throw new AppError(
-      error.message || "Failed to update idea",
-      status.INTERNAL_SERVER_ERROR,
-    );
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+
+    throw new AppError("Failed to update idea", status.INTERNAL_SERVER_ERROR);
   }
 };
 
-const updateIdeaStatus = async (id: string, IdeaStatus: IdeaStatus) => {
+const updateIdeaStatus = async (id: string, ideaStatus: IdeaStatus) => {
   try {
     const idea = await prisma.idea.findUnique({
       where: {
@@ -319,25 +334,38 @@ const updateIdeaStatus = async (id: string, IdeaStatus: IdeaStatus) => {
       throw new AppError("Idea not found", status.NOT_FOUND);
     }
 
+    if (idea.status === ideaStatus) {
+      throw new AppError(
+        `Idea status already ${ideaStatus}`,
+        status.BAD_REQUEST,
+      );
+    }
+
+    if (idea.isDeleted) {
+      throw new AppError("Idea already deleted", status.BAD_REQUEST);
+    }
+
     const updatedIdea = await prisma.idea.update({
       where: {
         id,
       },
       data: {
-        status: IdeaStatus,
+        status: ideaStatus,
       },
     });
 
     return updatedIdea;
-  } catch (error: any) {
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+
     throw new AppError(
-      error.message || "Failed to update idea status",
+      "Failed to update idea status",
       status.INTERNAL_SERVER_ERROR,
     );
   }
 };
 
-const deleteIdeaById = async (id: string, user: User): Promise<Idea> => {
+const deleteIdeaById = async (id: string, user: User): Promise<void> => {
   try {
     const isAdmin = user.role === UserRole.ADMIN;
 
@@ -362,7 +390,7 @@ const deleteIdeaById = async (id: string, user: User): Promise<Idea> => {
       );
     }
 
-    const deletedIdea = await prisma.idea.update({
+    await prisma.idea.update({
       where: {
         id,
       },
@@ -371,13 +399,10 @@ const deleteIdeaById = async (id: string, user: User): Promise<Idea> => {
         deletedAt: new Date(),
       },
     });
+  } catch (error) {
+    if (error instanceof AppError) throw error;
 
-    return deletedIdea;
-  } catch (error: any) {
-    throw new AppError(
-      error.message || "Failed to delete idea",
-      status.INTERNAL_SERVER_ERROR,
-    );
+    throw new AppError("Failed to delete idea", status.INTERNAL_SERVER_ERROR);
   }
 };
 

@@ -9,13 +9,13 @@ import { User } from "@prisma/client";
 const createIdea = catchAsync(async (req: Request, res: Response) => {
   const payload = {
     ...req.body,
-    isPaid: req.body?.isPaid === "true" && Boolean(req.body?.isPaid),
+    isPaid: req.body?.isPaid && Boolean(req.body?.isPaid),
     price: req.body?.price && Number(req.body?.price),
     image: req.file?.path,
   };
-  const { id } = req.user!;
+  const { id } = req.user as User;
 
-  const result = await ideaServices.createIdea(payload, id as string);
+  const result = await ideaServices.createIdea(payload, id);
 
   sendResponse(res, {
     statusCode: status.CREATED,
@@ -104,14 +104,20 @@ const getIdeaById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateIdeaById = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user as User;
   const id = req.params.id;
   const payload = {
     ...req.body,
-    isPaid: req.body?.isPaid === "true" ? true : false,
+    isPaid: req.body?.isPaid && Boolean(req.body?.isPaid),
+    price: req.body?.price && Number(req.body?.price),
     image: req.file?.path,
   };
 
-  const result = await ideaServices.updateIdeaById(id as string, payload);
+  const result = await ideaServices.updateIdeaById(
+    id as string,
+    payload,
+    user.id,
+  );
 
   sendResponse(res, {
     statusCode: status.OK,
@@ -123,9 +129,9 @@ const updateIdeaById = catchAsync(async (req: Request, res: Response) => {
 
 const updateIdeaStatus = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
-  const { status: IdeaStatus } = req.body;
+  const { status: ideaStatus } = req.body;
 
-  const result = await ideaServices.updateIdeaStatus(id as string, IdeaStatus);
+  const result = await ideaServices.updateIdeaStatus(id as string, ideaStatus);
 
   sendResponse(res, {
     statusCode: status.OK,
@@ -139,13 +145,12 @@ const deleteIdeaById = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   const user = req.user;
 
-  const result = await ideaServices.deleteIdeaById(id as string, user as User);
+  await ideaServices.deleteIdeaById(id as string, user as User);
 
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
     message: "Idea deleted successfully",
-    data: result,
   });
 });
 

@@ -1,4 +1,4 @@
-export interface ICreateIdea {
+export interface CreateIdea {
   title: string;
   description: string;
   problemStatement: string;
@@ -9,7 +9,7 @@ export interface ICreateIdea {
   categoryId: string;
 }
 
-export interface IUpdateIdea {
+export interface UpdateIdea {
   title?: string;
   description?: string;
   image?: string;
