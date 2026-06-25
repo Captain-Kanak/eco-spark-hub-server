@@ -1,10 +1,10 @@
-export interface ICreateCategory {
+export interface CreateCategory {
   name: string;
-  description?: string;
   icon?: string;
+  description?: string;
 }
 
-export interface IUpdateCategory {
+export interface UpdateCategory {
   name?: string;
   icon?: string;
   description?: string;

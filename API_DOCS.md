@@ -26,11 +26,11 @@
 
 | Method | Endpoint               | Access | Description                         |
 | ------ | ---------------------- | ------ | ----------------------------------- |
-| POST   | /api/v1/categories     | ADMIN  | Create Category                     |
-| GET    | /api/v1/categories     | Public | Get all Categories                  |
-| GET    | /api/v1/categories/:id | Public | Get Category by id                  |
-| PATCH  | /api/v1/categories/:id | ADMIN  | Update Category by id               |
-| DELETE | /api/v1/categories/:id | ADMIN  | Delete Category by id (soft delete) |
+| POST   | /api/v1/categories     | ADMIN  | create a new category               |
+| GET    | /api/v1/categories     | PUBLIC | get all categories                  |
+| GET    | /api/v1/categories/:id | PUBLIC | get category by id                  |
+| PATCH  | /api/v1/categories/:id | ADMIN  | update category by id               |
+| DELETE | /api/v1/categories/:id | ADMIN  | delete category by id (soft delete) |
 
 ---
 

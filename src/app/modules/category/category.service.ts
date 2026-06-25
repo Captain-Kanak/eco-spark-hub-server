@@ -1,6 +1,6 @@
 import status from "http-status";
 import AppError from "../../errors/app-error.js";
-import { ICreateCategory, IUpdateCategory } from "./category.interface.js";
+import { CreateCategory, UpdateCategory } from "./category.interface.js";
 import { prisma } from "../../lib/prisma.js";
 import { Category, Prisma } from "@prisma/client";
 import {
@@ -10,16 +10,16 @@ import {
 import { QueryBuilder } from "../../utils/query-builder.js";
 import { categorySearchableFields } from "./category.constant.js";
 
-const createCategory = async (payload: ICreateCategory): Promise<Category> => {
+const createCategory = async (payload: CreateCategory): Promise<Category> => {
   try {
     const category = await prisma.category.create({
       data: payload,
     });
 
     return category;
-  } catch (error: any) {
+  } catch (error) {
     throw new AppError(
-      error.message || "Failed to create category",
+      "Failed to create category",
       status.INTERNAL_SERVER_ERROR,
     );
   }
@@ -79,7 +79,7 @@ const getCategoryById = async (id: string): Promise<Category | null> => {
 
 const updateCategoryById = async (
   id: string,
-  payload: IUpdateCategory,
+  payload: UpdateCategory,
 ): Promise<Category | null> => {
   try {
     const isCategoryExist = await prisma.category.findUnique({
