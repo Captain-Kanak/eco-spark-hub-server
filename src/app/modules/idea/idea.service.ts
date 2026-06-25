@@ -71,8 +71,6 @@ const getIdeas = async (
   query: IQueryParams,
   user?: User,
 ): Promise<QueryResult<Partial<Idea>>> => {
-  const userId = user?.id;
-
   try {
     const queryBuilder = new QueryBuilder<
       Idea,
@@ -104,10 +102,10 @@ const getIdeas = async (
     // Check if the user has purchased the idea
     let purchasedIdeaIds = new Set<string>();
 
-    if (userId) {
+    if (user?.id) {
       const payments = await prisma.payment.findMany({
         where: {
-          userId,
+          userId: user.id,
         },
         select: {
           ideaId: true,
@@ -125,7 +123,7 @@ const getIdeas = async (
       }
 
       const isAdmin = user?.role === UserRole.ADMIN;
-      const isOwner = idea.userId === userId;
+      const isOwner = idea.userId === user?.id;
       const hasPurchased = purchasedIdeaIds.has(idea.id);
 
       if (isAdmin || isOwner || hasPurchased) {
@@ -153,11 +151,10 @@ const getIdeas = async (
       data: sanitizedIdeas,
       meta: result.meta,
     };
-  } catch (error: any) {
-    throw new AppError(
-      error.message || "Failed to get ideas",
-      status.INTERNAL_SERVER_ERROR,
-    );
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+
+    throw new AppError("Failed to get ideas", status.INTERNAL_SERVER_ERROR);
   }
 };
 
@@ -187,11 +184,8 @@ const getMyIdeas = async (
       .execute();
 
     return result;
-  } catch (error: any) {
-    throw new AppError(
-      error.message || "Failed to get my ideas",
-      status.INTERNAL_SERVER_ERROR,
-    );
+  } catch (error) {
+    throw new AppError("Failed to get my ideas", status.INTERNAL_SERVER_ERROR);
   }
 };
 
@@ -219,11 +213,8 @@ const getPurchasedIdeas = async (
       .execute();
 
     return result;
-  } catch (error: any) {
-    throw new AppError(
-      error.message || "Failed to get my ideas",
-      status.INTERNAL_SERVER_ERROR,
-    );
+  } catch (error) {
+    throw new AppError("Failed to get my ideas", status.INTERNAL_SERVER_ERROR);
   }
 };
 
