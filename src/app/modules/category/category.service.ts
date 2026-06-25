@@ -69,11 +69,10 @@ const getCategoryById = async (id: string): Promise<Category | null> => {
     }
 
     return category;
-  } catch (error: any) {
-    throw new AppError(
-      error.message || "Failed to get category",
-      status.INTERNAL_SERVER_ERROR,
-    );
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+
+    throw new AppError("Failed to get category", status.INTERNAL_SERVER_ERROR);
   }
 };
 
@@ -100,15 +99,17 @@ const updateCategoryById = async (
     });
 
     return category;
-  } catch (error: any) {
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+
     throw new AppError(
-      error.message || "Failed to update category",
+      "Failed to update category",
       status.INTERNAL_SERVER_ERROR,
     );
   }
 };
 
-const deleteCategoryById = async (id: string): Promise<Category> => {
+const deleteCategoryById = async (id: string): Promise<void> => {
   try {
     const isCategoryExist = await prisma.category.findUnique({
       where: {
@@ -120,11 +121,11 @@ const deleteCategoryById = async (id: string): Promise<Category> => {
       throw new AppError("Category not found", status.NOT_FOUND);
     }
 
-    if (isCategoryExist.isDeleted === true) {
+    if (isCategoryExist.isDeleted) {
       throw new AppError("Category already deleted", status.BAD_REQUEST);
     }
 
-    const category = await prisma.category.update({
+    await prisma.category.update({
       where: {
         id,
       },
@@ -133,11 +134,11 @@ const deleteCategoryById = async (id: string): Promise<Category> => {
         deletedAt: new Date(),
       },
     });
+  } catch (error) {
+    if (error instanceof AppError) throw error;
 
-    return category;
-  } catch (error: any) {
     throw new AppError(
-      error.message || "Failed to delete category",
+      "Failed to delete category",
       status.INTERNAL_SERVER_ERROR,
     );
   }
