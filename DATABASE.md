@@ -2,25 +2,6 @@
 
 **[ERD LINK](https://drive.google.com/file/d/1j3ANDqFYj20Nu6VDs8lQYnDMitSW76Z5/view)**
 
-### IdeaStatus
-
-| Value         | Description                    |
-| ------------- | ------------------------------ |
-| `DRAFT`       | Idea is being prepared         |
-| `PUBLISHED`   | Visible to everyone            |
-| `IN_PROGRESS` | Currently under implementation |
-| `COMPLETED`   | Successfully completed         |
-| `REJECTED`    | Rejected by moderators         |
-
-### FundingStatus
-
-| Value      | Description         |
-| ---------- | ------------------- |
-| `PENDING`  | Waiting for payment |
-| `SUCCESS`  | Payment completed   |
-| `FAILED`   | Payment failed      |
-| `REFUNDED` | Payment refunded    |
-
 ## User (Manage by Better Auth)
 
 | Field         | Description      |
@@ -50,8 +31,8 @@
 
 | Value    | Description   |
 | -------- | ------------- |
-| ACTIVE   | active user   |
-| INACTIVE | inactive user |
+| ACTIVE   | Active user   |
+| INACTIVE | Inactive user |
 
 ## Category
 
@@ -68,26 +49,39 @@
 
 ## Idea
 
-| Field            | Description                   |
-| ---------------- | ----------------------------- |
-| id               | UUID (PK)                     |
-| title            | String (unique)               |
-| slug             | String (unique)               |
-| description      | String                        |
-| problemStatement | String                        |
-| solution         | String                        |
-| expectedImpact   | String                        |
-| estimatedBudget  | Int                           |
-| location         | String                        |
-| image            | String?                       |
-| status           | PENDING / APPROVED / REJECTED |
-| likes            | Int                           |
-| views            | Int                           |
-| categoryId       | String (FK)                   |
-| userId           | String (FK)                   |
-| createdAt        | DateTime (now())              |
-| updatedAt        | DateTime                      |
-| deletedAt        | DateTime?                     |
+| Field            | Description      |
+| ---------------- | ---------------- |
+| id               | UUID (PK)        |
+| title            | String (unique)  |
+| slug             | String (unique)  |
+| description      | String           |
+| problemStatement | String           |
+| solution         | String           |
+| expectedImpact   | String           |
+| estimatedBudget  | Int              |
+| location         | String           |
+| image            | String?          |
+| status           | IdeaStatus       |
+| likes            | Int              |
+| views            | Int              |
+| categoryId       | String (FK)      |
+| userId           | String (FK)      |
+| createdAt        | DateTime (now()) |
+| updatedAt        | DateTime         |
+| deletedAt        | DateTime?        |
+
+**IdeaStatus**
+
+| Value       | Description                    |
+| ----------- | ------------------------------ |
+| DRAFT       | Idea is being prepared         |
+| PENDING     | Idea is pending for review     |
+| PUBLISHED   | Visible to everyone            |
+| FUNDING     | Idea is available for funding  |
+| IN_PROGRESS | Currently under implementation |
+| COMPLETED   | Successfully completed         |
+| ARCHIVED    | Idea into archived list        |
+| REJECTED    | Rejected by moderators         |
 
 ## Payment
 
