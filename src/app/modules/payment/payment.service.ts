@@ -45,9 +45,11 @@ const createPaymentIntent = async (
     });
 
     return paymentIntent.client_secret as string;
-  } catch (error: any) {
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+
     throw new AppError(
-      error.message || "Failed to create payment intent",
+      "Failed to create payment intent",
       status.INTERNAL_SERVER_ERROR,
     );
   }
@@ -130,11 +132,10 @@ const getSales = async (
       .execute();
 
     return result;
-  } catch (error: any) {
-    throw new AppError(
-      error.message || "Failed to get sales",
-      status.INTERNAL_SERVER_ERROR,
-    );
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+
+    throw new AppError("Failed to get sales", status.INTERNAL_SERVER_ERROR);
   }
 };
 
@@ -166,11 +167,10 @@ const getAllPayments = async (
       .execute();
 
     return result;
-  } catch (error: any) {
-    throw new AppError(
-      error.message || "Failed to get payments",
-      status.INTERNAL_SERVER_ERROR,
-    );
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+
+    throw new AppError("Failed to get payments", status.INTERNAL_SERVER_ERROR);
   }
 };
 

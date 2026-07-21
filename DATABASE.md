@@ -2,62 +2,94 @@
 
 **[ERD LINK](https://drive.google.com/file/d/1j3ANDqFYj20Nu6VDs8lQYnDMitSW76Z5/view)**
 
-### User
+### IdeaStatus
 
-| Field         | Description       |
-| ------------- | ----------------- |
-| id            | UUID (PK)         |
-| name          | String            |
-| email         | String (unique)   |
-| emailVerified | Boolean (false)   |
-| image         | String?           |
-| role          | ADMIN / MEMBER    |
-| status        | ACTIVE / DEACTIVE |
-| phone         | String?           |
-| address       | String?           |
-| date_of_birth | DateTime?         |
-| isDeleted     | Boolean (false)   |
-| deletedAt     | DateTime?         |
-| createdAt     | DateTime (now())  |
-| updatedAt     | DateTime          |
+| Value         | Description                    |
+| ------------- | ------------------------------ |
+| `DRAFT`       | Idea is being prepared         |
+| `PUBLISHED`   | Visible to everyone            |
+| `IN_PROGRESS` | Currently under implementation |
+| `COMPLETED`   | Successfully completed         |
+| `REJECTED`    | Rejected by moderators         |
 
-### Category
+### FundingStatus
+
+| Value      | Description         |
+| ---------- | ------------------- |
+| `PENDING`  | Waiting for payment |
+| `SUCCESS`  | Payment completed   |
+| `FAILED`   | Payment failed      |
+| `REFUNDED` | Payment refunded    |
+
+## User (Manage by Better Auth)
+
+| Field         | Description      |
+| ------------- | ---------------- |
+| id            | UUID (PK)        |
+| name          | String           |
+| email         | String (unique)  |
+| emailVerified | Boolean (false)  |
+| image         | String?          |
+| phone         | String?          |
+| address       | String?          |
+| dateOfBirth   | DateTime?        |
+| role          | UserRole         |
+| status        | UserStatus       |
+| createdAt     | DateTime (now()) |
+| updatedAt     | DateTime         |
+| deletedAt     | DateTime?        |
+
+**UserRole**
+
+| Value | Description            |
+| ----- | ---------------------- |
+| ADMIN | Platform administrator |
+| USER  | Regular user           |
+
+**UserStatus**
+
+| Value    | Description   |
+| -------- | ------------- |
+| ACTIVE   | active user   |
+| INACTIVE | inactive user |
+
+## Category
 
 | Field       | Description      |
 | ----------- | ---------------- |
 | id          | UUID (PK)        |
 | name        | String (unique)  |
+| slug        | String (unique)  |
 | icon        | String?          |
 | description | String?          |
-| isDeleted   | Boolean (false)  |
-| deletedAt   | DateTime?        |
 | createdAt   | DateTime (now()) |
 | updatedAt   | DateTime         |
+| deletedAt   | DateTime?        |
 
-### Idea
+## Idea
 
 | Field            | Description                   |
 | ---------------- | ----------------------------- |
 | id               | UUID (PK)                     |
 | title            | String (unique)               |
+| slug             | String (unique)               |
 | description      | String                        |
 | problemStatement | String                        |
 | solution         | String                        |
+| expectedImpact   | String                        |
+| estimatedBudget  | Int                           |
+| location         | String                        |
 | image            | String?                       |
-| isPaid           | Boolean (false)               |
-| price            | Float?                        |
 | status           | PENDING / APPROVED / REJECTED |
-| adminFeedback    | String?                       |
-| upvotes          | Int                           |
-| downvotes        | Int                           |
+| likes            | Int                           |
+| views            | Int                           |
 | categoryId       | String (FK)                   |
 | userId           | String (FK)                   |
-| isDeleted        | Boolean (false)               |
-| deletedAt        | DateTime?                     |
 | createdAt        | DateTime (now())              |
 | updatedAt        | DateTime                      |
+| deletedAt        | DateTime?                     |
 
-### Payment
+## Payment
 
 | Field         | Description      |
 | ------------- | ---------------- |

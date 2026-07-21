@@ -1,4 +1,4 @@
-# 🌱 EcoSpark-Hub – SERVER
+# 🌱 Eco Spark Hub – SERVER
 
 A high-integrity, multi-role backend built for a specialized Environmental Innovation Marketplace. This system enables Admins to curate eco-categories, Innovators to list sustainable solutions, and Supporters to fund projects and leave impact reviews with real-time tracking of project availability.
 
@@ -137,8 +137,10 @@ pnpm dev
 
 ## 👤 Author
 
-- Kanak Ray
-- Software Engineer
+**Kanak Ray**
+
+> Software Engineer
+
 - (TypeScript | Express.js | PostgreSQL | Docker | GO | Echo)
 
 ---
