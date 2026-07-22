@@ -3,8 +3,8 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { UserRole, UserStatus } from "@prisma/client";
 import ms, { StringValue } from "ms";
 import { prisma } from "./prisma.js";
-import { env } from "../../config/env.js";
 import { bearer, emailOTP } from "better-auth/plugins";
+import { env } from "../config/env.js";
 import { sendEmail } from "../utils/email.js";
 
 export const auth = betterAuth({
@@ -142,14 +142,14 @@ export const auth = betterAuth({
         type: "string",
         required: false,
       },
-      date_of_birth: {
+      dateOfBirth: {
         type: "date",
         required: false,
       },
-      isDeleted: {
-        type: "boolean",
-        required: false,
-        defaultValue: false,
+      ecoPoints: {
+        type: "number",
+        required: true,
+        defaultValue: 0,
       },
       deletedAt: {
         type: "date",

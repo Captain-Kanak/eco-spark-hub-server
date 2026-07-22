@@ -23,10 +23,10 @@
 
 ### UserRole
 
-| Value | Description                                                                |
-| ----- | -------------------------------------------------------------------------- |
-| ADMIN | Platform administrator with full system access.                            |
-| USER  | Registered user who can create ideas, donate, and participate in projects. |
+| Value  | Description                                                                |
+| ------ | -------------------------------------------------------------------------- |
+| ADMIN  | Platform administrator with full system access.                            |
+| MEMBER | Registered user who can create ideas, donate, and participate in projects. |
 
 ### UserStatus
 
