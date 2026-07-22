@@ -59,13 +59,13 @@ The system utilizes Better Auth for modern security:
 
 ## 🗄️ Database Schema
 
-- **[Details](https://github.com/Captain-Kanak/eco-spark-hub-server/blob/main/DATABASE.md)**
+- **[DATABASE.md](https://github.com/Captain-Kanak/eco-spark-hub-server/blob/main/DATABASE.md)**
 
 ---
 
 ## 🔗 API Endpoints
 
-- **[Details](https://github.com/Captain-Kanak/eco-spark-hub-server/blob/main/API_DOCS.md)**
+- **[API_DOCS.md](https://github.com/Captain-Kanak/eco-spark-hub-server/blob/main/API_DOCS.md)**
 
 ---
 
