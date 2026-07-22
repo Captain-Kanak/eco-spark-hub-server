@@ -57,8 +57,6 @@
 | Field            | Type             | Description                                   |
 | ---------------- | ---------------- | --------------------------------------------- |
 | id               | UUID (PK)        | Unique identifier for the idea.               |
-| categoryId       | UUID (FK)        | References the associated category.           |
-| userId           | UUID (FK)        | References the creator of the idea.           |
 | title            | String           | Title of the environmental idea.              |
 | slug             | String (Unique)  | URL-friendly unique identifier.               |
 | coverImage       | String?          | Cover image URL for the idea.                 |
@@ -66,13 +64,15 @@
 | problemStatement | Text             | Environmental problem the idea aims to solve. |
 | proposedSolution | Text             | Proposed solution for addressing the problem. |
 | expectedImpact   | Text             | Expected environmental and social impact.     |
+| location         | String           | Project implementation location.              |
 | estimatedBudget  | Decimal (0)      | Estimated implementation cost in USD.         |
 | fundingGoal      | Decimal (0)      | Total funding goal in USD.                    |
 | currentFunding   | Decimal (0)      | Total amount raised in USD.                   |
-| location         | String           | Project implementation location.              |
 | status           | IdeaStatus       | Current lifecycle status of the idea.         |
 | likes            | Int (0)          | Total number of likes.                        |
 | views            | Int (0)          | Total number of views.                        |
+| categoryId       | UUID (FK)        | References the associated category.           |
+| userId           | UUID (FK)        | References the creator of the idea.           |
 | createdAt        | DateTime (now()) | Timestamp when the idea was created.          |
 | updatedAt        | DateTime         | Timestamp of the last update.                 |
 | deletedAt        | DateTime?        | Soft delete timestamp (if applicable).        |
@@ -96,11 +96,11 @@
 | Field              | Type             | Description                                      |
 | ------------------ | ---------------- | ------------------------------------------------ |
 | id                 | UUID (PK)        | Unique identifier for the progress update.       |
-| ideaId             | UUID (FK)        | References the related idea.                     |
 | title              | String           | Title of the update.                             |
 | content            | Text             | Detailed progress description.                   |
 | progressPercentage | Int?             | Overall project progress (0–100).                |
-| createdBy          | UUID (FK)        | References the creator who published the update. |
+| ideaId             | UUID (FK)        | References the related idea.                     |
+| userId             | UUID (FK)        | References the creator who published the update. |
 | createdAt          | DateTime (now()) | Timestamp when the update was published.         |
 | updatedAt          | DateTime         | Timestamp of the last update.                    |
 | deletedAt          | DateTime?        | Soft delete timestamp (if applicable).           |
@@ -112,9 +112,11 @@
 | Field        | Type             | Description                            |
 | ------------ | ---------------- | -------------------------------------- |
 | id           | UUID (PK)        | Unique identifier for the image.       |
-| ideaUpdateId | UUID (FK)        | References the related idea update.    |
 | imageUrl     | String           | Uploaded image URL.                    |
+| ideaUpdateId | UUID (FK)        | References the related idea update.    |
 | createdAt    | DateTime (now()) | Timestamp when the image was uploaded. |
+| updatedAt    | DateTime         | Timestamp of the last update.          |
+| deletedAt    | DateTime?        | Soft delete timestamp (if applicable). |
 
 ---
 

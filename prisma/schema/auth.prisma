@@ -23,6 +23,7 @@ model User {
     accounts Account[]
 
     @@unique([email])
+    @@index([deletedAt])
     @@map("user")
 }
 

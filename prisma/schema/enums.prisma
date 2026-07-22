@@ -9,8 +9,12 @@ enum UserStatus {
 }
 
 enum IdeaStatus {
-    PENDING
-    APPROVED
+    DRAFT
+    ON_REVIEW
+    PUBLISHED
+    IN_PROGRESS
+    COMPLETED
+    ARCHIVED
     REJECTED
 }
 

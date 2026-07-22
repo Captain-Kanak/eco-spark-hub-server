@@ -1,16 +1,17 @@
 model Category {
     id          String    @id @default(uuid(7))
     name        String    @db.VarChar(255)
+    slug        String    @db.VarChar(255)
     icon        String?   @db.Text
     description String?   @db.Text
-    isDeleted   Boolean   @default(false)
-    deletedAt   DateTime?
     createdAt   DateTime  @default(now())
     updatedAt   DateTime  @updatedAt
+    deletedAt   DateTime?
 
     ideas Idea[]
 
     @@unique([name])
-    @@index([isDeleted], name: "category_isDeleted_idx")
+    @@unique([slug])
+    @@index([deletedAt])
     @@map("category")
 }
