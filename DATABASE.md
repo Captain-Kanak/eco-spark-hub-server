@@ -16,6 +16,7 @@
 | dateOfBirth   | DateTime?        |
 | role          | UserRole         |
 | status        | UserStatus       |
+| ecoPoints     | Int (0)          |
 | createdAt     | DateTime (now()) |
 | updatedAt     | DateTime         |
 | deletedAt     | DateTime?        |
@@ -54,47 +55,66 @@
 | id               | UUID (PK)        |
 | title            | String (unique)  |
 | slug             | String (unique)  |
+| image            | String?          |
 | description      | String           |
 | problemStatement | String           |
-| solution         | String           |
+| proposedSolution | String           |
 | expectedImpact   | String           |
-| estimatedBudget  | Int              |
+| estimatedBudget  | Int (0)          |
+| fundingGoal      | Int (0)          |
+| currentFunding   | Int (0)          |
 | location         | String           |
-| image            | String?          |
 | status           | IdeaStatus       |
 | likes            | Int              |
 | views            | Int              |
-| categoryId       | String (FK)      |
-| userId           | String (FK)      |
+| categoryId       | UUID (FK)        |
+| userId           | UUID (FK)        |
 | createdAt        | DateTime (now()) |
 | updatedAt        | DateTime         |
 | deletedAt        | DateTime?        |
 
 **IdeaStatus**
 
-| Value       | Description                    |
-| ----------- | ------------------------------ |
-| DRAFT       | Idea is being prepared         |
-| PENDING     | Idea is pending for review     |
-| PUBLISHED   | Visible to everyone            |
-| FUNDING     | Idea is available for funding  |
-| IN_PROGRESS | Currently under implementation |
-| COMPLETED   | Successfully completed         |
-| ARCHIVED    | Idea into archived list        |
-| REJECTED    | Rejected by moderators         |
+| Value       | Description                      |
+| ----------- | -------------------------------- |
+| DRAFT       | Idea is being prepared           |
+| ON_REVIEW   | Idea is pending for admin review |
+| PUBLISHED   | Visible to everyone              |
+| FUNDING     | Idea is available for funding    |
+| IN_PROGRESS | Currently under implementation   |
+| COMPLETED   | Successfully completed           |
+| ARCHIVED    | Idea into archived list          |
+| REJECTED    | Rejected by moderators           |
 
-## Payment
+## IdeaImage
+
+| Field     | Description      |
+| --------- | ---------------- |
+| id        | UUID (PK)        |
+| ideaId    | UUID (FK)        |
+| url       | String           |
+| createdAt | DateTime (now()) |
+| updatedAt | DateTime         |
+| deletedAt | DateTime?        |
+
+## Donation
 
 | Field         | Description      |
 | ------------- | ---------------- |
 | id            | UUID (PK)        |
+| ideaId        | UUID (FK)        |
+| userId        | UUID (FK)        |
 | amount        | Float            |
-| transactionId | String           |
-| status        | PAID / UNPAID    |
 | paymentMethod | String           |
-| ideaId        | String (FK)      |
-| userId        | String (FK)      |
-| isDeleted     | Boolean (false)  |
-| deletedAt     | DateTime?        |
+| transactionId | String           |
+| status        | PaymentStatus    |
 | createdAt     | DateTime (now()) |
 | updatedAt     | DateTime         |
+| deletedAt     | DateTime?        |
+
+**PaymentStatus**
+
+| Value  | Description |
+| ------ | ----------- |
+| PAID   | paid        |
+| UNPAID | unpaid      |
