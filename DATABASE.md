@@ -52,23 +52,23 @@
 
 | Field            | Description      |
 | ---------------- | ---------------- |
-| id               | UUID (PK)        |
-| title            | String (unique)  |
-| slug             | String (unique)  |
-| image            | String?          |
-| description      | String           |
-| problemStatement | String           |
-| proposedSolution | String           |
-| expectedImpact   | String           |
-| estimatedBudget  | Int (0)          |
-| fundingGoal      | Int (0)          |
-| currentFunding   | Int (0)          |
-| location         | String           |
+| id               | uuid (PK)        |
+| title            | string (unique)  |
+| slug             | string (unique)  |
+| image            | string?          |
+| description      | string           |
+| problemStatement | string           |
+| proposedSolution | string           |
+| expectedImpact   | string           |
+| estimatedBudget  | int (0)          |
+| fundingGoal      | int (0)          |
+| currentFunding   | int (0)          |
+| location         | string           |
 | status           | IdeaStatus       |
-| likes            | Int              |
-| views            | Int              |
-| categoryId       | UUID (FK)        |
-| userId           | UUID (FK)        |
+| likes            | int              |
+| views            | int              |
+| categoryId       | uuid (FK)        |
+| userId           | uuid (FK)        |
 | createdAt        | DateTime (now()) |
 | updatedAt        | DateTime         |
 | deletedAt        | DateTime?        |
@@ -80,7 +80,6 @@
 | DRAFT       | Idea is being prepared           |
 | ON_REVIEW   | Idea is pending for admin review |
 | PUBLISHED   | Visible to everyone              |
-| FUNDING     | Idea is available for funding    |
 | IN_PROGRESS | Currently under implementation   |
 | COMPLETED   | Successfully completed           |
 | ARCHIVED    | Idea into archived list          |
@@ -99,22 +98,37 @@
 
 ## Donation
 
-| Field         | Description      |
-| ------------- | ---------------- |
-| id            | UUID (PK)        |
-| ideaId        | UUID (FK)        |
-| userId        | UUID (FK)        |
-| amount        | Float            |
-| paymentMethod | String           |
-| transactionId | String           |
-| status        | PaymentStatus    |
-| createdAt     | DateTime (now()) |
-| updatedAt     | DateTime         |
-| deletedAt     | DateTime?        |
+| Field            | Type             | Description                                                        |
+| ---------------- | ---------------- | ------------------------------------------------------------------ |
+| id               | uuid (PK)        | Unique identifier for the donation.                                |
+| ideaId           | uuid (FK)        | References the idea receiving the donation.                        |
+| userId           | uuid (FK)        | References the user who made the donation.                         |
+| originalAmount   | Decimal          | Amount donated in the donor's selected currency.                   |
+| originalCurrency | String           | ISO 4217 currency code (e.g., USD, BDT, EUR).                      |
+| exchangeRate     | Decimal          | Exchange rate used to convert the donation into the base currency. |
+| baseAmount       | Decimal          | Converted donation amount in the platform's base currency (USD).   |
+| baseCurrency     | String           | Platform base currency (always `USD`).                             |
+| gateway          | PaymentGateway   | Payment gateway used to process the donation.                      |
+| paymentMethod    | String           | Payment method used (e.g., Visa, bKash, Nagad).                    |
+| transactionId    | String           | Transaction ID returned by the payment gateway.                    |
+| status           | PaymentStatus    | Current payment status.                                            |
+| createdAt        | DateTime (now()) | Timestamp when the donation record was created.                    |
+| updatedAt        | DateTime         | Timestamp of the last update.                                      |
+| deletedAt        | DateTime?        | Soft delete timestamp (if applicable).                             |
 
-**PaymentStatus**
+### PaymentGateway
 
-| Value  | Description |
-| ------ | ----------- |
-| PAID   | paid        |
-| UNPAID | unpaid      |
+| Value      | Description                           |
+| ---------- | ------------------------------------- |
+| STRIPE     | Payment processed through Stripe.     |
+| SSLCOMMERZ | Payment processed through SSLCommerz. |
+
+### PaymentStatus
+
+| Value     | Description                                   |
+| --------- | --------------------------------------------- |
+| PENDING   | Payment has been initiated but not completed. |
+| SUCCESS   | Payment was successfully completed.           |
+| FAILED    | Payment failed during processing.             |
+| CANCELLED | Payment was cancelled by the user or gateway. |
+| REFUNDED  | Payment was refunded after completion.        |

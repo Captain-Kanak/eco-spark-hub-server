@@ -1,6 +1,6 @@
 # 🌱 Eco Spark Hub – SERVER
 
-A high-integrity, multi-role backend built for a specialized Environmental Innovation Marketplace. This system enables Admins to curate eco-categories, Innovators to list sustainable solutions, and Supporters to fund projects and leave impact reviews with real-time tracking of project availability.
+EcoSpark Hub is a global crowdfunding platform for environmental innovation, where verified eco-friendly ideas are reviewed by administrators, funded by the community, implemented by their creators, and archived as successful environmental impact projects.
 
 - **[LIVE LINK](https://eco-spark-hub-client.vercel.app)**
 - **[CLIENT REPOSITORY](https://github.com/Captain-Kanak/eco-spark-hub-client)**
