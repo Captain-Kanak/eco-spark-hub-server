@@ -1,0 +1,12 @@
+model Like {
+    id        String   @id @default(uuid(7))
+    userId    String
+    ideaId    String
+    createdAt DateTime @default(now())
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    idea Idea @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+
+    @@unique([ideaId, userId])
+    @@map("like")
+}

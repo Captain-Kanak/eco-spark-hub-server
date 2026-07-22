@@ -12,22 +12,52 @@ model Idea {
     fundingGoal      Decimal    @default(0)
     currentFunding   Decimal    @default(0)
     status           IdeaStatus @default(ON_REVIEW)
-    likes            Int        @default(0)
     views            Int        @default(0)
-    categoryId       String
     userId           String
+    user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+    categoryId       String
+    category         Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
     createdAt        DateTime   @default(now())
     updatedAt        DateTime   @updatedAt
     deletedAt        DateTime?
 
-    category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    user     User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-    votes    Vote[]
-    comments Comment[]
-    payments Payment[]
+    likes       Like[]
+    ideaUpdates IdeaUpdate[]
+    comments    Comment[]
+    payments    Payment[]
 
     @@unique([slug])
     @@index([deletedAt])
     @@map("idea")
+}
+
+model IdeaUpdate {
+    id                 String    @id @default(uuid(7))
+    title              String    @db.VarChar(255)
+    content            String    @db.Text
+    progressPercentage Int       @default(0)
+    userId             String
+    user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    ideaId             String
+    idea               Idea      @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+    createdAt          DateTime  @default(now())
+    updatedAt          DateTime  @updatedAt
+    deletedAt          DateTime?
+
+    ideaUpdateImages IdeaUpdateImage[]
+
+    @@index([deletedAt])
+    @@map("idea_update")
+}
+
+model IdeaUpdateImage {
+    id           String   @id @default(uuid(7))
+    imageUrl     String?  @db.Text
+    ideaUpdateId String
+    createdAt    DateTime @default(now())
+
+    ideaUpdate IdeaUpdate @relation(fields: [ideaUpdateId], references: [id], onDelete: Cascade)
+
+    @@index([ideaUpdateId])
+    @@map("idea_update_image")
 }

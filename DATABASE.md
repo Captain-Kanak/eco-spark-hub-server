@@ -69,10 +69,9 @@
 | fundingGoal      | Decimal (0)      | Total funding goal in USD.                    |
 | currentFunding   | Decimal (0)      | Total amount raised in USD.                   |
 | status           | IdeaStatus       | Current lifecycle status of the idea.         |
-| likes            | Int (0)          | Total number of likes.                        |
 | views            | Int (0)          | Total number of views.                        |
-| categoryId       | UUID (FK)        | References the associated category.           |
 | userId           | UUID (FK)        | References the creator of the idea.           |
+| categoryId       | UUID (FK)        | References the associated category.           |
 | createdAt        | DateTime (now()) | Timestamp when the idea was created.          |
 | updatedAt        | DateTime         | Timestamp of the last update.                 |
 | deletedAt        | DateTime?        | Soft delete timestamp (if applicable).        |
@@ -98,9 +97,9 @@
 | id                 | UUID (PK)        | Unique identifier for the progress update.       |
 | title              | String           | Title of the update.                             |
 | content            | Text             | Detailed progress description.                   |
-| progressPercentage | Int?             | Overall project progress (0–100).                |
-| ideaId             | UUID (FK)        | References the related idea.                     |
+| progressPercentage | Int (0)          | Overall project progress (0–100).                |
 | userId             | UUID (FK)        | References the creator who published the update. |
+| ideaId             | UUID (FK)        | References the related idea.                     |
 | createdAt          | DateTime (now()) | Timestamp when the update was published.         |
 | updatedAt          | DateTime         | Timestamp of the last update.                    |
 | deletedAt          | DateTime?        | Soft delete timestamp (if applicable).           |
@@ -112,11 +111,9 @@
 | Field        | Type             | Description                            |
 | ------------ | ---------------- | -------------------------------------- |
 | id           | UUID (PK)        | Unique identifier for the image.       |
-| imageUrl     | String           | Uploaded image URL.                    |
+| imageUrl     | String?          | Uploaded image URL.                    |
 | ideaUpdateId | UUID (FK)        | References the related idea update.    |
 | createdAt    | DateTime (now()) | Timestamp when the image was uploaded. |
-| updatedAt    | DateTime         | Timestamp of the last update.          |
-| deletedAt    | DateTime?        | Soft delete timestamp (if applicable). |
 
 ---
 

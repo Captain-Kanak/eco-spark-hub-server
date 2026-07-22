@@ -14,10 +14,11 @@ model User {
     updatedAt     DateTime   @updatedAt
     deletedAt     DateTime?
 
-    ideas    Idea[]
-    votes    Vote[]
-    comments Comment[]
-    payments Payment[]
+    ideas       Idea[]
+    likes       Like[]
+    ideaUpdates IdeaUpdate[]
+    comments    Comment[]
+    payments    Payment[]
 
     sessions Session[]
     accounts Account[]
