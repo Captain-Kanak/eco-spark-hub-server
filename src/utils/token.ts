@@ -1,6 +1,6 @@
 import ms, { StringValue } from "ms";
 import { jwtUtil } from "./jwt.js";
-import { JwtPayload, SignOptions } from "jsonwebtoken";
+import { SignOptions } from "jsonwebtoken";
 import { cookieUtils } from "./cookie.js";
 import { Response } from "express";
 import { env } from "../config/env.js";
@@ -15,12 +15,10 @@ const generateAccessToken = (payload: JWTUser): string => {
   } as SignOptions);
 };
 
-const generateRefreshToken = (payload: JwtPayload) => {
-  const refreshToken = jwtUtil.createToken(payload, secret, {
-    expiresIn: Math.floor(ms(expiresIn as StringValue) / 1000),
+const generateRefreshToken = (payload: JWTUser): string => {
+  return jwtUtil.createToken(payload, env.REFRESH_TOKEN_SECRET, {
+    expiresIn: env.REFRESH_TOKEN_EXPIRES_IN,
   } as SignOptions);
-
-  return refreshToken;
 };
 
 const setBetterAuthSessionToken = (res: Response, token: string) => {
