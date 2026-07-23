@@ -2,7 +2,7 @@ import { UserRole } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import status from "http-status";
 import { cookieUtils } from "../utils/cookie.js";
-import AppError from "../errors/app-error.js";
+import AppError from "../app/errors/app-error.js";
 import { prisma } from "../lib/prisma.js";
 
 export const authMiddleware = (...roles: UserRole[]) => {

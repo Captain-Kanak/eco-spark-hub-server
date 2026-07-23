@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { userController } from "./user.controller.js";
-import { authMiddleware } from "../../middlewares/auth-middleware.js";
+import { authMiddleware } from "../../../middlewares/auth-middleware.js";
 import { multerUpload } from "../../../config/multer.config.js";
-import { validateRequestBody } from "../../middlewares/zod-middleware.js";
+import { validateRequestBody } from "../../../middlewares/zod-middleware.js";
 import { userValidation } from "./user.validation.js";
 import { UserRole } from "@prisma/client";
 

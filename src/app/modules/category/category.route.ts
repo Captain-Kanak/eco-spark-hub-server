@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { CategoryControllers } from "./category.controller.js";
-import { authMiddleware } from "../../middlewares/auth-middleware.js";
+import { authMiddleware } from "../../../middlewares/auth-middleware.js";
 import { UserRole } from "@prisma/client";
 import {
   paramsIdZodSchema,
   validateRequestBody,
   validateRequestParams,
-} from "../../middlewares/zod-middleware.js";
+} from "../../../middlewares/zod-middleware.js";
 import { CategoryValidations } from "./category.validation.js";
 import { multerUpload } from "../../../config/multer.config.js";
 

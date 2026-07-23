@@ -20,5 +20,5 @@ model Donation {
 
     @@unique([ideaId, userId])
     @@index([deletedAt])
-    @@map("payment")
+    @@map("donation")
 }

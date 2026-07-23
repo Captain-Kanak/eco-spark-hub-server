@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import status from "http-status";
 import * as z from "zod";
-import { ErrorSourceType } from "../../interfaces/error.interface.js";
-import { env } from "../../config/env.js";
-import { handleZodError } from "../errors/zod-error.js";
-import AppError from "../errors/app-error.js";
+import { ErrorSourceType } from "../interfaces/error.interface.js";
+import { env } from "../config/env.js";
+import { handleZodError } from "../app/errors/zod-error.js";
+import AppError from "../app/errors/app-error.js";
 
 async function globalErrorHandler(
   err: Error,

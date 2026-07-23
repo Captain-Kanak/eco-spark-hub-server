@@ -1,15 +1,15 @@
 import { Router } from "express";
 import { ideaControllers } from "./idea.controller.js";
-import { authMiddleware } from "../../middlewares/auth-middleware.js";
+import { authMiddleware } from "../../../middlewares/auth-middleware.js";
 import { UserRole } from "@prisma/client";
 import {
   paramsIdZodSchema,
   validateRequestBody,
   validateRequestParams,
-} from "../../middlewares/zod-middleware.js";
+} from "../../../middlewares/zod-middleware.js";
 import { IdeaValidations } from "./idea.validation.js";
 import { multerUpload } from "../../../config/multer.config.js";
-import { optionalAuthMiddleware } from "../../middlewares/optional-auth-middleware.js";
+import { optionalAuthMiddleware } from "../../../middlewares/optional-auth-middleware.js";
 
 const router: Router = Router();
 
