@@ -18,7 +18,22 @@ enum IdeaStatus {
     REJECTED
 }
 
+enum Currency {
+    USD
+    BDT
+    EUR
+    INR
+}
+
+enum PaymentGateway {
+    STRIPE
+    SSLCOMMERZ
+    PAYPAL
+}
+
 enum PaymentStatus {
     PAID
     UNPAID
+    REFUNDED
+    CANCELLED
 }

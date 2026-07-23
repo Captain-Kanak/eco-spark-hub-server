@@ -22,9 +22,9 @@ model Idea {
     deletedAt        DateTime?
 
     likes       Like[]
+    donations   Donation[]
     ideaUpdates IdeaUpdate[]
     comments    Comment[]
-    payments    Payment[]
 
     @@unique([slug])
     @@index([deletedAt])
@@ -51,12 +51,11 @@ model IdeaUpdate {
 }
 
 model IdeaUpdateImage {
-    id           String   @id @default(uuid(7))
-    imageUrl     String?  @db.Text
+    id           String     @id @default(uuid(7))
+    imageUrl     String?    @db.Text
     ideaUpdateId String
-    createdAt    DateTime @default(now())
-
-    ideaUpdate IdeaUpdate @relation(fields: [ideaUpdateId], references: [id], onDelete: Cascade)
+    ideaUpdate   IdeaUpdate @relation(fields: [ideaUpdateId], references: [id], onDelete: Cascade)
+    createdAt    DateTime   @default(now())
 
     @@index([ideaUpdateId])
     @@map("idea_update_image")

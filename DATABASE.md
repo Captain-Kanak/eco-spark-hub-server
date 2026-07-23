@@ -122,8 +122,6 @@
 | Field            | Type             | Description                                                        |
 | ---------------- | ---------------- | ------------------------------------------------------------------ |
 | id               | UUID (PK)        | Unique identifier for the donation.                                |
-| ideaId           | UUID (FK)        | References the idea receiving the donation.                        |
-| userId           | UUID (FK)        | References the user who made the donation.                         |
 | originalAmount   | Decimal          | Amount donated in the donor's selected currency.                   |
 | originalCurrency | String           | ISO 4217 currency code (e.g., USD, BDT, EUR).                      |
 | exchangeRate     | Decimal          | Exchange rate used to convert the donation into the base currency. |
@@ -133,6 +131,8 @@
 | paymentMethod    | String           | Payment method used (e.g., Visa, bKash, Nagad).                    |
 | transactionId    | String           | Transaction ID returned by the payment gateway.                    |
 | status           | PaymentStatus    | Current payment status.                                            |
+| ideaId           | UUID (FK)        | References the idea receiving the donation.                        |
+| userId           | UUID (FK)        | References the user who made the donation.                         |
 | createdAt        | DateTime (now()) | Timestamp when the donation record was created.                    |
 | updatedAt        | DateTime         | Timestamp of the last update.                                      |
 | deletedAt        | DateTime?        | Soft delete timestamp (if applicable).                             |

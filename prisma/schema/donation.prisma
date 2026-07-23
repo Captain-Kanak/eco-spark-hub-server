@@ -1,0 +1,24 @@
+model Donation {
+    id               String         @id @default(uuid(7))
+    originalAmount   Decimal
+    originalCurrency Currency       @default(USD)
+    exchangeRate     Decimal
+    baseAmount       Decimal
+    baseCurrency     Currency       @default(USD)
+    gateway          PaymentGateway
+    paymentMethod    String         @db.VarChar(50)
+    transactionId    String
+    status           PaymentStatus  @default(UNPAID)
+    userId           String
+    ideaId           String
+    createdAt        DateTime       @default(now())
+    updatedAt        DateTime       @updatedAt
+    deletedAt        DateTime?
+
+    idea Idea @relation(fields: [ideaId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+    @@unique([ideaId, userId])
+    @@index([deletedAt])
+    @@map("payment")
+}
