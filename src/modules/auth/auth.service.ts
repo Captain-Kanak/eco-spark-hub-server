@@ -20,11 +20,14 @@ const registerUser = async (payload: RegisterUser): Promise<void> => {
       where: { email },
     });
 
-    if (user && user.status === UserStatus.BLOCKED) {
+    if (user && user.deletedAt !== null) {
+      throw new AppError(
+        "Suspended: You can't use this email",
+        status.BAD_REQUEST,
+      );
+    } else if (user && user.status === UserStatus.BLOCKED) {
       throw new AppError("Your account has been blocked", status.BAD_REQUEST);
-    }
-
-    if (user) {
+    } else if (user) {
       throw new AppError("User already exist", status.BAD_REQUEST);
     }
 
@@ -77,15 +80,19 @@ const loginUser = async (
   try {
     const { email, password } = payload;
 
-    const isUserExist = await prisma.user.findUnique({
-      where: {
-        email,
-        deletedAt: null,
-      },
+    const user = await prisma.user.findUnique({
+      where: { email },
     });
 
-    if (!isUserExist) {
-      throw new AppError("User not exist with this email", status.NOT_FOUND);
+    if (user && user.deletedAt !== null) {
+      throw new AppError(
+        "Suspended: You can't use this email",
+        status.BAD_REQUEST,
+      );
+    } else if (user && user.status === UserStatus.BLOCKED) {
+      throw new AppError("Your account has been blocked", status.BAD_REQUEST);
+    } else if (!user) {
+      throw new AppError("User not found", status.NOT_FOUND);
     }
 
     const result = await auth.api.signInEmail({
@@ -102,9 +109,7 @@ const loginUser = async (
       user: authResponse(result.user as User),
     };
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError("Failed to login user", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 

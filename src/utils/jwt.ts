@@ -1,23 +1,19 @@
 import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
-import { DecodedUser } from "../../types/auth.type.js";
+import { JWTUser } from "../interfaces/auth.js";
 
 const createToken = (
   payload: JwtPayload,
   secret: string,
   { expiresIn }: SignOptions,
-) => {
-  const token = jwt.sign(payload, secret, { expiresIn });
-
-  return token;
+): string => {
+  return jwt.sign(payload, secret, { expiresIn });
 };
 
-const verifyToken = (token: string, secret: string) => {
-  const decoded = jwt.verify(token, secret) as DecodedUser;
-
-  return decoded;
+const verifyToken = (token: string, secret: string): JWTUser => {
+  return jwt.verify(token, secret) as JWTUser;
 };
 
-export const jwtUtils = {
+export const jwtUtil = {
   createToken,
   verifyToken,
 };

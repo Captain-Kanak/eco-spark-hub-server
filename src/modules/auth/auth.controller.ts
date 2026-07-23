@@ -3,7 +3,7 @@ import { catchAsync } from "../../utils/catch-async.js";
 import { sendResponse } from "../../utils/send-response.js";
 import status from "http-status";
 import { AuthServices } from "./auth.service.js";
-import { tokenUtils } from "../../utils/token.js";
+import { cookieUtil } from "../../utils/token.js";
 import { User } from "@prisma/client";
 import { authResponse } from "./auth.interface.js";
 import { env } from "../../config/env.js";
@@ -31,7 +31,7 @@ const verifyEmail = catchAsync(async (req: Request, res: Response) => {
 const loginUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthServices.loginUser(req.body);
 
-  tokenUtils.setBetterAuthSessionCookie(res, result.token);
+  cookieUtil.setBetterAuthSessionToken(res, result.token);
 
   sendResponse(res, {
     statusCode: status.OK,
@@ -81,7 +81,7 @@ const googleLoginSuccess = catchAsync(async (req: Request, res: Response) => {
     return res.redirect(`${env.FRONTEND_URL}/login?error=no_user_found`);
   }
 
-  tokenUtils.setBetterAuthSessionCookie(res, result.session.token);
+  cookieUtil.setBetterAuthSessionToken(res, result.session.token);
 
   const isValidRedirectPath =
     redirectPath.startsWith("/") && !redirectPath.startsWith("//");

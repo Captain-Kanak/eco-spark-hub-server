@@ -1,10 +1,8 @@
 import { UserRole } from "@prisma/client";
 
-export interface DecodedUser {
+export interface JWTUser {
   id: string;
   name: string;
   email: string;
-  emailVerified: boolean;
   role: UserRole;
-  isDeleted: boolean;
 }
