@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { User, UserStatus } from "@prisma/client";
 import AppError from "../../errors/app-error.js";
 import { auth } from "../../lib/auth.js";
 import { prisma } from "../../lib/prisma.js";
@@ -12,30 +12,29 @@ import {
 import status from "http-status";
 import { Session } from "better-auth";
 
-const registerUser = async (payload: RegisterUser): Promise<AuthResponse> => {
+const registerUser = async (payload: RegisterUser): Promise<void> => {
   try {
     const { name, email, password } = payload;
 
-    const isUserExist = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { email },
     });
 
-    if (isUserExist) {
-      throw new AppError(
-        "User already exist with this email",
-        status.BAD_REQUEST,
-      );
+    if (user && user.status === UserStatus.BLOCKED) {
+      throw new AppError("Your account has been blocked", status.BAD_REQUEST);
     }
 
-    const result = await auth.api.signUpEmail({
+    if (user) {
+      throw new AppError("User already exist", status.BAD_REQUEST);
+    }
+
+    await auth.api.signUpEmail({
       body: {
         name,
         email,
         password,
       },
     });
-
-    return authResponse(result.user as User);
   } catch (error) {
     throw error;
   }
@@ -63,7 +62,7 @@ const verifyEmail = async (payload: VerifyEmail): Promise<void> => {
       });
     }
   } catch (error) {
-    throw new AppError("Failed to verify email", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
@@ -81,7 +80,7 @@ const loginUser = async (
     const isUserExist = await prisma.user.findUnique({
       where: {
         email,
-        isDeleted: false,
+        deletedAt: null,
       },
     });
 

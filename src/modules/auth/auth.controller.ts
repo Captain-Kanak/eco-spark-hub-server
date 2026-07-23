@@ -9,13 +9,12 @@ import { authResponse } from "./auth.interface.js";
 import { env } from "../../config/env.js";
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthServices.registerUser(req.body);
+  await AuthServices.registerUser(req.body);
 
   sendResponse(res, {
     statusCode: status.CREATED,
     success: true,
     message: "User registered successfully",
-    data: result,
   });
 });
 
