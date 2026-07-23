@@ -3,7 +3,7 @@ import status from "http-status";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { env } from "./config/env.js";
-import { IndexRoutes } from "./routes/index.js";
+import { IndexRouter } from "./routes/index.js";
 import globalErrorHandler from "./middlewares/error-middleware.js";
 import path from "path";
 import { toNodeHandler } from "better-auth/node";
@@ -50,7 +50,7 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/api/auth", toNodeHandler(auth));
 
 // index routes for custom api
-app.use("/api/v1", IndexRoutes);
+app.use("/api/v1", IndexRouter);
 
 // 404 route handler
 app.use((req: Request, res: Response) => {

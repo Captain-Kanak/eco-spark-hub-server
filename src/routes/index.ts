@@ -1,26 +1,26 @@
 import { Router } from "express";
-import { AuthRoutes } from "../app/modules/auth/auth.route.js";
-import { CategoryRoutes } from "../app/modules/category/category.route.js";
-import { IdeaRoutes } from "../app/modules/idea/idea.route.js";
-import { VoteRoutes } from "../app/modules/vote/vote.route.js";
-import { CommentRoutes } from "../app/modules/comment/comment.route.js";
-import { PaymentRoutes } from "../app/modules/payment/payment.route.js";
-import { UserRoutes } from "../app/modules/user/user.route.js";
+import { AuthRouter } from "../modules/auth/auth.route.js";
+import { UserRoutes } from "../modules/user/user.route.js";
+import { CategoryRoutes } from "../modules/category/category.route.js";
+import { IdeaRoutes } from "../modules/idea/idea.route.js";
+import { VoteRoutes } from "../modules/vote/vote.route.js";
+import { CommentRoutes } from "../modules/comment/comment.route.js";
+import { PaymentRoutes } from "../modules/payment/payment.route.js";
 
 const router: Router = Router();
 
-router.use("/auth", AuthRoutes);
+router.use("/auth", AuthRouter);
+
+router.use("/users", UserRoutes);
 
 router.use("/categories", CategoryRoutes);
 
 router.use("/ideas", IdeaRoutes);
 
-router.use("/payments", PaymentRoutes);
+router.use("/donations", PaymentRoutes);
 
-router.use("/users", UserRoutes);
-
-router.use("/votes", VoteRoutes);
+router.use("/likes", VoteRoutes);
 
 router.use("/comments", CommentRoutes);
 
-export { router as IndexRoutes };
+export { router as IndexRouter };

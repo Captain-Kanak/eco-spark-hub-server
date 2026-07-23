@@ -1,26 +1,26 @@
 import { Router } from "express";
 import { AuthControllers } from "./auth.controller.js";
-import { validateRequestBody } from "../../../middlewares/zod-middleware.js";
-import { AuthValidations } from "./auth.validation.js";
-import { authMiddleware } from "../../../middlewares/auth-middleware.js";
+import { AuthValidation } from "./auth.validation.js";
+import { validateRequestBody } from "../../middlewares/zod-middleware.js";
+import { authMiddleware } from "../../middlewares/auth-middleware.js";
 
 const router: Router = Router();
 
 router.post(
   "/register",
-  validateRequestBody(AuthValidations.registerUserZodSchema),
+  validateRequestBody(AuthValidation.registerSchema),
   AuthControllers.registerUser,
 );
 
 router.post(
   "/verify-email",
-  validateRequestBody(AuthValidations.verifyEmailZodSchema),
+  validateRequestBody(AuthValidation.verifyEmailSchema),
   AuthControllers.verifyEmail,
 );
 
 router.post(
   "/login",
-  validateRequestBody(AuthValidations.loginUserZodSchema),
+  validateRequestBody(AuthValidation.loginSchema),
   AuthControllers.loginUser,
 );
 
@@ -35,4 +35,4 @@ router.get("/login/google", AuthControllers.googleLogin);
 
 router.get("/google/success", AuthControllers.googleLoginSuccess);
 
-export { router as AuthRoutes };
+export { router as AuthRouter };

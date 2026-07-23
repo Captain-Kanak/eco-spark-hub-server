@@ -2,7 +2,7 @@ import { CloudinaryStorage } from "multer-storage-cloudinary";
 import multer from "multer";
 import status from "http-status";
 import { cloudinaryUpload } from "./cloudinary.config.js";
-import AppError from "../app/errors/app-error.js";
+import AppError from "../errors/app-error.js";
 import crypto from "crypto";
 
 const storage = new CloudinaryStorage({
