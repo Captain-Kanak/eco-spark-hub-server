@@ -3,8 +3,8 @@ import { catchAsync } from "../../utils/catch-async.js";
 import { userService } from "./user.service.js";
 import { sendResponse } from "../../utils/send-response.js";
 import status from "http-status";
-import { IQueryParams } from "../../../interfaces/query-builder.interface.js";
 import { User } from "@prisma/client";
+import { IQueryParams } from "../../interfaces/query-builder.interface.js";
 
 const getUsers = catchAsync(async (req: Request, res: Response) => {
   const query = req.query;
@@ -20,12 +20,12 @@ const getUsers = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateProfile = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.user as User;
   const payload = {
     ...req.body,
-    date_of_birth: req.body?.date_of_birth && new Date(req.body?.date_of_birth),
+    dateOfBirth: req.body?.dateOfBirth && new Date(req.body?.dateOfBirth),
     image: req.file?.path,
   };
-  const { id } = req.user as User;
 
   const result = await userService.updateProfile(payload, id);
 

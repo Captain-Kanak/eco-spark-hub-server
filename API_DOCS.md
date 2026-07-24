@@ -14,11 +14,11 @@
 
 ### User
 
-| Method | Endpoint             | Access | Description                     |
-| ------ | -------------------- | ------ | ------------------------------- |
-| GET    | /api/v1/users        | ADMIN  | get all users                   |
-| PATCH  | /api/v1/users/update | SECURE | update user informations        |
-| DELETE | /api/v1/users/:id    | ADMIN  | delete user by id (soft delete) |
+| Method | Endpoint                     | Access | Description                     |
+| ------ | ---------------------------- | ------ | ------------------------------- |
+| GET    | /api/v1/users                | ADMIN  | get all users                   |
+| PATCH  | /api/v1/users/update-profile | SECURE | update user profile             |
+| DELETE | /api/v1/users/:id            | ADMIN  | delete user by id (soft delete) |
 
 ---
 

@@ -15,7 +15,7 @@ const updateProfileZodSchema = z
       .string()
       .min(3, "Address must be at least 3 characters long")
       .max(300, "Address can't be more than 100 characters long"),
-    date_of_birth: z.string(),
+    dateOfBirth: z.string(),
   })
   .partial();
 

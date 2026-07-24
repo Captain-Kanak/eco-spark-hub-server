@@ -4,11 +4,11 @@ import AppError from "../../errors/app-error.js";
 import status from "http-status";
 import { prisma } from "../../lib/prisma.js";
 import { QueryBuilder } from "../../utils/query-builder.js";
+import { AuthResponse, authResponse } from "../auth/auth.interface.js";
 import {
   IQueryParams,
   QueryResult,
-} from "../../../interfaces/query-builder.interface.js";
-import { UserResponse, userResponse } from "../auth/auth.interface.js";
+} from "../../interfaces/query-builder.interface.js";
 
 const getUsers = async (query: IQueryParams): Promise<QueryResult<User>> => {
   try {
@@ -21,7 +21,7 @@ const getUsers = async (query: IQueryParams): Promise<QueryResult<User>> => {
     const result = await queryBuilder
       .pagination()
       .where({
-        isDeleted: false,
+        deletedAt: null,
         role: UserRole.MEMBER,
       })
       .search()
@@ -33,65 +33,52 @@ const getUsers = async (query: IQueryParams): Promise<QueryResult<User>> => {
 
     return result;
   } catch (error) {
-    throw new AppError("Failed to get users", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
 const updateProfile = async (
   payload: UpdateUser,
   userId: string,
-): Promise<UserResponse> => {
+): Promise<AuthResponse> => {
   try {
-    const isUserExist = await prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
+    const user = await prisma.user.findUnique({
+      where: { id: userId, deletedAt: null },
     });
 
-    if (!isUserExist) {
+    if (!user) {
       throw new AppError("User not found", status.NOT_FOUND);
     }
 
-    const user = await prisma.user.update({
-      where: {
-        id: userId,
-      },
+    const result = await prisma.user.update({
+      where: { id: userId },
       data: payload,
     });
 
-    return userResponse(user);
+    return authResponse(result);
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError("Failed to update user", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
 const deleteUser = async (id: string): Promise<void> => {
   try {
-    const isUserExist = await prisma.user.findUnique({
-      where: {
-        id: id,
-      },
+    const user = await prisma.user.findUnique({
+      where: { id, deletedAt: null },
     });
 
-    if (!isUserExist) {
+    if (!user) {
       throw new AppError("User not found", status.NOT_FOUND);
     }
 
     await prisma.user.update({
-      where: {
-        id: id,
-      },
+      where: { id },
       data: {
-        isDeleted: true,
         deletedAt: new Date(),
       },
     });
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError("Failed to delete user", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
