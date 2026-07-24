@@ -2,8 +2,8 @@ import nodemailer from "nodemailer";
 import status from "http-status";
 import path from "path";
 import ejs from "ejs";
-import { env } from "../../config/env.js";
 import AppError from "../errors/app-error.js";
+import { env } from "../config/env.js";
 
 interface SendEmailOptions {
   to: string;
@@ -37,7 +37,7 @@ export const sendEmail = async ({
   try {
     const templatePath = path.resolve(
       process.cwd(),
-      `src/app/templates/${templateName}.ejs`,
+      `src/templates/${templateName}.ejs`,
     );
 
     const html = await ejs.renderFile(templatePath, templateData);

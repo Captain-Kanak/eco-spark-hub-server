@@ -13,9 +13,7 @@ const seedAdmin = async () => {
     };
 
     const isAdminExist = await prisma.user.findUnique({
-      where: {
-        email: adminData.email,
-      },
+      where: { email: adminData.email },
     });
 
     if (isAdminExist) {
@@ -28,9 +26,7 @@ const seedAdmin = async () => {
 
     if (admin.user) {
       await prisma.user.update({
-        where: {
-          id: admin.user.id,
-        },
+        where: { id: admin.user.id },
         data: {
           emailVerified: true,
           role: UserRole.ADMIN,
@@ -38,8 +34,6 @@ const seedAdmin = async () => {
       });
 
       console.log("Admin seeded successfully");
-    } else {
-      throw new AppError("Failed to seed admin", status.INTERNAL_SERVER_ERROR);
     }
   } catch (error) {
     if (error instanceof AppError) throw error;

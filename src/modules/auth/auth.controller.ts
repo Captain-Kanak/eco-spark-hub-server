@@ -41,17 +41,6 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getMe = catchAsync(async (req: Request, res: Response) => {
-  const user = req.user as User;
-
-  sendResponse(res, {
-    statusCode: status.OK,
-    success: true,
-    message: "User fetched successfully",
-    data: authResponse(user),
-  });
-});
-
 const googleLogin = catchAsync(async (req: Request, res: Response) => {
   const redirectPath = req.query.redirect || "/";
   const encodedRedirectPath = encodeURIComponent(redirectPath as string);
@@ -90,11 +79,22 @@ const googleLoginSuccess = catchAsync(async (req: Request, res: Response) => {
   return res.redirect(`${env.FRONTEND_URL}${finalRedirectPath}?auth=success`);
 });
 
+const getMe = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user as User;
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "User fetched successfully",
+    data: authResponse(user),
+  });
+});
+
 export const AuthControllers = {
   registerUser,
   verifyEmail,
   loginUser,
-  getMe,
   googleLogin,
   googleLoginSuccess,
+  getMe,
 };

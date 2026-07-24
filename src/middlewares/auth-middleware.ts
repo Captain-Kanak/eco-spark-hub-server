@@ -1,17 +1,14 @@
-import { UserRole } from "@prisma/client";
+import { UserRole, UserStatus } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import status from "http-status";
-import { cookieUtils } from "../utils/cookie.js";
-import AppError from "../app/errors/app-error.js";
 import { prisma } from "../lib/prisma.js";
+import { tokenUtil } from "../utils/token.js";
+import AppError from "../errors/app-error.js";
 
 export const authMiddleware = (...roles: UserRole[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const sessionToken = cookieUtils.getCookie(
-        req,
-        "better-auth.session_token",
-      );
+      const sessionToken = tokenUtil.getBetterAuthToken(req);
 
       if (!sessionToken) {
         throw new AppError(
@@ -34,16 +31,17 @@ export const authMiddleware = (...roles: UserRole[]) => {
             "Unauthorized: Session not found",
             status.UNAUTHORIZED,
           );
-        }
-
-        if (session.user.isDeleted) {
+        } else if (session.user.deletedAt !== null) {
           throw new AppError(
             "Unauthorized: User is deleted",
             status.UNAUTHORIZED,
           );
-        }
-
-        if (roles.length > 0 && !roles.includes(session.user.role)) {
+        } else if (session.user.status === UserStatus.BLOCKED) {
+          throw new AppError(
+            "Unauthorized: User is blocked",
+            status.UNAUTHORIZED,
+          );
+        } else if (roles.length > 0 && !roles.includes(session.user.role)) {
           throw new AppError(
             "Unauthorized: you are not authorized to access this resources",
             status.UNAUTHORIZED,
