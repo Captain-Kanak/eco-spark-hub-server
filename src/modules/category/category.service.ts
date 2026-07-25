@@ -31,36 +31,38 @@ const createCategory = async (payload: CreateCategory): Promise<Category> => {
 const getCategories = async (
   query: IQueryParams,
 ): Promise<QueryResult<Category>> => {
-  const queryBuilder = new QueryBuilder<
-    Category,
-    Prisma.CategoryWhereInput,
-    Prisma.CategoryInclude
-  >(prisma.category, query, {
-    searchableFields: categorySearchableFields,
-    filterableFields: categorySearchableFields,
-  });
+  try {
+    const queryBuilder = new QueryBuilder<
+      Category,
+      Prisma.CategoryWhereInput,
+      Prisma.CategoryInclude
+    >(prisma.category, query, {
+      searchableFields: categorySearchableFields,
+      filterableFields: categorySearchableFields,
+    });
 
-  const result = await queryBuilder
-    .pagination()
-    .where({ deletedAt: null })
-    .search()
-    .filter()
-    .sort()
-    .select()
-    .includes({
-      _count: true,
-    })
-    .execute();
+    const result = await queryBuilder
+      .pagination()
+      .where({ deletedAt: null })
+      .search()
+      .filter()
+      .sort()
+      .select()
+      .includes({
+        _count: true,
+      })
+      .execute();
 
-  return result;
+    return result;
+  } catch (error) {
+    throw error;
+  }
 };
 
-const getCategoryById = async (id: string): Promise<Category | null> => {
+const getCategoryById = async (id: string): Promise<Category> => {
   try {
     const category = await prisma.category.findUnique({
-      where: {
-        id,
-      },
+      where: { id, deletedAt: null },
       include: {
         _count: true,
         ideas: true,
@@ -73,77 +75,59 @@ const getCategoryById = async (id: string): Promise<Category | null> => {
 
     return category;
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError("Failed to get category", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
 const updateCategoryById = async (
   id: string,
   payload: UpdateCategory,
-): Promise<Category | null> => {
+): Promise<Category> => {
   try {
-    const isCategoryExist = await prisma.category.findUnique({
-      where: {
-        id,
-      },
+    const category = await prisma.category.findUnique({
+      where: { id, deletedAt: null },
     });
 
-    if (!isCategoryExist) {
+    if (!category) {
       throw new AppError("Category not found", status.NOT_FOUND);
     }
 
-    const category = await prisma.category.update({
-      where: {
-        id,
+    const slug = payload.name
+      ? generateUniqueSlug(payload.name)
+      : category.slug;
+
+    const updatedCategory = await prisma.category.update({
+      where: { id },
+      data: {
+        ...payload,
+        slug,
       },
-      data: payload,
     });
 
-    return category;
+    return updatedCategory;
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError(
-      "Failed to update category",
-      status.INTERNAL_SERVER_ERROR,
-    );
+    throw error;
   }
 };
 
 const deleteCategoryById = async (id: string): Promise<void> => {
   try {
-    const isCategoryExist = await prisma.category.findUnique({
-      where: {
-        id,
-      },
+    const category = await prisma.category.findUnique({
+      where: { id, deletedAt: null },
     });
 
-    if (!isCategoryExist) {
+    if (!category) {
       throw new AppError("Category not found", status.NOT_FOUND);
     }
 
-    if (isCategoryExist.deletedAt !== null) {
-      throw new AppError("Category already deleted", status.BAD_REQUEST);
-    }
-
     await prisma.category.update({
-      where: {
-        id,
-      },
+      where: { id },
       data: {
-        isDeleted: true,
         deletedAt: new Date(),
       },
     });
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError(
-      "Failed to delete category",
-      status.INTERNAL_SERVER_ERROR,
-    );
+    throw error;
   }
 };
 
