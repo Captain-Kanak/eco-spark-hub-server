@@ -3,17 +3,20 @@ import AppError from "../../errors/app-error.js";
 import { CreateCategory, UpdateCategory } from "./category.interface.js";
 import { prisma } from "../../lib/prisma.js";
 import { Category, Prisma } from "@prisma/client";
+import { QueryBuilder } from "../../utils/query-builder.js";
+import { categorySearchableFields } from "./category.constant.js";
 import {
   IQueryParams,
   QueryResult,
-} from "../../../interfaces/query-builder.interface.js";
-import { QueryBuilder } from "../../utils/query-builder.js";
-import { categorySearchableFields } from "./category.constant.js";
+} from "../../interfaces/query-builder.interface.js";
 
 const createCategory = async (payload: CreateCategory): Promise<Category> => {
   try {
     const category = await prisma.category.create({
-      data: payload,
+      data: {
+        ...payload,
+        slug: "",
+      },
     });
 
     return category;
@@ -39,7 +42,7 @@ const getCategories = async (
 
   const result = await queryBuilder
     .pagination()
-    .where({ isDeleted: false })
+    .where({ deletedAt: null })
     .search()
     .filter()
     .sort()
@@ -121,7 +124,7 @@ const deleteCategoryById = async (id: string): Promise<void> => {
       throw new AppError("Category not found", status.NOT_FOUND);
     }
 
-    if (isCategoryExist.isDeleted) {
+    if (isCategoryExist.deletedAt !== null) {
       throw new AppError("Category already deleted", status.BAD_REQUEST);
     }
 
