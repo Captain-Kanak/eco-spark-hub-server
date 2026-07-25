@@ -16,7 +16,7 @@ router.post(
   "/",
   authMiddleware(UserRole.ADMIN),
   multerUpload.single("file"),
-  validateRequestBody(CategoryValidations.createCategoryZodSchema),
+  validateRequestBody(CategoryValidations.createCategorySchema),
   CategoryControllers.createCategory,
 );
 
@@ -32,7 +32,7 @@ router.patch(
   "/:id",
   authMiddleware(UserRole.ADMIN),
   multerUpload.single("file"),
-  validateRequestBody(CategoryValidations.updateCategoryZodSchema),
+  validateRequestBody(CategoryValidations.updateCategorySchema),
   CategoryControllers.updateCategoryById,
 );
 

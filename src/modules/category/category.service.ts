@@ -9,22 +9,22 @@ import {
   IQueryParams,
   QueryResult,
 } from "../../interfaces/query-builder.interface.js";
+import { generateUniqueSlug } from "../../utils/generate-slug.js";
 
 const createCategory = async (payload: CreateCategory): Promise<Category> => {
   try {
+    const slug = generateUniqueSlug(payload.name);
+
     const category = await prisma.category.create({
       data: {
         ...payload,
-        slug: "",
+        slug,
       },
     });
 
     return category;
   } catch (error) {
-    throw new AppError(
-      "Failed to create category",
-      status.INTERNAL_SERVER_ERROR,
-    );
+    throw error;
   }
 };
 
