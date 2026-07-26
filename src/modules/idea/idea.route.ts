@@ -9,13 +9,12 @@ import {
   validateRequestBody,
   validateRequestParams,
 } from "../../middlewares/zod-middleware.js";
-import { optionalAuthMiddleware } from "../../middlewares/optional-auth-middleware.js";
 
 const router: Router = Router();
 
 router.post(
   "/",
-  authMiddleware(UserRole.MEMBER),
+  authMiddleware(),
   multerUpload.single("file"),
   validateRequestBody(IdeaValidation.createIdeaZodSchema),
   ideaController.createIdea,
@@ -27,30 +26,21 @@ router.get(
   ideaController.getPendingIdeas,
 );
 
-router.get("/", optionalAuthMiddleware(), ideaController.getIdeas);
+router.get("/", ideaController.getIdeas);
 
-router.get(
-  "/my-ideas",
-  authMiddleware(UserRole.MEMBER),
-  ideaController.getMyIdeas,
-);
+router.get("/my-ideas", authMiddleware(), ideaController.getMyIdeas);
 
-router.get(
-  "/purchased-ideas",
-  authMiddleware(UserRole.MEMBER),
-  ideaController.getPurchasedIdeas,
-);
+router.get("/donated-ideas", authMiddleware(), ideaController.getDonatedIdeas);
 
 router.get(
   "/:id",
-  optionalAuthMiddleware(),
   validateRequestParams(paramsIdZodSchema),
   ideaController.getIdeaById,
 );
 
 router.patch(
   "/:id",
-  authMiddleware(UserRole.MEMBER),
+  authMiddleware(),
   multerUpload.single("file"),
   validateRequestParams(paramsIdZodSchema),
   validateRequestBody(IdeaValidation.updateIdeaZodSchema),

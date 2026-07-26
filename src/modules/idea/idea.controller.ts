@@ -38,12 +38,8 @@ const getPendingIdeas = catchAsync(async (req: Request, res: Response) => {
 
 const getIdeas = catchAsync(async (req: Request, res: Response) => {
   const query = req.query;
-  const user = req.user;
 
-  const result = await ideaServices.getIdeas(
-    query as IQueryParams,
-    user as User,
-  );
+  const result = await ideaServices.getIdeas(query as IQueryParams);
 
   sendResponse(res, {
     statusCode: status.OK,
@@ -67,14 +63,11 @@ const getMyIdeas = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getPurchasedIdeas = catchAsync(async (req: Request, res: Response) => {
+const getDonatedIdeas = catchAsync(async (req: Request, res: Response) => {
   const query = req.query;
   const { id } = req.user as User;
 
-  const result = await ideaServices.getPurchasedIdeas(
-    query as IQueryParams,
-    id,
-  );
+  const result = await ideaServices.getDonatedIdeas(query as IQueryParams, id);
 
   sendResponse(res, {
     statusCode: status.OK,
@@ -86,9 +79,8 @@ const getPurchasedIdeas = catchAsync(async (req: Request, res: Response) => {
 
 const getIdeaById = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
-  const userId = req.user?.id;
 
-  const result = await ideaServices.getIdeaById(id as string, userId as string);
+  const result = await ideaServices.getIdeaById(id as string);
 
   sendResponse(res, {
     statusCode: status.OK,
@@ -103,9 +95,7 @@ const updateIdeaById = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   const payload = {
     ...req.body,
-    isPaid: req.body?.isPaid && Boolean(req.body?.isPaid),
-    price: req.body?.price && Number(req.body?.price),
-    image: req.file?.path,
+    coverImage: req.file?.path,
   };
 
   const result = await ideaServices.updateIdeaById(
@@ -154,7 +144,7 @@ export const ideaController = {
   getPendingIdeas,
   getIdeas,
   getMyIdeas,
-  getPurchasedIdeas,
+  getDonatedIdeas,
   getIdeaById,
   updateIdeaById,
   updateIdeaStatus,

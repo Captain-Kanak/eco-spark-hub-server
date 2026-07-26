@@ -73,7 +73,6 @@ const getPendingIdeas = async (
 
 const getIdeas = async (
   query: IQueryParams,
-  user?: User,
 ): Promise<QueryResult<Partial<Idea>>> => {
   try {
     const queryBuilder = new QueryBuilder<
@@ -103,60 +102,9 @@ const getIdeas = async (
       })
       .execute();
 
-    // Check if the user has purchased the idea
-    let purchasedIdeaIds = new Set<string>();
-
-    if (user?.id) {
-      const payments = await prisma.donation.findMany({
-        where: { userId: user.id },
-        select: {
-          ideaId: true,
-        },
-      });
-
-      purchasedIdeaIds = new Set(payments.map((payment) => payment.ideaId));
-    }
-
-    const sanitizedIdeas = result.data.map((idea: Idea) => {
-      // if (!idea.isPaid) {
-      //   return {
-      //     ...idea,
-      //   };
-      // }
-
-      const isAdmin = user?.role === UserRole.ADMIN;
-      const isOwner = idea.userId === user?.id;
-      const hasPurchased = purchasedIdeaIds.has(idea.id);
-
-      if (isAdmin || isOwner || hasPurchased) {
-        return {
-          ...idea,
-        };
-      }
-
-      return {
-        id: idea.id,
-        title: idea.title,
-        // image: idea.image,
-        // isPaid: idea.isPaid,
-        // price: idea.price,
-        status: idea.status,
-        // upvotes: idea.upvotes,
-        // downvotes: idea.downvotes,
-        categoryId: idea.categoryId,
-        createdAt: idea.createdAt,
-        updatedAt: idea.updatedAt,
-      };
-    });
-
-    return {
-      data: sanitizedIdeas,
-      meta: result.meta,
-    };
+    return result;
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError("Failed to get ideas", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
@@ -174,9 +122,9 @@ const getMyIdeas = async (
     const result = await queryBuilder
       .pagination()
       .where({
+        userId,
         deletedAt: null,
         status: IdeaStatus.PUBLISHED,
-        userId,
       })
       .search()
       .filter()
@@ -187,11 +135,11 @@ const getMyIdeas = async (
 
     return result;
   } catch (error) {
-    throw new AppError("Failed to get my ideas", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
-const getPurchasedIdeas = async (
+const getDonatedIdeas = async (
   query: IQueryParams,
   userId: string,
 ): Promise<QueryResult<Partial<Donation>>> => {
@@ -220,10 +168,7 @@ const getPurchasedIdeas = async (
   }
 };
 
-const getIdeaById = async (
-  id: string,
-  userId?: string,
-): Promise<Partial<Idea>> => {
+const getIdeaById = async (id: string): Promise<Partial<Idea>> => {
   try {
     const idea = await prisma.idea.findUnique({
       where: { id, status: IdeaStatus.PUBLISHED },
@@ -234,41 +179,9 @@ const getIdeaById = async (
       throw new AppError("Idea not found", status.NOT_FOUND);
     }
 
-    // if (!idea.isPaid) {
-    //   return idea;
-    // }
-
-    const isOwner = idea.userId === userId;
-
-    if (isOwner) {
-      return idea;
-    }
-
-    if (!userId) {
-      throw new AppError(
-        "Please login to access this idea",
-        status.UNAUTHORIZED,
-      );
-    }
-
-    const payment = await prisma.donation.findFirst({
-      where: {
-        ideaId: id,
-        userId,
-      },
-    });
-
-    if (!payment) {
-      return {
-        id: idea.id,
-      };
-    }
-
     return idea;
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError("Failed to get idea", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
@@ -279,9 +192,7 @@ const updateIdeaById = async (
 ): Promise<Idea> => {
   try {
     const idea = await prisma.idea.findUnique({
-      where: {
-        id,
-      },
+      where: { id, deletedAt: null },
     });
 
     if (!idea) {
@@ -295,31 +206,21 @@ const updateIdeaById = async (
       );
     }
 
-    if (idea.deletedAt !== null) {
-      throw new AppError("Idea already deleted", status.BAD_REQUEST);
-    }
-
     const updatedIdea = await prisma.idea.update({
-      where: {
-        id,
-      },
+      where: { id },
       data: payload,
     });
 
     return updatedIdea;
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError("Failed to update idea", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
 const updateIdeaStatus = async (id: string, ideaStatus: IdeaStatus) => {
   try {
     const idea = await prisma.idea.findUnique({
-      where: {
-        id,
-      },
+      where: { id, deletedAt: null },
     });
 
     if (!idea) {
@@ -333,14 +234,8 @@ const updateIdeaStatus = async (id: string, ideaStatus: IdeaStatus) => {
       );
     }
 
-    if (idea.deletedAt !== null) {
-      throw new AppError("Idea already deleted", status.BAD_REQUEST);
-    }
-
     const updatedIdea = await prisma.idea.update({
-      where: {
-        id,
-      },
+      where: { id },
       data: {
         status: ideaStatus,
       },
@@ -348,12 +243,7 @@ const updateIdeaStatus = async (id: string, ideaStatus: IdeaStatus) => {
 
     return updatedIdea;
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError(
-      "Failed to update idea status",
-      status.INTERNAL_SERVER_ERROR,
-    );
+    throw error;
   }
 };
 
@@ -362,17 +252,11 @@ const deleteIdeaById = async (id: string, user: User): Promise<void> => {
     const isAdmin = user.role === UserRole.ADMIN;
 
     const idea = await prisma.idea.findUnique({
-      where: {
-        id,
-      },
+      where: { id, deletedAt: null },
     });
 
     if (!idea) {
       throw new AppError("Idea not found", status.NOT_FOUND);
-    }
-
-    if (idea.deletedAt !== null) {
-      throw new AppError("Idea already deleted", status.BAD_REQUEST);
     }
 
     if (!isAdmin && idea.userId !== user.id) {
@@ -383,18 +267,13 @@ const deleteIdeaById = async (id: string, user: User): Promise<void> => {
     }
 
     await prisma.idea.update({
-      where: {
-        id,
-      },
+      where: { id },
       data: {
-        isDeleted: true,
         deletedAt: new Date(),
       },
     });
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError("Failed to delete idea", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
@@ -403,7 +282,7 @@ export const ideaServices = {
   getPendingIdeas,
   getIdeas,
   getMyIdeas,
-  getPurchasedIdeas,
+  getDonatedIdeas,
   getIdeaById,
   updateIdeaById,
   updateIdeaStatus,

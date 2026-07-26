@@ -36,17 +36,17 @@
 
 ### Idea
 
-| Method | Endpoint                             | Access         | Description                       |
-| ------ | ------------------------------------ | -------------- | --------------------------------- |
-| POST   | /api/v1/ideas                        | MEMBER         | create as new idea                |
-| GET    | /api/v1/ideas/pending-ideas          | ADMIN          | get all pending ideas             |
-| GET    | /api/v1/ideas                        | PUBLIC         | get all ideas                     |
-| GET    | /api/v1/ideas/:id                    | PUBLIC         | get idea by id                    |
-| PATCH  | /api/v1/ideas/:id                    | MEMBER         | update idea by id                 |
-| PATCH  | /api/v1/ideas/update-idea-status/:id | ADMIN          | update idea status by id          |
-| GET    | /api/v1/ideas/my-ideas               | MEMBER         | get user specific ideas           |
-| GET    | /api/v1/ideas/purchased-ideas        | MEMBER         | get user specific purchased ideas |
-| DELETE | /api/v1/ideas/:id                    | MEMBER / ADMIN | delete idea by id (soft delete)   |
+| Method | Endpoint                             | Access         | Description                     |
+| ------ | ------------------------------------ | -------------- | ------------------------------- |
+| POST   | /api/v1/ideas                        | MEMBER         | create as new idea              |
+| GET    | /api/v1/ideas/pending-ideas          | ADMIN          | get all pending ideas           |
+| GET    | /api/v1/ideas                        | PUBLIC         | get all ideas                   |
+| GET    | /api/v1/ideas/:id                    | PUBLIC         | get idea by id                  |
+| PATCH  | /api/v1/ideas/:id                    | MEMBER         | update idea by id               |
+| PATCH  | /api/v1/ideas/update-idea-status/:id | ADMIN          | update idea status by id        |
+| GET    | /api/v1/ideas/my-ideas               | MEMBER         | get user specific ideas         |
+| GET    | /api/v1/ideas/donated-ideas          | MEMBER         | get user specific donated ideas |
+| DELETE | /api/v1/ideas/:id                    | MEMBER / ADMIN | delete idea by id (soft delete) |
 
 ---
 
