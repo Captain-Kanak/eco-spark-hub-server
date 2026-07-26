@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { catchAsync } from "../../utils/catch-async.js";
-import { paymentServices } from "./payment.service.js";
+import { paymentServices } from "./donation.service.js";
 import { sendResponse } from "../../utils/send-response.js";
 import { User } from "@prisma/client";
 import { IQueryParams } from "../../interfaces/query-builder.interface.js";

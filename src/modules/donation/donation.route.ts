@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { paymentControllers } from "./donation.controller.js";
 import { UserRole } from "@prisma/client";
-import { paymentValidations } from "./payment.validation.js";
+import { paymentValidations } from "./donation.validation.js";
 import { authMiddleware } from "../../middlewares/auth-middleware.js";
 import { validateRequestBody } from "../../middlewares/zod-middleware.js";
 
