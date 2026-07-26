@@ -1,10 +1,10 @@
 model Donation {
     id               String         @id @default(uuid(7))
-    originalAmount   Decimal
     originalCurrency Currency       @default(USD)
+    originalAmount   Decimal
     exchangeRate     Decimal
-    baseAmount       Decimal
     baseCurrency     Currency       @default(USD)
+    baseAmount       Decimal
     gateway          PaymentGateway
     paymentMethod    String         @db.VarChar(50)
     transactionId    String

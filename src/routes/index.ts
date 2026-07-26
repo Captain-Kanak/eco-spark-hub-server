@@ -5,7 +5,7 @@ import { CategoryRouter } from "../modules/category/category.route.js";
 import { IdeaRouter } from "../modules/idea/idea.route.js";
 import { VoteRoutes } from "../modules/vote/vote.route.js";
 import { CommentRoutes } from "../modules/comment/comment.route.js";
-import { PaymentRoutes } from "../modules/payment/payment.route.js";
+import { DonationRouter } from "../modules/donation/donation.route.js";
 
 const router: Router = Router();
 
@@ -17,7 +17,7 @@ router.use("/categories", CategoryRouter);
 
 router.use("/ideas", IdeaRouter);
 
-router.use("/donations", PaymentRoutes);
+router.use("/donations", DonationRouter);
 
 router.use("/likes", VoteRoutes);
 

@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { paymentControllers } from "./payment.controller.js";
-import { authMiddleware } from "../../../middlewares/auth-middleware.js";
+import { paymentControllers } from "./donation.controller.js";
 import { UserRole } from "@prisma/client";
-import { validateRequestBody } from "../../../middlewares/zod-middleware.js";
 import { paymentValidations } from "./payment.validation.js";
+import { authMiddleware } from "../../middlewares/auth-middleware.js";
+import { validateRequestBody } from "../../middlewares/zod-middleware.js";
 
 const router: Router = Router();
 
@@ -33,4 +33,4 @@ router.get(
   paymentControllers.getAllPayments,
 );
 
-export { router as PaymentRoutes };
+export { router as DonationRouter };

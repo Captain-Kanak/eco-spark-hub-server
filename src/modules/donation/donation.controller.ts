@@ -3,7 +3,7 @@ import { catchAsync } from "../../utils/catch-async.js";
 import { paymentServices } from "./payment.service.js";
 import { sendResponse } from "../../utils/send-response.js";
 import { User } from "@prisma/client";
-import { IQueryParams } from "../../../interfaces/query-builder.interface.js";
+import { IQueryParams } from "../../interfaces/query-builder.interface.js";
 
 const createPaymentIntent = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;

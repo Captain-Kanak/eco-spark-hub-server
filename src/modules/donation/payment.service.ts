@@ -3,13 +3,19 @@ import Stripe from "stripe";
 import AppError from "../../errors/app-error.js";
 import { IConfirmPayment, ICreatePaymentIntent } from "./payment.interface.js";
 import { prisma } from "../../lib/prisma.js";
-import { env } from "../../../config/env.js";
-import { Payment, PaymentStatus, Prisma } from "@prisma/client";
+import { QueryBuilder } from "../../utils/query-builder.js";
+import { env } from "../../config/env.js";
+import {
+  Currency,
+  Donation,
+  PaymentGateway,
+  PaymentStatus,
+  Prisma,
+} from "@prisma/client";
 import {
   IQueryParams,
   QueryResult,
-} from "../../../interfaces/query-builder.interface.js";
-import { QueryBuilder } from "../../utils/query-builder.js";
+} from "../../interfaces/query-builder.interface.js";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -30,12 +36,8 @@ const createPaymentIntent = async (
       throw new AppError("Idea not found", status.NOT_FOUND);
     }
 
-    if (!idea.isPaid || !idea.price) {
-      throw new AppError("Idea is free", status.BAD_REQUEST);
-    }
-
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: idea.price * 100,
+      amount: 5000,
       currency: "usd",
       automatic_payment_methods: { enabled: true },
       metadata: {
@@ -46,19 +48,14 @@ const createPaymentIntent = async (
 
     return paymentIntent.client_secret as string;
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError(
-      "Failed to create payment intent",
-      status.INTERNAL_SERVER_ERROR,
-    );
+    throw error;
   }
 };
 
 const confirmPayment = async (
   payload: IConfirmPayment,
   userId: string,
-): Promise<Payment> => {
+): Promise<Donation> => {
   try {
     const { ideaId, transactionId, paymentMethod } = payload;
 
@@ -72,54 +69,48 @@ const confirmPayment = async (
       throw new AppError("Idea not found", status.NOT_FOUND);
     }
 
-    if (!idea.price) {
-      throw new AppError("Idea is free", status.BAD_REQUEST);
-    }
-
     if (idea.userId === userId) {
       throw new AppError("You cannot buy your own idea", status.BAD_REQUEST);
     }
 
-    const createPayment = await prisma.payment.create({
+    const createPayment = await prisma.donation.create({
       data: {
-        amount: idea.price,
-        transactionId,
+        originalCurrency: Currency.INR,
+        originalAmount: 5000,
+        exchangeRate: 1,
+        baseCurrency: Currency.USD,
+        baseAmount: 5000,
+        gateway: PaymentGateway.STRIPE,
         paymentMethod,
+        transactionId,
         status: PaymentStatus.PAID,
-        ideaId,
         userId,
+        ideaId,
       },
     });
 
     return createPayment;
   } catch (error: any) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError(
-      error.message || "Failed to confirm payment",
-      status.INTERNAL_SERVER_ERROR,
-    );
+    throw error;
   }
 };
 
 const getSales = async (
   query: IQueryParams,
   userId: string,
-): Promise<QueryResult<Partial<Payment>>> => {
+): Promise<QueryResult<Partial<Donation>>> => {
   try {
     const queryBuilder = new QueryBuilder<
-      Payment,
-      Prisma.PaymentWhereInput,
-      Prisma.PaymentInclude
-    >(prisma.payment, query, {});
+      Donation,
+      Prisma.DonationWhereInput,
+      Prisma.DonationInclude
+    >(prisma.donation, query, {});
 
     const result = await queryBuilder
       .pagination()
       .where({
-        isDeleted: false,
-        idea: {
-          userId,
-        },
+        deletedAt: null,
+        idea: { userId },
       })
       .search()
       .filter()
@@ -133,25 +124,23 @@ const getSales = async (
 
     return result;
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError("Failed to get sales", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
 const getAllPayments = async (
   query: IQueryParams,
-): Promise<QueryResult<Payment>> => {
+): Promise<QueryResult<Donation>> => {
   try {
     const queryBuilder = new QueryBuilder<
-      Payment,
-      Prisma.PaymentWhereInput,
-      Prisma.PaymentInclude
-    >(prisma.payment, query, {});
+      Donation,
+      Prisma.DonationWhereInput,
+      Prisma.DonationInclude
+    >(prisma.donation, query, {});
 
     const result = await queryBuilder
       .pagination()
-      .where({ isDeleted: false })
+      .where({ deletedAt: null })
       .search()
       .filter()
       .sort()
@@ -168,9 +157,7 @@ const getAllPayments = async (
 
     return result;
   } catch (error) {
-    if (error instanceof AppError) throw error;
-
-    throw new AppError("Failed to get payments", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
