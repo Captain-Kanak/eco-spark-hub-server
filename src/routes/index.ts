@@ -4,7 +4,7 @@ import { UserRouter } from "../modules/user/user.route.js";
 import { CategoryRouter } from "../modules/category/category.route.js";
 import { IdeaRouter } from "../modules/idea/idea.route.js";
 import { LikeRouter } from "../modules/like/like.route.js";
-import { CommentRoutes } from "../modules/comment/comment.route.js";
+import { CommentRouter } from "../modules/comment/comment.route.js";
 import { DonationRouter } from "../modules/donation/donation.route.js";
 
 const router: Router = Router();
@@ -21,6 +21,6 @@ router.use("/donations", DonationRouter);
 
 router.use("/likes", LikeRouter);
 
-router.use("/comments", CommentRoutes);
+router.use("/comments", CommentRouter);
 
 export { router as IndexRouter };

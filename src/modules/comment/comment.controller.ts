@@ -3,11 +3,11 @@ import { catchAsync } from "../../utils/catch-async.js";
 import { CommentServices } from "./comment.service.js";
 import { sendResponse } from "../../utils/send-response.js";
 import status from "http-status";
-import { DecodedUser } from "../../../types/auth.type.js";
+import { JWTUser } from "../../interfaces/auth.js";
 
 const createComment = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
-  const { id } = req.user as DecodedUser;
+  const { id } = req.user as JWTUser;
 
   const result = await CommentServices.createComment(payload, id as string);
 
@@ -22,7 +22,7 @@ const createComment = catchAsync(async (req: Request, res: Response) => {
 const updateCommentById = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   const payload = req.body;
-  const { id: userId } = req.user as DecodedUser;
+  const { id: userId } = req.user as JWTUser;
 
   const result = await CommentServices.updateCommentById(
     id as string,
@@ -40,7 +40,7 @@ const updateCommentById = catchAsync(async (req: Request, res: Response) => {
 
 const deleteCommentById = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
-  const { id: userId } = req.user as DecodedUser;
+  const { id: userId } = req.user as JWTUser;
 
   const result = await CommentServices.deleteCommentById(
     id as string,

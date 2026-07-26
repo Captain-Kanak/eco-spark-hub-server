@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { CommentControllers } from "./comment.controller.js";
-import { authMiddleware } from "../../../middlewares/auth-middleware.js";
 import { UserRole } from "@prisma/client";
-import { validateRequestBody } from "../../../middlewares/zod-middleware.js";
 import { CommentValidations } from "./comment.validation.js";
+import { authMiddleware } from "../../middlewares/auth-middleware.js";
+import { validateRequestBody } from "../../middlewares/zod-middleware.js";
 
 const router: Router = Router();
 
@@ -27,4 +27,4 @@ router.delete(
   CommentControllers.deleteCommentById,
 );
 
-export { router as CommentRoutes };
+export { router as CommentRouter };

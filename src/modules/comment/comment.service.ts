@@ -28,10 +28,7 @@ const createComment = async (
 
     return comment;
   } catch (error: any) {
-    throw new AppError(
-      error.message || "Failed to create comment",
-      status.INTERNAL_SERVER_ERROR,
-    );
+    throw error;
   }
 };
 
@@ -62,10 +59,7 @@ const updateCommentById = async (
 
     return updatedComment;
   } catch (error: any) {
-    throw new AppError(
-      error.message || "Failed to update comment",
-      status.INTERNAL_SERVER_ERROR,
-    );
+    throw error;
   }
 };
 
@@ -94,10 +88,7 @@ const deleteCommentById = async (
 
     return deletedComment;
   } catch (error: any) {
-    throw new AppError(
-      error.message || "Failed to delete comment",
-      status.INTERNAL_SERVER_ERROR,
-    );
+    throw error;
   }
 };
 
