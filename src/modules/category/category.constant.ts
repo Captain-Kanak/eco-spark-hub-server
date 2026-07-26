@@ -1,1 +1,1 @@
-export const categorySearchableFields: string[] = ["name", "description"];
+export const categorySearchableFields: string[] = ["name"];

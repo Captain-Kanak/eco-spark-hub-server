@@ -1,11 +1,13 @@
 export interface CreateIdea {
   title: string;
+  coverImage?: string;
   description: string;
   problemStatement: string;
-  solution: string;
-  image?: string;
-  isPaid?: boolean;
-  price?: number;
+  proposedSolution: string;
+  expectedImpact: string;
+  location: string;
+  estimatedBudget: number;
+  fundingGoal: number;
   categoryId: string;
 }
 

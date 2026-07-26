@@ -42,10 +42,10 @@ const updateIdeaZodSchema = z
   .partial();
 
 const updateIdeaStatusZodSchema = z.object({
-  status: z.enum([IdeaStatus.APPROVED, IdeaStatus.REJECTED]),
+  status: z.nativeEnum(IdeaStatus),
 });
 
-export const IdeaValidations = {
+export const IdeaValidation = {
   createIdeaZodSchema,
   updateIdeaZodSchema,
   updateIdeaStatusZodSchema,

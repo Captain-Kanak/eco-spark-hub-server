@@ -1,15 +1,15 @@
 import { Router } from "express";
-import { ideaControllers } from "./idea.controller.js";
-import { authMiddleware } from "../../../middlewares/auth-middleware.js";
+import { ideaController } from "./idea.controller.js";
 import { UserRole } from "@prisma/client";
+import { IdeaValidation } from "./idea.validation.js";
+import { authMiddleware } from "../../middlewares/auth-middleware.js";
+import { multerUpload } from "../../config/multer.config.js";
 import {
   paramsIdZodSchema,
   validateRequestBody,
   validateRequestParams,
-} from "../../../middlewares/zod-middleware.js";
-import { IdeaValidations } from "./idea.validation.js";
-import { multerUpload } from "../../../config/multer.config.js";
-import { optionalAuthMiddleware } from "../../../middlewares/optional-auth-middleware.js";
+} from "../../middlewares/zod-middleware.js";
+import { optionalAuthMiddleware } from "../../middlewares/optional-auth-middleware.js";
 
 const router: Router = Router();
 
@@ -17,35 +17,35 @@ router.post(
   "/",
   authMiddleware(UserRole.MEMBER),
   multerUpload.single("file"),
-  validateRequestBody(IdeaValidations.createIdeaZodSchema),
-  ideaControllers.createIdea,
+  validateRequestBody(IdeaValidation.createIdeaZodSchema),
+  ideaController.createIdea,
 );
 
 router.get(
   "/pending-ideas",
   authMiddleware(UserRole.ADMIN),
-  ideaControllers.getPendingIdeas,
+  ideaController.getPendingIdeas,
 );
 
-router.get("/", optionalAuthMiddleware(), ideaControllers.getIdeas);
+router.get("/", optionalAuthMiddleware(), ideaController.getIdeas);
 
 router.get(
   "/my-ideas",
   authMiddleware(UserRole.MEMBER),
-  ideaControllers.getMyIdeas,
+  ideaController.getMyIdeas,
 );
 
 router.get(
   "/purchased-ideas",
   authMiddleware(UserRole.MEMBER),
-  ideaControllers.getPurchasedIdeas,
+  ideaController.getPurchasedIdeas,
 );
 
 router.get(
   "/:id",
   optionalAuthMiddleware(),
   validateRequestParams(paramsIdZodSchema),
-  ideaControllers.getIdeaById,
+  ideaController.getIdeaById,
 );
 
 router.patch(
@@ -53,23 +53,23 @@ router.patch(
   authMiddleware(UserRole.MEMBER),
   multerUpload.single("file"),
   validateRequestParams(paramsIdZodSchema),
-  validateRequestBody(IdeaValidations.updateIdeaZodSchema),
-  ideaControllers.updateIdeaById,
+  validateRequestBody(IdeaValidation.updateIdeaZodSchema),
+  ideaController.updateIdeaById,
 );
 
 router.patch(
   "/update-idea-status/:id",
   authMiddleware(UserRole.ADMIN),
   validateRequestParams(paramsIdZodSchema),
-  validateRequestBody(IdeaValidations.updateIdeaStatusZodSchema),
-  ideaControllers.updateIdeaStatus,
+  validateRequestBody(IdeaValidation.updateIdeaStatusZodSchema),
+  ideaController.updateIdeaStatus,
 );
 
 router.delete(
   "/:id",
   authMiddleware(UserRole.ADMIN, UserRole.MEMBER),
   validateRequestParams(paramsIdZodSchema),
-  ideaControllers.deleteIdeaById,
+  ideaController.deleteIdeaById,
 );
 
-export { router as IdeaRoutes };
+export { router as IdeaRouter };

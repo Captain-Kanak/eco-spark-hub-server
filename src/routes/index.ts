@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { AuthRouter } from "../modules/auth/auth.route.js";
 import { UserRouter } from "../modules/user/user.route.js";
-import { CategoryRoutes } from "../modules/category/category.route.js";
-import { IdeaRoutes } from "../modules/idea/idea.route.js";
+import { CategoryRouter } from "../modules/category/category.route.js";
+import { IdeaRouter } from "../modules/idea/idea.route.js";
 import { VoteRoutes } from "../modules/vote/vote.route.js";
 import { CommentRoutes } from "../modules/comment/comment.route.js";
 import { PaymentRoutes } from "../modules/payment/payment.route.js";
@@ -13,9 +13,9 @@ router.use("/auth", AuthRouter);
 
 router.use("/users", UserRouter);
 
-router.use("/categories", CategoryRoutes);
+router.use("/categories", CategoryRouter);
 
-router.use("/ideas", IdeaRoutes);
+router.use("/ideas", IdeaRouter);
 
 router.use("/donations", PaymentRoutes);
 

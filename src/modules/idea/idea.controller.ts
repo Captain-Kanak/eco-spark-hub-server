@@ -3,15 +3,13 @@ import { catchAsync } from "../../utils/catch-async.js";
 import { ideaServices } from "./idea.service.js";
 import { sendResponse } from "../../utils/send-response.js";
 import status from "http-status";
-import { IQueryParams } from "../../../interfaces/query-builder.interface.js";
 import { User } from "@prisma/client";
+import { IQueryParams } from "../../interfaces/query-builder.interface.js";
 
 const createIdea = catchAsync(async (req: Request, res: Response) => {
   const payload = {
     ...req.body,
-    isPaid: req.body?.isPaid && Boolean(req.body?.isPaid),
-    price: req.body?.price && Number(req.body?.price),
-    image: req.file?.path,
+    coverImage: req.file?.path,
   };
   const { id } = req.user as User;
 
@@ -151,7 +149,7 @@ const deleteIdeaById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const ideaControllers = {
+export const ideaController = {
   createIdea,
   getPendingIdeas,
   getIdeas,

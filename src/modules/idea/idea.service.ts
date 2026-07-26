@@ -1,7 +1,7 @@
 import {
   Idea,
   IdeaStatus,
-  Payment,
+  Donation,
   Prisma,
   User,
   UserRole,
@@ -10,28 +10,32 @@ import { CreateIdea, UpdateIdea } from "./idea.interface.js";
 import AppError from "../../errors/app-error.js";
 import status from "http-status";
 import { prisma } from "../../lib/prisma.js";
+import { QueryBuilder } from "../../utils/query-builder.js";
+import { ideaFilterableFields, ideaSearchableFields } from "./idea.constant.js";
 import {
   IQueryParams,
   QueryResult,
-} from "../../../interfaces/query-builder.interface.js";
-import { QueryBuilder } from "../../utils/query-builder.js";
-import { ideaFilterableFields, ideaSearchableFields } from "./idea.constant.js";
+} from "../../interfaces/query-builder.interface.js";
+import { generateUniqueSlug } from "../../utils/generate-slug.js";
 
 const createIdea = async (
   payload: CreateIdea,
   userId: string,
 ): Promise<Idea> => {
   try {
+    const slug = generateUniqueSlug(payload.title);
+
     const idea = await prisma.idea.create({
       data: {
         ...payload,
         userId,
+        slug,
       },
     });
 
     return idea;
   } catch (error) {
-    throw new AppError("Failed to create idea", status.INTERNAL_SERVER_ERROR);
+    throw error;
   }
 };
 
@@ -50,7 +54,10 @@ const getPendingIdeas = async (
 
     const result = await queryBuilder
       .pagination()
-      .where({ isDeleted: false, status: IdeaStatus.PENDING })
+      .where({
+        deletedAt: null,
+        status: IdeaStatus.ON_REVIEW,
+      })
       .search()
       .filter()
       .sort()
@@ -60,10 +67,7 @@ const getPendingIdeas = async (
 
     return result;
   } catch (error) {
-    throw new AppError(
-      "Failed to get pending ideas",
-      status.INTERNAL_SERVER_ERROR,
-    );
+    throw error;
   }
 };
 
@@ -84,8 +88,8 @@ const getIdeas = async (
     const result = await queryBuilder
       .pagination()
       .where({
-        isDeleted: false,
-        status: IdeaStatus.APPROVED,
+        deletedAt: null,
+        status: IdeaStatus.PUBLISHED,
         categoryId: query.categoryId,
       })
       .search()
@@ -103,10 +107,8 @@ const getIdeas = async (
     let purchasedIdeaIds = new Set<string>();
 
     if (user?.id) {
-      const payments = await prisma.payment.findMany({
-        where: {
-          userId: user.id,
-        },
+      const payments = await prisma.donation.findMany({
+        where: { userId: user.id },
         select: {
           ideaId: true,
         },
@@ -115,12 +117,12 @@ const getIdeas = async (
       purchasedIdeaIds = new Set(payments.map((payment) => payment.ideaId));
     }
 
-    const sanitizedIdeas = result.data.map((idea) => {
-      if (!idea.isPaid) {
-        return {
-          ...idea,
-        };
-      }
+    const sanitizedIdeas = result.data.map((idea: Idea) => {
+      // if (!idea.isPaid) {
+      //   return {
+      //     ...idea,
+      //   };
+      // }
 
       const isAdmin = user?.role === UserRole.ADMIN;
       const isOwner = idea.userId === user?.id;
@@ -135,12 +137,12 @@ const getIdeas = async (
       return {
         id: idea.id,
         title: idea.title,
-        image: idea.image,
-        isPaid: idea.isPaid,
-        price: idea.price,
+        // image: idea.image,
+        // isPaid: idea.isPaid,
+        // price: idea.price,
         status: idea.status,
-        upvotes: idea.upvotes,
-        downvotes: idea.downvotes,
+        // upvotes: idea.upvotes,
+        // downvotes: idea.downvotes,
         categoryId: idea.categoryId,
         createdAt: idea.createdAt,
         updatedAt: idea.updatedAt,
@@ -172,8 +174,8 @@ const getMyIdeas = async (
     const result = await queryBuilder
       .pagination()
       .where({
-        isDeleted: false,
-        status: IdeaStatus.APPROVED,
+        deletedAt: null,
+        status: IdeaStatus.PUBLISHED,
         userId,
       })
       .search()
@@ -192,17 +194,17 @@ const getMyIdeas = async (
 const getPurchasedIdeas = async (
   query: IQueryParams,
   userId: string,
-): Promise<QueryResult<Partial<Payment>>> => {
+): Promise<QueryResult<Partial<Donation>>> => {
   try {
     const queryBuilder = new QueryBuilder<
-      Payment,
-      Prisma.PaymentWhereInput,
-      Prisma.PaymentInclude
-    >(prisma.payment, query, {});
+      Donation,
+      Prisma.DonationWhereInput,
+      Prisma.DonationInclude
+    >(prisma.donation, query, {});
 
     const result = await queryBuilder
       .pagination()
-      .where({ isDeleted: false, userId })
+      .where({ deletedAt: null, userId })
       .search()
       .filter()
       .sort()
@@ -224,7 +226,7 @@ const getIdeaById = async (
 ): Promise<Partial<Idea>> => {
   try {
     const idea = await prisma.idea.findUnique({
-      where: { id, status: IdeaStatus.APPROVED },
+      where: { id, status: IdeaStatus.PUBLISHED },
       include: { user: true },
     });
 
@@ -232,9 +234,9 @@ const getIdeaById = async (
       throw new AppError("Idea not found", status.NOT_FOUND);
     }
 
-    if (!idea.isPaid) {
-      return idea;
-    }
+    // if (!idea.isPaid) {
+    //   return idea;
+    // }
 
     const isOwner = idea.userId === userId;
 
@@ -249,7 +251,7 @@ const getIdeaById = async (
       );
     }
 
-    const payment = await prisma.payment.findFirst({
+    const payment = await prisma.donation.findFirst({
       where: {
         ideaId: id,
         userId,
@@ -259,7 +261,6 @@ const getIdeaById = async (
     if (!payment) {
       return {
         id: idea.id,
-        price: idea.price,
       };
     }
 
@@ -294,7 +295,7 @@ const updateIdeaById = async (
       );
     }
 
-    if (idea.isDeleted) {
+    if (idea.deletedAt !== null) {
       throw new AppError("Idea already deleted", status.BAD_REQUEST);
     }
 
@@ -332,7 +333,7 @@ const updateIdeaStatus = async (id: string, ideaStatus: IdeaStatus) => {
       );
     }
 
-    if (idea.isDeleted) {
+    if (idea.deletedAt !== null) {
       throw new AppError("Idea already deleted", status.BAD_REQUEST);
     }
 
@@ -370,7 +371,7 @@ const deleteIdeaById = async (id: string, user: User): Promise<void> => {
       throw new AppError("Idea not found", status.NOT_FOUND);
     }
 
-    if (idea.isDeleted) {
+    if (idea.deletedAt !== null) {
       throw new AppError("Idea already deleted", status.BAD_REQUEST);
     }
 

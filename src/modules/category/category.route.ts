@@ -43,4 +43,4 @@ router.delete(
   CategoryControllers.deleteCategoryById,
 );
 
-export { router as CategoryRoutes };
+export { router as CategoryRouter };
