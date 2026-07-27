@@ -4,7 +4,7 @@ model User {
     email         String     @db.VarChar(255)
     emailVerified Boolean    @default(false)
     image         String?    @db.Text
-    phone         String?    @db.VarChar(20)
+    phone         String?    @db.VarChar(15)
     address       String?    @db.Text
     dateOfBirth   DateTime?
     role          UserRole   @default(MEMBER)

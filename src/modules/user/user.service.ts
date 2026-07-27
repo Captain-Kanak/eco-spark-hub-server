@@ -38,8 +38,8 @@ const getUsers = async (query: IQueryParams): Promise<QueryResult<User>> => {
 };
 
 const updateProfile = async (
-  payload: UpdateUser,
   userId: string,
+  payload: UpdateUser,
 ): Promise<AuthResponse> => {
   try {
     const user = await prisma.user.findUnique({

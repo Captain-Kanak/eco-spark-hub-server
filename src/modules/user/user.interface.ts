@@ -3,5 +3,5 @@ export interface UpdateUser {
   image?: string;
   phone?: string;
   address?: string;
-  dateOfBirth?: string;
+  dateOfBirth?: Date;
 }

@@ -14,7 +14,7 @@ router.patch(
   "/update-profile",
   authMiddleware(),
   multerUpload.single("file"),
-  validateRequestBody(userValidation.updateProfileZodSchema),
+  validateRequestBody(userValidation.updateProfileSchema),
   userController.updateProfile,
 );
 

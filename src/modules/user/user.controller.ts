@@ -23,11 +23,11 @@ const updateProfile = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.user as User;
   const payload = {
     ...req.body,
-    dateOfBirth: req.body?.dateOfBirth && new Date(req.body?.dateOfBirth),
     image: req.file?.path,
+    dateOfBirth: req.body?.dateOfBirth && new Date(req.body?.dateOfBirth),
   };
 
-  const result = await userService.updateProfile(payload, id);
+  const result = await userService.updateProfile(id, payload);
 
   sendResponse(res, {
     statusCode: status.OK,
