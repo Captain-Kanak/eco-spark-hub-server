@@ -110,7 +110,7 @@ const updateCategoryById = async (
   }
 };
 
-const deleteCategoryById = async (id: string): Promise<void> => {
+const deleteCategoryById = async (id: string): Promise<Category> => {
   try {
     const category = await prisma.category.findUnique({
       where: { id, deletedAt: null },
@@ -120,18 +120,20 @@ const deleteCategoryById = async (id: string): Promise<void> => {
       throw new AppError("Category not found", status.NOT_FOUND);
     }
 
-    await prisma.category.update({
+    const result = await prisma.category.update({
       where: { id },
       data: {
         deletedAt: new Date(),
       },
     });
+
+    return result;
   } catch (error) {
     throw error;
   }
 };
 
-export const CategoryServices = {
+export const CategoryService = {
   createCategory,
   getCategories,
   getCategoryById,

@@ -1,7 +1,7 @@
 model Idea {
     id               String     @id @default(uuid(7))
     title            String     @db.VarChar(255)
-    slug             String     @db.VarChar(255)
+    slug             String     @db.Text
     coverImage       String?    @db.Text
     description      String     @db.Text
     problemStatement String     @db.Text

@@ -141,7 +141,7 @@ const googleLoginSuccess = async (
   }
 };
 
-export const AuthServices = {
+export const AuthService = {
   registerUser,
   verifyEmail,
   loginUser,

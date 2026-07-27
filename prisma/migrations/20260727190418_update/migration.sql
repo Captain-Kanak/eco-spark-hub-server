@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "category" ALTER COLUMN "slug" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "idea" ALTER COLUMN "slug" SET DATA TYPE TEXT;

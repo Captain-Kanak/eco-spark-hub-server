@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { catchAsync } from "../../utils/catch-async.js";
-import { CategoryServices } from "./category.service.js";
+import { CategoryService } from "./category.service.js";
 import { sendResponse } from "../../utils/send-response.js";
 import status from "http-status";
 import { IQueryParams } from "../../interfaces/query-builder.interface.js";
@@ -11,7 +11,7 @@ const createCategory = catchAsync(async (req: Request, res: Response) => {
     icon: req.file?.path,
   };
 
-  const result = await CategoryServices.createCategory(payload);
+  const result = await CategoryService.createCategory(payload);
 
   sendResponse(res, {
     statusCode: status.CREATED,
@@ -24,7 +24,7 @@ const createCategory = catchAsync(async (req: Request, res: Response) => {
 const getCategories = catchAsync(async (req: Request, res: Response) => {
   const query = req.query;
 
-  const result = await CategoryServices.getCategories(query as IQueryParams);
+  const result = await CategoryService.getCategories(query as IQueryParams);
 
   sendResponse(res, {
     statusCode: status.OK,
@@ -37,7 +37,7 @@ const getCategories = catchAsync(async (req: Request, res: Response) => {
 const getCategoryById = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
 
-  const result = await CategoryServices.getCategoryById(id as string);
+  const result = await CategoryService.getCategoryById(id as string);
 
   sendResponse(res, {
     statusCode: status.OK,
@@ -54,7 +54,7 @@ const updateCategoryById = catchAsync(async (req: Request, res: Response) => {
     icon: req.file?.path,
   };
 
-  const result = await CategoryServices.updateCategoryById(
+  const result = await CategoryService.updateCategoryById(
     id as string,
     payload,
   );
@@ -70,16 +70,17 @@ const updateCategoryById = catchAsync(async (req: Request, res: Response) => {
 const deleteCategoryById = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
 
-  await CategoryServices.deleteCategoryById(id as string);
+  const result = await CategoryService.deleteCategoryById(id as string);
 
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
     message: "Category deleted successfully",
+    data: result,
   });
 });
 
-export const CategoryControllers = {
+export const CategoryController = {
   createCategory,
   getCategories,
   getCategoryById,

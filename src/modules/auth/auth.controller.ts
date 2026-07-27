@@ -2,14 +2,14 @@ import { Request, Response } from "express";
 import { catchAsync } from "../../utils/catch-async.js";
 import { sendResponse } from "../../utils/send-response.js";
 import status from "http-status";
-import { AuthServices } from "./auth.service.js";
+import { AuthService } from "./auth.service.js";
 import { tokenUtil } from "../../utils/token.js";
 import { User } from "@prisma/client";
 import { authResponse } from "./auth.interface.js";
 import { env } from "../../config/env.js";
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthServices.registerUser(req.body);
+  const result = await AuthService.registerUser(req.body);
 
   sendResponse(res, {
     statusCode: status.CREATED,
@@ -20,7 +20,7 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const verifyEmail = catchAsync(async (req: Request, res: Response) => {
-  await AuthServices.verifyEmail(req.body);
+  await AuthService.verifyEmail(req.body);
 
   sendResponse(res, {
     statusCode: status.OK,
@@ -30,7 +30,7 @@ const verifyEmail = catchAsync(async (req: Request, res: Response) => {
 });
 
 const loginUser = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthServices.loginUser(req.body);
+  const result = await AuthService.loginUser(req.body);
 
   tokenUtil.setBetterAuthToken(res, result.token);
 
@@ -61,7 +61,7 @@ const googleLoginSuccess = catchAsync(async (req: Request, res: Response) => {
     return res.redirect(`${env.FRONTEND_URL}/login?error=oauth_failed`);
   }
 
-  const result = await AuthServices.googleLoginSuccess(sessionToken);
+  const result = await AuthService.googleLoginSuccess(sessionToken);
 
   if (!result.session) {
     return res.redirect(`${env.FRONTEND_URL}/login?error=no_session_found`);
@@ -91,7 +91,7 @@ const getMe = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const AuthControllers = {
+export const AuthController = {
   registerUser,
   verifyEmail,
   loginUser,

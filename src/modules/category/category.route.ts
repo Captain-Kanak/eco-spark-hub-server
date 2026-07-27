@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { CategoryControllers } from "./category.controller.js";
+import { CategoryController } from "./category.controller.js";
 import { UserRole } from "@prisma/client";
-import { CategoryValidations } from "./category.validation.js";
+import { CategoryValidation } from "./category.validation.js";
 import { authMiddleware } from "../../middlewares/auth-middleware.js";
 import { multerUpload } from "../../config/multer.config.js";
 import {
@@ -16,31 +16,31 @@ router.post(
   "/",
   authMiddleware(UserRole.ADMIN),
   multerUpload.single("file"),
-  validateRequestBody(CategoryValidations.createCategorySchema),
-  CategoryControllers.createCategory,
+  validateRequestBody(CategoryValidation.createCategorySchema),
+  CategoryController.createCategory,
 );
 
-router.get("/", CategoryControllers.getCategories);
+router.get("/", CategoryController.getCategories);
 
 router.get(
   "/:id",
   validateRequestParams(paramsIdZodSchema),
-  CategoryControllers.getCategoryById,
+  CategoryController.getCategoryById,
 );
 
 router.patch(
   "/:id",
   authMiddleware(UserRole.ADMIN),
   multerUpload.single("file"),
-  validateRequestBody(CategoryValidations.updateCategorySchema),
-  CategoryControllers.updateCategoryById,
+  validateRequestBody(CategoryValidation.updateCategorySchema),
+  CategoryController.updateCategoryById,
 );
 
 router.delete(
   "/:id",
   authMiddleware(UserRole.ADMIN),
   validateRequestParams(paramsIdZodSchema),
-  CategoryControllers.deleteCategoryById,
+  CategoryController.deleteCategoryById,
 );
 
 export { router as CategoryRouter };
