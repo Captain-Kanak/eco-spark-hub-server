@@ -55,7 +55,7 @@ const googleLogin = catchAsync(async (req: Request, res: Response) => {
 
 const googleLoginSuccess = catchAsync(async (req: Request, res: Response) => {
   const redirectPath = (req.query.redirect as string) || "/";
-  const sessionToken = req.cookies["better-auth.session_token"];
+  const sessionToken = tokenUtil.getBetterAuthToken(req);
 
   if (!sessionToken) {
     return res.redirect(`${env.FRONTEND_URL}/login?error=oauth_failed`);
