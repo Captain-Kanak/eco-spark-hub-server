@@ -18,6 +18,12 @@ router.patch(
   userController.updateProfile,
 );
 
+router.patch(
+  "/block/:id",
+  authMiddleware(UserRole.ADMIN),
+  userController.blockUser,
+);
+
 router.delete(
   "/:id",
   authMiddleware(UserRole.ADMIN),

@@ -18,6 +18,7 @@
 | ------ | ---------------------------- | ------ | ------------------------------- |
 | GET    | /api/v1/users                | ADMIN  | get all users                   |
 | PATCH  | /api/v1/users/update-profile | SECURE | update user profile             |
+| PATCH  | /api/v1/users/block/:id      | ADMIN  | block user account              |
 | DELETE | /api/v1/users/:id            | ADMIN  | delete user by id (soft delete) |
 
 ---

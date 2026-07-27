@@ -71,6 +71,39 @@ const updateProfile = async (
   }
 };
 
+const blockUser = async (id: string): Promise<User> => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (user && user.deletedAt !== null) {
+      throw new AppError(
+        "This account has been already deleted",
+        status.BAD_REQUEST,
+      );
+    } else if (user && user.status === UserStatus.BLOCKED) {
+      throw new AppError(
+        "This account has been already blocked",
+        status.BAD_REQUEST,
+      );
+    } else if (!user) {
+      throw new AppError("User not found", status.NOT_FOUND);
+    }
+
+    const result = await prisma.user.update({
+      where: { id },
+      data: {
+        status: UserStatus.BLOCKED,
+      },
+    });
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const deleteUser = async (id: string): Promise<User> => {
   try {
     const user = await prisma.user.findUnique({
@@ -102,5 +135,6 @@ const deleteUser = async (id: string): Promise<User> => {
 export const userService = {
   getUsers,
   updateProfile,
+  blockUser,
   deleteUser,
 };

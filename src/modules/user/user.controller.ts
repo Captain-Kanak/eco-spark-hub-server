@@ -37,6 +37,19 @@ const updateProfile = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const blockUser = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const result = await userService.blockUser(id as string);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "User blocked successfully",
+    data: result,
+  });
+});
+
 const deleteUser = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
 
@@ -53,5 +66,6 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
 export const userController = {
   getUsers,
   updateProfile,
+  blockUser,
   deleteUser,
 };
