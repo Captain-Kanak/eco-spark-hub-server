@@ -122,27 +122,36 @@
 | Field            | Type             | Description                                                        |
 | ---------------- | ---------------- | ------------------------------------------------------------------ |
 | id               | UUID (PK)        | Unique identifier for the donation.                                |
+| originalCurrency | Currency         | ISO 4217 currency code (e.g., USD, BDT, EUR).                      |
 | originalAmount   | Decimal          | Amount donated in the donor's selected currency.                   |
-| originalCurrency | String           | ISO 4217 currency code (e.g., USD, BDT, EUR).                      |
 | exchangeRate     | Decimal          | Exchange rate used to convert the donation into the base currency. |
+| baseCurrency     | Currency         | Platform base currency (always `USD`).                             |
 | baseAmount       | Decimal          | Converted donation amount in the platform's base currency (USD).   |
-| baseCurrency     | String           | Platform base currency (always `USD`).                             |
 | gateway          | PaymentGateway   | Payment gateway used to process the donation.                      |
 | paymentMethod    | String           | Payment method used (e.g., Visa, bKash, Nagad).                    |
 | transactionId    | String           | Transaction ID returned by the payment gateway.                    |
 | status           | PaymentStatus    | Current payment status.                                            |
-| ideaId           | UUID (FK)        | References the idea receiving the donation.                        |
 | userId           | UUID (FK)        | References the user who made the donation.                         |
+| ideaId           | UUID (FK)        | References the idea receiving the donation.                        |
 | createdAt        | DateTime (now()) | Timestamp when the donation record was created.                    |
 | updatedAt        | DateTime         | Timestamp of the last update.                                      |
 | deletedAt        | DateTime?        | Soft delete timestamp (if applicable).                             |
 
+### Currency
+
+| Value | Description                                    |
+| ----- | ---------------------------------------------- |
+| USD   | United States Dollar (Platform base currency). |
+| BDT   | Bangladeshi Taka.                              |
+| INR   | Indian Rupee.                                  |
+| EUR   | Euro.                                          |
+
 ### PaymentGateway
 
-| Value      | Description                           |
-| ---------- | ------------------------------------- |
-| STRIPE     | Payment processed through Stripe.     |
-| SSLCOMMERZ | Payment processed through SSLCommerz. |
+| Value      | Description                                                   |
+| ---------- | ------------------------------------------------------------- |
+| STRIPE     | International payment gateway supporting multiple currencies. |
+| SSLCOMMERZ | Payment gateway primarily supporting payments in Bangladesh.  |
 
 ### PaymentStatus
 

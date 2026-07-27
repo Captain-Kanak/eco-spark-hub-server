@@ -21,8 +21,8 @@ enum IdeaStatus {
 enum Currency {
     USD
     BDT
-    EUR
     INR
+    EUR
 }
 
 enum PaymentGateway {
