@@ -20,11 +20,14 @@ const registerUser = async (payload: RegisterUser): Promise<AuthResponse> => {
 
     if (user && user.deletedAt !== null) {
       throw new AppError(
-        "Suspended: You can't use this email",
+        "Your account has been suspended, please contact support or try different email",
         status.BAD_REQUEST,
       );
     } else if (user && user.status === UserStatus.BLOCKED) {
-      throw new AppError("Your account has been blocked", status.BAD_REQUEST);
+      throw new AppError(
+        "Your account has been blocked, please contact support",
+        status.BAD_REQUEST,
+      );
     } else if (user) {
       throw new AppError("User already exist", status.BAD_REQUEST);
     }
@@ -82,11 +85,14 @@ const loginUser = async (
 
     if (user && user.deletedAt !== null) {
       throw new AppError(
-        "Suspended: You can't use this email",
+        "Your account has been suspended, please contact support",
         status.BAD_REQUEST,
       );
     } else if (user && user.status === UserStatus.BLOCKED) {
-      throw new AppError("Your account has been blocked", status.BAD_REQUEST);
+      throw new AppError(
+        "Your account has been blocked, please contact support",
+        status.BAD_REQUEST,
+      );
     } else if (!user) {
       throw new AppError("User not found", status.NOT_FOUND);
     }

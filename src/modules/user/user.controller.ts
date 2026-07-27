@@ -40,12 +40,13 @@ const updateProfile = catchAsync(async (req: Request, res: Response) => {
 const deleteUser = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  await userService.deleteUser(id as string);
+  const result = await userService.deleteUser(id as string);
 
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
     message: "User deleted successfully",
+    data: result,
   });
 });
 

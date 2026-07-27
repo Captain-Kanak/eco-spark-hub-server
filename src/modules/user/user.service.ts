@@ -1,4 +1,4 @@
-import { Prisma, User, UserRole } from "@prisma/client";
+import { Prisma, User, UserRole, UserStatus } from "@prisma/client";
 import { UpdateUser } from "./user.interface.js";
 import AppError from "../../errors/app-error.js";
 import status from "http-status";
@@ -43,10 +43,20 @@ const updateProfile = async (
 ): Promise<AuthResponse> => {
   try {
     const user = await prisma.user.findUnique({
-      where: { id: userId, deletedAt: null },
+      where: { id: userId },
     });
 
-    if (!user) {
+    if (user && user.deletedAt !== null) {
+      throw new AppError(
+        "You account has been suspended, please contact support",
+        status.BAD_REQUEST,
+      );
+    } else if (user && user.status === UserStatus.BLOCKED) {
+      throw new AppError(
+        "You account has been blocked, please contact support",
+        status.BAD_REQUEST,
+      );
+    } else if (!user) {
       throw new AppError("User not found", status.NOT_FOUND);
     }
 
@@ -61,22 +71,29 @@ const updateProfile = async (
   }
 };
 
-const deleteUser = async (id: string): Promise<void> => {
+const deleteUser = async (id: string): Promise<User> => {
   try {
     const user = await prisma.user.findUnique({
-      where: { id, deletedAt: null },
+      where: { id },
     });
 
-    if (!user) {
+    if (user && user.deletedAt !== null) {
+      throw new AppError(
+        "This account has been already deleted",
+        status.BAD_REQUEST,
+      );
+    } else if (!user) {
       throw new AppError("User not found", status.NOT_FOUND);
     }
 
-    await prisma.user.update({
+    const result = await prisma.user.update({
       where: { id },
       data: {
         deletedAt: new Date(),
       },
     });
+
+    return result;
   } catch (error) {
     throw error;
   }
