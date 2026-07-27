@@ -12,13 +12,11 @@ import {
 import status from "http-status";
 import { Session } from "better-auth";
 
-const registerUser = async (payload: RegisterUser): Promise<void> => {
+const registerUser = async (payload: RegisterUser): Promise<AuthResponse> => {
   try {
     const { name, email, password } = payload;
 
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
+    const user = await prisma.user.findUnique({ where: { email } });
 
     if (user && user.deletedAt !== null) {
       throw new AppError(
@@ -31,13 +29,15 @@ const registerUser = async (payload: RegisterUser): Promise<void> => {
       throw new AppError("User already exist", status.BAD_REQUEST);
     }
 
-    await auth.api.signUpEmail({
+    const result = await auth.api.signUpEmail({
       body: {
         name,
         email,
         password,
       },
     });
+
+    return authResponse(result.user as User);
   } catch (error) {
     throw error;
   }
@@ -56,9 +56,7 @@ const verifyEmail = async (payload: VerifyEmail): Promise<void> => {
 
     if (result.status && !result.user.emailVerified) {
       await prisma.user.update({
-        where: {
-          email,
-        },
+        where: { email },
         data: {
           emailVerified: true,
         },
@@ -80,9 +78,7 @@ const loginUser = async (
   try {
     const { email, password } = payload;
 
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
+    const user = await prisma.user.findUnique({ where: { email } });
 
     if (user && user.deletedAt !== null) {
       throw new AppError(

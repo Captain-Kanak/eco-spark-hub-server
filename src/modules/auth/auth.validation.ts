@@ -2,7 +2,7 @@ import * as z from "zod";
 
 const nameSchema = z
   .string("Name is required")
-  .min(3, "Name must be at least 3 characters long")
+  .min(2, "Name must be at least 2 characters long")
   .max(100, "Name can't be more than 100 characters long");
 
 const emailSchema = z
