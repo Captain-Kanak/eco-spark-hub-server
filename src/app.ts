@@ -1,13 +1,19 @@
-import express, { Application, Request, Response } from "express";
-import status from "http-status";
+import express, {
+  Application,
+  json,
+  Request,
+  Response,
+  urlencoded,
+} from "express";
+import path from "path";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { env } from "./config/env.js";
-import { IndexRouter } from "./routes/index.js";
-import globalErrorHandler from "./middlewares/error-middleware.js";
-import path from "path";
+import status from "http-status";
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth.js";
+import { IndexRouter } from "./routes/index.js";
+import globalErrorHandler from "./middlewares/error-middleware.js";
 
 // create express app
 const app: Application = express();
@@ -20,10 +26,10 @@ app.set("views", path.resolve(process.cwd(), "src/templates"));
 app.set("query parser", "extended");
 
 // body parser for json
-app.use(express.json());
+app.use(json());
 
 // urlencoded parser for form data
-app.use(express.urlencoded({ extended: true }));
+app.use(urlencoded({ extended: true }));
 
 // cookie parser
 app.use(cookieParser());

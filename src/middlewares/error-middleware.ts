@@ -5,6 +5,8 @@ import { ErrorSourceType } from "../interfaces/error.interface.js";
 import { env } from "../config/env.js";
 import { handleZodError } from "../errors/zod-error.js";
 import AppError from "../errors/app-error.js";
+import { Prisma } from "@prisma/client";
+import { handlePrismaError } from "../errors/prisma-error.js";
 
 async function globalErrorHandler(
   err: Error,
@@ -21,16 +23,16 @@ async function globalErrorHandler(
   }
 
   if (err instanceof z.ZodError) {
-    const simplifiedZodErrors = handleZodError(err);
-
-    statusCode = simplifiedZodErrors.statusCode;
-    message = simplifiedZodErrors.message;
-    errorSources = [...simplifiedZodErrors.errorSources];
-  }
-
-  if (err instanceof AppError) {
+    ({ statusCode, message, errorSources } = handleZodError(err));
+  } else if (err instanceof Prisma.PrismaClientKnownRequestError) {
+    ({ statusCode, message, errorSources } = handlePrismaError(err));
+  } else if (err instanceof AppError) {
     statusCode = err.statusCode;
     message = err.message;
+  } else if (err instanceof Error) {
+    message = err.message;
+  } else {
+    message = "Something went wrong";
   }
 
   return res.status(statusCode).json({
