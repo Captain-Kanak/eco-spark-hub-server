@@ -58,3 +58,21 @@
 | POST   | /api/v1/donations/confirm-payment       | MEMBER | Confirm Payment       |
 
 ---
+
+### Like
+
+| Method | Endpoint      | Access | Description           |
+| ------ | ------------- | ------ | --------------------- |
+| POST   | /api/v1/likes | MEMBER | Create Payment Intent |
+| POST   | /api/v1/likes | MEMBER | Confirm Payment       |
+
+---
+
+### Comment
+
+| Method | Endpoint         | Access | Description           |
+| ------ | ---------------- | ------ | --------------------- |
+| POST   | /api/v1/comments | MEMBER | Create Payment Intent |
+| POST   | /api/v1/comments | MEMBER | Confirm Payment       |
+
+---
