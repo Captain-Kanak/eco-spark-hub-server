@@ -3,7 +3,10 @@ import AppError from "../../errors/app-error.js";
 import { CreateCategory, UpdateCategory } from "./category.interface.js";
 import { prisma } from "../../lib/prisma.js";
 import { Category, Prisma } from "@prisma/client";
-import { categorySearchableFields } from "./category.constant.js";
+import {
+  categoryFilterableFields,
+  categorySearchableFields,
+} from "./category.constant.js";
 import { generateUniqueSlug } from "../../utils/generate-slug.js";
 import {
   QueryBuilderParams,
@@ -38,7 +41,7 @@ const getCategories = async (
       Prisma.CategoryInclude
     >(prisma.category, query, {
       searchableFields: categorySearchableFields,
-      filterableFields: categorySearchableFields,
+      filterableFields: categoryFilterableFields,
     });
 
     const result = await queryBuilder
