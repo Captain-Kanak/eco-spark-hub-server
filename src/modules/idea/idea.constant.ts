@@ -1,8 +1,3 @@
-export const ideaSearchableFields: string[] = ["title", "description"];
+export const ideaSearchableFields: string[] = ["title"];
 
-export const ideaFilterableFields: string[] = [
-  "title",
-  "description",
-  "isPaid",
-  "price",
-];
+export const ideaFilterableFields: string[] = ["status"];

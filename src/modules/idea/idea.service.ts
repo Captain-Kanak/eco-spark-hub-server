@@ -9,6 +9,7 @@ import {
   QueryBuilderResult,
 } from "../../query-builder/query-builder.interface.js";
 import { QueryBuilder } from "../../query-builder/query-builder.js";
+import { ideaFilterableFields, ideaSearchableFields } from "./idea.constant.js";
 
 const createIdea = async (
   payload: CreateIdea,
@@ -39,7 +40,10 @@ const getIdeas = async (
       Idea,
       Prisma.IdeaWhereInput,
       Prisma.IdeaInclude
-    >(prisma.idea, query, {});
+    >(prisma.idea, query, {
+      searchableFields: ideaSearchableFields,
+      filterableFields: ideaFilterableFields,
+    });
 
     const result = await queryBuilder
       .pagination()

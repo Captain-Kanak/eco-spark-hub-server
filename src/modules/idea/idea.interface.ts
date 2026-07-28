@@ -1,3 +1,6 @@
+import { Idea, IdeaStatus } from "@prisma/client";
+import { Decimal } from "@prisma/client/runtime/client";
+
 export interface CreateIdea {
   title: string;
   coverImage?: string;
@@ -6,16 +9,14 @@ export interface CreateIdea {
   proposedSolution: string;
   expectedImpact: string;
   location: string;
-  estimatedBudget: number;
-  fundingGoal: number;
+  estimatedBudget: Decimal;
+  fundingGoal: Decimal;
   categoryId: string;
 }
 
 export interface UpdateIdea {
   title?: string;
+  coverImage?: string;
   description?: string;
-  image?: string;
-  isPaid?: boolean;
-  price?: number;
   categoryId?: string;
 }
