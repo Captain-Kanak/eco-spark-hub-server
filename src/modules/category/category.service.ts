@@ -3,13 +3,13 @@ import AppError from "../../errors/app-error.js";
 import { CreateCategory, UpdateCategory } from "./category.interface.js";
 import { prisma } from "../../lib/prisma.js";
 import { Category, Prisma } from "@prisma/client";
-import { QueryBuilder } from "../../utils/query-builder.js";
 import { categorySearchableFields } from "./category.constant.js";
-import {
-  IQueryParams,
-  QueryResult,
-} from "../../interfaces/query-builder.interface.js";
 import { generateUniqueSlug } from "../../utils/generate-slug.js";
+import {
+  QueryBuilderParams,
+  QueryBuilderResult,
+} from "../../query-builder/query-builder.interface.js";
+import { QueryBuilder } from "../../query-builder/query-builder.js";
 
 const createCategory = async (payload: CreateCategory): Promise<Category> => {
   try {
@@ -29,8 +29,8 @@ const createCategory = async (payload: CreateCategory): Promise<Category> => {
 };
 
 const getCategories = async (
-  query: IQueryParams,
-): Promise<QueryResult<Category>> => {
+  query: QueryBuilderParams,
+): Promise<QueryBuilderResult<Category>> => {
   try {
     const queryBuilder = new QueryBuilder<
       Category,
@@ -43,12 +43,14 @@ const getCategories = async (
 
     const result = await queryBuilder
       .pagination()
-      .where({ deletedAt: null })
+      .where({
+        deletedAt: null,
+      })
       .search()
       .filter()
       .sort()
       .select()
-      .includes({
+      .include({
         _count: true,
       })
       .execute();

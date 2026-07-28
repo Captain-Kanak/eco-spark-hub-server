@@ -1,22 +1,14 @@
-import {
-  Idea,
-  IdeaStatus,
-  Donation,
-  Prisma,
-  User,
-  UserRole,
-} from "@prisma/client";
+import { Idea, IdeaStatus, Prisma, User, UserRole } from "@prisma/client";
 import { CreateIdea, UpdateIdea } from "./idea.interface.js";
 import AppError from "../../errors/app-error.js";
 import status from "http-status";
 import { prisma } from "../../lib/prisma.js";
-import { QueryBuilder } from "../../utils/query-builder.js";
-import { ideaFilterableFields, ideaSearchableFields } from "./idea.constant.js";
-import {
-  IQueryParams,
-  QueryResult,
-} from "../../interfaces/query-builder.interface.js";
 import { generateUniqueSlug } from "../../utils/generate-slug.js";
+import {
+  QueryBuilderParams,
+  QueryBuilderResult,
+} from "../../query-builder/query-builder.interface.js";
+import { QueryBuilder } from "../../query-builder/query-builder.js";
 
 const createIdea = async (
   payload: CreateIdea,
@@ -39,79 +31,9 @@ const createIdea = async (
   }
 };
 
-const getPendingIdeas = async (
-  query: IQueryParams,
-): Promise<QueryResult<Partial<Idea>>> => {
-  try {
-    const queryBuilder = new QueryBuilder<
-      Idea,
-      Prisma.IdeaWhereInput,
-      Prisma.IdeaInclude
-    >(prisma.idea, query, {
-      searchableFields: ideaSearchableFields,
-      filterableFields: ideaFilterableFields,
-    });
-
-    const result = await queryBuilder
-      .pagination()
-      .where({
-        deletedAt: null,
-        status: IdeaStatus.ON_REVIEW,
-      })
-      .search()
-      .filter()
-      .sort()
-      .select()
-      .includes({ user: true })
-      .execute();
-
-    return result;
-  } catch (error) {
-    throw error;
-  }
-};
-
 const getIdeas = async (
-  query: IQueryParams,
-): Promise<QueryResult<Partial<Idea>>> => {
-  try {
-    const queryBuilder = new QueryBuilder<
-      Idea,
-      Prisma.IdeaWhereInput,
-      Prisma.IdeaInclude
-    >(prisma.idea, query, {
-      searchableFields: ideaSearchableFields,
-      filterableFields: ideaFilterableFields,
-    });
-
-    const result = await queryBuilder
-      .pagination()
-      .where({
-        deletedAt: null,
-        status: IdeaStatus.PUBLISHED,
-        categoryId: query.categoryId,
-      })
-      .search()
-      .filter()
-      .sort()
-      .select()
-      .includes({
-        category: true,
-        user: true,
-        _count: true,
-      })
-      .execute();
-
-    return result;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const getMyIdeas = async (
-  query: IQueryParams,
-  userId: string,
-): Promise<QueryResult<Partial<Idea>>> => {
+  query: QueryBuilderParams,
+): Promise<QueryBuilderResult<Idea>> => {
   try {
     const queryBuilder = new QueryBuilder<
       Idea,
@@ -122,49 +44,20 @@ const getMyIdeas = async (
     const result = await queryBuilder
       .pagination()
       .where({
-        userId,
         deletedAt: null,
-        status: IdeaStatus.PUBLISHED,
       })
       .search()
       .filter()
       .sort()
       .select()
-      .includes({ _count: true })
+      .include({
+        _count: true,
+      })
       .execute();
 
     return result;
   } catch (error) {
     throw error;
-  }
-};
-
-const getDonatedIdeas = async (
-  query: IQueryParams,
-  userId: string,
-): Promise<QueryResult<Partial<Donation>>> => {
-  try {
-    const queryBuilder = new QueryBuilder<
-      Donation,
-      Prisma.DonationWhereInput,
-      Prisma.DonationInclude
-    >(prisma.donation, query, {});
-
-    const result = await queryBuilder
-      .pagination()
-      .where({ deletedAt: null, userId })
-      .search()
-      .filter()
-      .sort()
-      .select()
-      .includes({
-        idea: true,
-      })
-      .execute();
-
-    return result;
-  } catch (error) {
-    throw new AppError("Failed to get my ideas", status.INTERNAL_SERVER_ERROR);
   }
 };
 
@@ -279,10 +172,7 @@ const deleteIdeaById = async (id: string, user: User): Promise<void> => {
 
 export const ideaServices = {
   createIdea,
-  getPendingIdeas,
   getIdeas,
-  getMyIdeas,
-  getDonatedIdeas,
   getIdeaById,
   updateIdeaById,
   updateIdeaStatus,

@@ -4,12 +4,12 @@ import { userService } from "./user.service.js";
 import { sendResponse } from "../../utils/send-response.js";
 import status from "http-status";
 import { User } from "@prisma/client";
-import { IQueryParams } from "../../interfaces/query-builder.interface.js";
+import { QueryBuilderParams } from "../../query-builder/query-builder.interface.js";
 
 const getUsers = catchAsync(async (req: Request, res: Response) => {
   const query = req.query;
 
-  const result = await userService.getUsers(query as IQueryParams);
+  const result = await userService.getUsers(query as QueryBuilderParams);
 
   sendResponse(res, {
     statusCode: status.OK,

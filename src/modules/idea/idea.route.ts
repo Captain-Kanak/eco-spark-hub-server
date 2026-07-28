@@ -20,17 +20,7 @@ router.post(
   ideaController.createIdea,
 );
 
-router.get(
-  "/pending-ideas",
-  authMiddleware(UserRole.ADMIN),
-  ideaController.getPendingIdeas,
-);
-
 router.get("/", ideaController.getIdeas);
-
-router.get("/my-ideas", authMiddleware(), ideaController.getMyIdeas);
-
-router.get("/donated-ideas", authMiddleware(), ideaController.getDonatedIdeas);
 
 router.get(
   "/:id",

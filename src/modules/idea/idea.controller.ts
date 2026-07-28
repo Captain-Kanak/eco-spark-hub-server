@@ -4,7 +4,7 @@ import { ideaServices } from "./idea.service.js";
 import { sendResponse } from "../../utils/send-response.js";
 import status from "http-status";
 import { User } from "@prisma/client";
-import { IQueryParams } from "../../interfaces/query-builder.interface.js";
+import { QueryBuilderParams } from "../../query-builder/query-builder.interface.js";
 
 const createIdea = catchAsync(async (req: Request, res: Response) => {
   const payload = {
@@ -23,51 +23,10 @@ const createIdea = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getPendingIdeas = catchAsync(async (req: Request, res: Response) => {
-  const query = req.query;
-
-  const result = await ideaServices.getPendingIdeas(query as IQueryParams);
-
-  sendResponse(res, {
-    statusCode: status.OK,
-    success: true,
-    message: "Ideas fetched successfully",
-    data: result,
-  });
-});
-
 const getIdeas = catchAsync(async (req: Request, res: Response) => {
   const query = req.query;
 
-  const result = await ideaServices.getIdeas(query as IQueryParams);
-
-  sendResponse(res, {
-    statusCode: status.OK,
-    success: true,
-    message: "Ideas fetched successfully",
-    data: result,
-  });
-});
-
-const getMyIdeas = catchAsync(async (req: Request, res: Response) => {
-  const query = req.query;
-  const { id } = req.user as User;
-
-  const result = await ideaServices.getMyIdeas(query as IQueryParams, id);
-
-  sendResponse(res, {
-    statusCode: status.OK,
-    success: true,
-    message: "Ideas fetched successfully",
-    data: result,
-  });
-});
-
-const getDonatedIdeas = catchAsync(async (req: Request, res: Response) => {
-  const query = req.query;
-  const { id } = req.user as User;
-
-  const result = await ideaServices.getDonatedIdeas(query as IQueryParams, id);
+  const result = await ideaServices.getIdeas(query as QueryBuilderParams);
 
   sendResponse(res, {
     statusCode: status.OK,
@@ -141,10 +100,7 @@ const deleteIdeaById = catchAsync(async (req: Request, res: Response) => {
 
 export const ideaController = {
   createIdea,
-  getPendingIdeas,
   getIdeas,
-  getMyIdeas,
-  getDonatedIdeas,
   getIdeaById,
   updateIdeaById,
   updateIdeaStatus,

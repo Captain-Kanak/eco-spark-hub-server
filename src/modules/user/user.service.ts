@@ -3,14 +3,16 @@ import { UpdateUser } from "./user.interface.js";
 import AppError from "../../errors/app-error.js";
 import status from "http-status";
 import { prisma } from "../../lib/prisma.js";
-import { QueryBuilder } from "../../utils/query-builder.js";
 import { AuthResponse, authResponse } from "../auth/auth.interface.js";
 import {
-  IQueryParams,
-  QueryResult,
-} from "../../interfaces/query-builder.interface.js";
+  QueryBuilderParams,
+  QueryBuilderResult,
+} from "../../query-builder/query-builder.interface.js";
+import { QueryBuilder } from "../../query-builder/query-builder.js";
 
-const getUsers = async (query: IQueryParams): Promise<QueryResult<User>> => {
+const getUsers = async (
+  query: QueryBuilderParams,
+): Promise<QueryBuilderResult<User>> => {
   try {
     const queryBuilder = new QueryBuilder<
       User,
@@ -20,15 +22,16 @@ const getUsers = async (query: IQueryParams): Promise<QueryResult<User>> => {
 
     const result = await queryBuilder
       .pagination()
+      .sort()
       .where({
         deletedAt: null,
-        role: UserRole.MEMBER,
       })
       .search()
       .filter()
-      .sort()
       .select()
-      .includes({ _count: true })
+      .include({
+        _count: true,
+      })
       .execute();
 
     return result;

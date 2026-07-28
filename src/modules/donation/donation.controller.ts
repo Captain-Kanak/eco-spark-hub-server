@@ -3,7 +3,7 @@ import { catchAsync } from "../../utils/catch-async.js";
 import { paymentServices } from "./donation.service.js";
 import { sendResponse } from "../../utils/send-response.js";
 import { User } from "@prisma/client";
-import { IQueryParams } from "../../interfaces/query-builder.interface.js";
+import { QueryBuilderParams } from "../../query-builder/query-builder.interface.js";
 
 const createPaymentIntent = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
@@ -41,8 +41,8 @@ const getSales = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.user as User;
 
   const result = await paymentServices.getSales(
-    query as IQueryParams,
     id as string,
+    query as QueryBuilderParams,
   );
 
   sendResponse(res, {
@@ -56,7 +56,9 @@ const getSales = catchAsync(async (req: Request, res: Response) => {
 const getAllPayments = catchAsync(async (req: Request, res: Response) => {
   const query = req.query;
 
-  const result = await paymentServices.getAllPayments(query as IQueryParams);
+  const result = await paymentServices.getAllPayments(
+    query as QueryBuilderParams,
+  );
 
   sendResponse(res, {
     statusCode: 200,

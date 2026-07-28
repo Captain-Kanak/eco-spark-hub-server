@@ -3,7 +3,6 @@ import Stripe from "stripe";
 import AppError from "../../errors/app-error.js";
 import { IConfirmPayment, ICreatePaymentIntent } from "./donation.interface.js";
 import { prisma } from "../../lib/prisma.js";
-import { QueryBuilder } from "../../utils/query-builder.js";
 import { env } from "../../config/env.js";
 import {
   Currency,
@@ -13,9 +12,10 @@ import {
   Prisma,
 } from "@prisma/client";
 import {
-  IQueryParams,
-  QueryResult,
-} from "../../interfaces/query-builder.interface.js";
+  QueryBuilderParams,
+  QueryBuilderResult,
+} from "../../query-builder/query-builder.interface.js";
+import { QueryBuilder } from "../../query-builder/query-builder.js";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -96,9 +96,9 @@ const confirmPayment = async (
 };
 
 const getSales = async (
-  query: IQueryParams,
   userId: string,
-): Promise<QueryResult<Partial<Donation>>> => {
+  query: QueryBuilderParams,
+): Promise<QueryBuilderResult<Donation>> => {
   try {
     const queryBuilder = new QueryBuilder<
       Donation,
@@ -116,7 +116,7 @@ const getSales = async (
       .filter()
       .sort()
       .select()
-      .includes({
+      .include({
         idea: true,
         user: true,
       })
@@ -129,8 +129,8 @@ const getSales = async (
 };
 
 const getAllPayments = async (
-  query: IQueryParams,
-): Promise<QueryResult<Donation>> => {
+  query: QueryBuilderParams,
+): Promise<QueryBuilderResult<Donation>> => {
   try {
     const queryBuilder = new QueryBuilder<
       Donation,
@@ -140,12 +140,14 @@ const getAllPayments = async (
 
     const result = await queryBuilder
       .pagination()
-      .where({ deletedAt: null })
+      .where({
+        deletedAt: null,
+      })
       .search()
       .filter()
       .sort()
       .select()
-      .includes({
+      .include({
         idea: {
           include: {
             user: true,
