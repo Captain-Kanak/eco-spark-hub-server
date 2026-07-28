@@ -5,7 +5,7 @@ import { IdeaValidation } from "./idea.validation.js";
 import { authMiddleware } from "../../middlewares/auth-middleware.js";
 import { multerUpload } from "../../config/multer.config.js";
 import {
-  paramsIdZodSchema,
+  paramsIdSchema,
   validateRequestBody,
   validateRequestParams,
 } from "../../middlewares/zod-middleware.js";
@@ -16,7 +16,7 @@ router.post(
   "/",
   authMiddleware(),
   multerUpload.single("file"),
-  validateRequestBody(IdeaValidation.createIdeaZodSchema),
+  validateRequestBody(IdeaValidation.createIdeaSchema),
   ideaController.createIdea,
 );
 
@@ -34,7 +34,7 @@ router.get("/donated-ideas", authMiddleware(), ideaController.getDonatedIdeas);
 
 router.get(
   "/:id",
-  validateRequestParams(paramsIdZodSchema),
+  validateRequestParams(paramsIdSchema),
   ideaController.getIdeaById,
 );
 
@@ -42,23 +42,23 @@ router.patch(
   "/:id",
   authMiddleware(),
   multerUpload.single("file"),
-  validateRequestParams(paramsIdZodSchema),
-  validateRequestBody(IdeaValidation.updateIdeaZodSchema),
+  validateRequestParams(paramsIdSchema),
+  validateRequestBody(IdeaValidation.updateIdeaSchema),
   ideaController.updateIdeaById,
 );
 
 router.patch(
   "/update-idea-status/:id",
   authMiddleware(UserRole.ADMIN),
-  validateRequestParams(paramsIdZodSchema),
-  validateRequestBody(IdeaValidation.updateIdeaStatusZodSchema),
+  validateRequestParams(paramsIdSchema),
+  validateRequestBody(IdeaValidation.updateIdeaStatusSchema),
   ideaController.updateIdeaStatus,
 );
 
 router.delete(
   "/:id",
   authMiddleware(UserRole.ADMIN, UserRole.MEMBER),
-  validateRequestParams(paramsIdZodSchema),
+  validateRequestParams(paramsIdSchema),
   ideaController.deleteIdeaById,
 );
 

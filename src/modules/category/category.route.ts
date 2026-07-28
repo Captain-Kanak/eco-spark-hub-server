@@ -5,7 +5,7 @@ import { CategoryValidation } from "./category.validation.js";
 import { authMiddleware } from "../../middlewares/auth-middleware.js";
 import { multerUpload } from "../../config/multer.config.js";
 import {
-  paramsIdZodSchema,
+  paramsIdSchema,
   validateRequestBody,
   validateRequestParams,
 } from "../../middlewares/zod-middleware.js";
@@ -24,7 +24,7 @@ router.get("/", CategoryController.getCategories);
 
 router.get(
   "/:id",
-  validateRequestParams(paramsIdZodSchema),
+  validateRequestParams(paramsIdSchema),
   CategoryController.getCategoryById,
 );
 
@@ -39,7 +39,7 @@ router.patch(
 router.delete(
   "/:id",
   authMiddleware(UserRole.ADMIN),
-  validateRequestParams(paramsIdZodSchema),
+  validateRequestParams(paramsIdSchema),
   CategoryController.deleteCategoryById,
 );
 

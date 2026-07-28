@@ -1,52 +1,62 @@
 import { IdeaStatus } from "@prisma/client";
 import * as z from "zod";
 
-const createIdeaZodSchema = z.object({
-  title: z
-    .string("Title is required")
-    .min(3, "Title must be at least 3 characters long")
-    .max(100, "Title can't be more than 100 characters long"),
-  description: z
-    .string("Description is required")
-    .min(3, "Description must be at least 3 characters long")
-    .max(1000, "Description can't be more than 1000 characters long"),
-  problemStatement: z
-    .string("Problem Statement is required")
-    .min(3, "Problem Statement must be at least 3 characters long")
-    .max(1000, "Problem Statement can't be more than 1000 characters long"),
-  solution: z
-    .string("Solution is required")
-    .min(3, "Solution must be at least 3 characters long")
-    .max(1000, "Solution can't be more than 1000 characters long"),
-  image: z.url("Image must be a valid URL").optional(),
-  isPaid: z.boolean().optional(),
-  price: z.number().optional(),
-  categoryId: z.uuid("Category ID is invalid or missing"),
+const titleSchema = z
+  .string("Title is required")
+  .trim()
+  .min(3, "Title must be at least 3 characters long")
+  .max(255, "Title can't be more than 255 characters long");
+
+const textSchema = z
+  .string("Description is required")
+  .trim()
+  .min(10, "Description must be at least 10 characters long")
+  .max(5000, "Description can't be more than 5000 characters long");
+
+const locationSchema = z
+  .string("Location is required")
+  .trim()
+  .min(2, "Location must be at least 2 characters long")
+  .max(300, "Location can't be more than 300 characters long");
+
+const amountSchema = z
+  .number("Amount is required")
+  .min(0, "Amount cannot be negative");
+
+const idSchema = z.uuid("Invalid or missing UUID");
+
+const parcentageSchema = z.number().int().min(0).max(100);
+
+const createIdeaSchema = z.object({
+  title: titleSchema,
+  description: textSchema,
+  problemStatement: textSchema,
+  proposedSolution: textSchema,
+  expectedImpact: textSchema,
+  location: locationSchema,
+  estimatedBudget: amountSchema,
+  fundingGoal: amountSchema,
+  categoryId: idSchema,
 });
 
-const updateIdeaZodSchema = z
-  .object({
-    title: z
-      .string("Title is required")
-      .min(3, "Title must be at least 3 characters long")
-      .max(100, "Title can't be more than 100 characters long"),
-    description: z
-      .string("Description is required")
-      .min(3, "Description must be at least 3 characters long")
-      .max(1000, "Description can't be more than 1000 characters long"),
-    image: z.url("Image must be a valid URL"),
-    isPaid: z.boolean(),
-    price: z.number(),
-    categoryId: z.uuid("Category ID is invalid or missing"),
-  })
-  .partial();
+const updateIdeaSchema = createIdeaSchema.partial();
 
-const updateIdeaStatusZodSchema = z.object({
-  status: z.nativeEnum(IdeaStatus),
+const updateIdeaStatusSchema = z.object({
+  status: z.enum(IdeaStatus),
 });
+
+const createIdeaUpdateSchema = z.object({
+  title: titleSchema,
+  content: textSchema,
+  progressPercentage: parcentageSchema,
+});
+
+const updateIdeaUpdateSchema = createIdeaUpdateSchema.partial();
 
 export const IdeaValidation = {
-  createIdeaZodSchema,
-  updateIdeaZodSchema,
-  updateIdeaStatusZodSchema,
+  createIdeaSchema,
+  updateIdeaSchema,
+  updateIdeaStatusSchema,
+  createIdeaUpdateSchema,
+  updateIdeaUpdateSchema,
 };

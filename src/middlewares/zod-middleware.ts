@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import * as z from "zod";
 
-export const paramsIdZodSchema = z.object({
+export const paramsIdSchema = z.object({
   id: z.uuid("UUID is invalid or missing"),
 });
 
