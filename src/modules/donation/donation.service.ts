@@ -17,6 +17,7 @@ import {
   QueryBuilderResult,
 } from "../../query-builder/query-builder.interface.js";
 import { QueryBuilder } from "../../query-builder/query-builder.js";
+import { Request } from "express";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -51,7 +52,7 @@ const createPaymentIntent = async (
       exchangeRate = 122.5;
       const amountInUSD = amount / exchangeRate;
       baseAmount = amountInUSD;
-      amountInCents = amountInUSD * 100;
+      amountInCents = Math.round(amountInUSD * 100);
     }
 
     const paymentIntent = await stripe.paymentIntents.create({
@@ -86,45 +87,31 @@ const createPaymentIntent = async (
   }
 };
 
-const confirmPayment = async (
-  payload: ConfirmPayment,
-  userId: string,
-): Promise<Donation> => {
+const handleStripeWebhook = async (req: Request): Promise<void> => {
   try {
-    const { ideaId, transactionId, paymentMethod } = payload;
+    const signature = req.headers["stripe-signature"];
 
-    const idea = await prisma.idea.findUnique({
-      where: {
-        id: ideaId,
-      },
-    });
-
-    if (!idea) {
-      throw new AppError("Idea not found", status.NOT_FOUND);
+    if (!signature) {
+      throw new AppError("Missing Stripe signature", status.BAD_REQUEST);
     }
 
-    if (idea.userId === userId) {
-      throw new AppError("You cannot buy your own idea", status.BAD_REQUEST);
+    const event = stripe.webhooks.constructEvent(
+      req.body,
+      signature,
+      env.STRIPE_WEBHOOK_SECRET,
+    );
+
+    switch (event.type) {
+      case "payment_intent.succeeded":
+        break;
+
+      case "payment_intent.payment_failed":
+        break;
+
+      default:
+        break;
     }
-
-    const createPayment = await prisma.donation.create({
-      data: {
-        originalCurrency: Currency.INR,
-        originalAmount: 5000,
-        exchangeRate: 1,
-        baseCurrency: Currency.USD,
-        baseAmount: 5000,
-        gateway: PaymentGateway.STRIPE,
-        paymentMethod,
-        transactionId,
-        status: PaymentStatus.PAID,
-        userId,
-        ideaId,
-      },
-    });
-
-    return createPayment;
-  } catch (error: any) {
+  } catch (error) {
     throw error;
   }
 };
@@ -197,9 +184,9 @@ const getAllPayments = async (
   }
 };
 
-export const paymentServices = {
+export const donationService = {
   createPaymentIntent,
-  confirmPayment,
+  handleStripeWebhook,
   getSales,
   getAllPayments,
 };

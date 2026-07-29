@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { paymentControllers } from "./donation.controller.js";
+import { donationController } from "./donation.controller.js";
 import { UserRole } from "@prisma/client";
 import { donationValidation } from "./donation.validation.js";
 import { authMiddleware } from "../../middlewares/auth-middleware.js";
@@ -11,26 +11,19 @@ router.post(
   "/create-payment-intent",
   authMiddleware(UserRole.MEMBER),
   validateRequestBody(donationValidation.createPaymentIntentSchema),
-  paymentControllers.createPaymentIntent,
-);
-
-router.post(
-  "/confirm-payment",
-  authMiddleware(UserRole.MEMBER),
-  validateRequestBody(donationValidation.confirmPaymentSchema),
-  paymentControllers.confirmPayment,
+  donationController.createPaymentIntent,
 );
 
 router.get(
   "/get-sales",
   authMiddleware(UserRole.MEMBER),
-  paymentControllers.getSales,
+  donationController.getSales,
 );
 
 router.get(
   "/get-all-payments",
   authMiddleware(UserRole.ADMIN),
-  paymentControllers.getAllPayments,
+  donationController.getAllPayments,
 );
 
 export { router as DonationRouter };

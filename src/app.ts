@@ -14,6 +14,7 @@ import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth.js";
 import { IndexRouter } from "./routes/index.js";
 import globalErrorHandler from "./middlewares/error-middleware.js";
+import { donationController } from "./modules/donation/donation.controller.js";
 
 // create express app
 const app: Application = express();
@@ -24,6 +25,13 @@ app.set("views", path.resolve(process.cwd(), "src/templates"));
 
 // query parser
 app.set("query parser", "extended");
+
+// stripe webhook
+app.use(
+  "/api/v1/payments/webhook",
+  express.raw({ type: "application/json" }),
+  donationController.handleStripeWebhook,
+);
 
 // body parser for json
 app.use(json());
