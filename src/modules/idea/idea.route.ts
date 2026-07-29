@@ -22,6 +22,14 @@ router.post(
 
 router.get("/", ideaController.getIdeas);
 
+router.patch(
+  "/update-status/:id",
+  authMiddleware(),
+  validateRequestParams(paramsIdSchema),
+  validateRequestBody(IdeaValidation.updateIdeaStatusSchema),
+  ideaController.updateIdeaStatus,
+);
+
 router.get(
   "/:id",
   validateRequestParams(paramsIdSchema),
@@ -35,14 +43,6 @@ router.patch(
   validateRequestParams(paramsIdSchema),
   validateRequestBody(IdeaValidation.updateIdeaSchema),
   ideaController.updateIdeaById,
-);
-
-router.patch(
-  "/update-idea-status/:id",
-  authMiddleware(UserRole.ADMIN),
-  validateRequestParams(paramsIdSchema),
-  validateRequestBody(IdeaValidation.updateIdeaStatusSchema),
-  ideaController.updateIdeaStatus,
 );
 
 router.delete(

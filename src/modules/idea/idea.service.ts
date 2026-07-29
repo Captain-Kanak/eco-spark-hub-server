@@ -65,7 +65,61 @@ const getIdeas = async (
   }
 };
 
-const getIdeaById = async (id: string): Promise<Partial<Idea>> => {
+const updateIdeaStatus = async (
+  user: User,
+  id: string,
+  ideaStatus: IdeaStatus,
+) => {
+  try {
+    const isAdmin = user.role === UserRole.ADMIN;
+
+    if (
+      !isAdmin &&
+      (ideaStatus === IdeaStatus.PUBLISHED ||
+        ideaStatus === IdeaStatus.REJECTED)
+    ) {
+      throw new AppError(
+        "Only admin can PUBLISHED or REJECTED idea",
+        status.UNAUTHORIZED,
+      );
+    }
+
+    const idea = await prisma.idea.findUnique({
+      where: { id, deletedAt: null },
+    });
+
+    if (!idea) {
+      throw new AppError("Idea not found", status.NOT_FOUND);
+    }
+
+    if (!isAdmin && idea.userId !== user.id) {
+      throw new AppError(
+        "You are not authorized to update this idea",
+        status.UNAUTHORIZED,
+      );
+    }
+
+    if (idea.status === ideaStatus) {
+      throw new AppError(
+        `Idea status already ${ideaStatus}`,
+        status.BAD_REQUEST,
+      );
+    }
+
+    const updatedIdea = await prisma.idea.update({
+      where: { id },
+      data: {
+        status: ideaStatus,
+      },
+    });
+
+    return updatedIdea;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getIdeaById = async (id: string): Promise<Idea> => {
   try {
     const idea = await prisma.idea.findUnique({
       where: { id, status: IdeaStatus.PUBLISHED },
@@ -83,9 +137,9 @@ const getIdeaById = async (id: string): Promise<Partial<Idea>> => {
 };
 
 const updateIdeaById = async (
+  userId: string,
   id: string,
   payload: UpdateIdea,
-  userId: string,
 ): Promise<Idea> => {
   try {
     const idea = await prisma.idea.findUnique({
@@ -103,38 +157,13 @@ const updateIdeaById = async (
       );
     }
 
-    const updatedIdea = await prisma.idea.update({
-      where: { id },
-      data: payload,
-    });
-
-    return updatedIdea;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const updateIdeaStatus = async (id: string, ideaStatus: IdeaStatus) => {
-  try {
-    const idea = await prisma.idea.findUnique({
-      where: { id, deletedAt: null },
-    });
-
-    if (!idea) {
-      throw new AppError("Idea not found", status.NOT_FOUND);
-    }
-
-    if (idea.status === ideaStatus) {
-      throw new AppError(
-        `Idea status already ${ideaStatus}`,
-        status.BAD_REQUEST,
-      );
-    }
+    const slug = payload.title ? generateUniqueSlug(payload.title) : idea.slug;
 
     const updatedIdea = await prisma.idea.update({
       where: { id },
       data: {
-        status: ideaStatus,
+        ...payload,
+        slug,
       },
     });
 
@@ -177,8 +206,8 @@ const deleteIdeaById = async (id: string, user: User): Promise<void> => {
 export const ideaServices = {
   createIdea,
   getIdeas,
+  updateIdeaStatus,
   getIdeaById,
   updateIdeaById,
-  updateIdeaStatus,
   deleteIdeaById,
 };

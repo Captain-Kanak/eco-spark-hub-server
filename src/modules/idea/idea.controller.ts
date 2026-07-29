@@ -36,6 +36,25 @@ const getIdeas = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateIdeaStatus = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user as User;
+  const id = req.params.id;
+  const { status: ideaStatus } = req.body;
+
+  const result = await ideaServices.updateIdeaStatus(
+    user,
+    id as string,
+    ideaStatus,
+  );
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Idea status updated successfully",
+    data: result,
+  });
+});
+
 const getIdeaById = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
 
@@ -58,29 +77,15 @@ const updateIdeaById = catchAsync(async (req: Request, res: Response) => {
   };
 
   const result = await ideaServices.updateIdeaById(
+    user.id,
     id as string,
     payload,
-    user.id,
   );
 
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
     message: "Idea updated successfully",
-    data: result,
-  });
-});
-
-const updateIdeaStatus = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const { status: ideaStatus } = req.body;
-
-  const result = await ideaServices.updateIdeaStatus(id as string, ideaStatus);
-
-  sendResponse(res, {
-    statusCode: status.OK,
-    success: true,
-    message: "Idea status updated successfully",
     data: result,
   });
 });
@@ -101,8 +106,8 @@ const deleteIdeaById = catchAsync(async (req: Request, res: Response) => {
 export const ideaController = {
   createIdea,
   getIdeas,
+  updateIdeaStatus,
   getIdeaById,
   updateIdeaById,
-  updateIdeaStatus,
   deleteIdeaById,
 };

@@ -37,14 +37,14 @@
 
 ### Idea
 
-| Method | Endpoint                             | Access | Description                     |
-| ------ | ------------------------------------ | ------ | ------------------------------- |
-| POST   | /api/v1/ideas                        | SECURE | create as new idea              |
-| GET    | /api/v1/ideas                        | PUBLIC | get all ideas                   |
-| GET    | /api/v1/ideas/:id                    | PUBLIC | get idea by id                  |
-| PATCH  | /api/v1/ideas/:id                    | MEMBER | update idea by id               |
-| PATCH  | /api/v1/ideas/update-idea-status/:id | ADMIN  | update idea status by id        |
-| DELETE | /api/v1/ideas/:id                    | SECURE | delete idea by id (soft delete) |
+| Method | Endpoint                        | Access | Description                     |
+| ------ | ------------------------------- | ------ | ------------------------------- |
+| POST   | /api/v1/ideas                   | SECURE | create as new idea              |
+| GET    | /api/v1/ideas                   | PUBLIC | get all ideas                   |
+| PATCH  | /api/v1/ideas/update-status/:id | SECURE | update idea status by id        |
+| GET    | /api/v1/ideas/:id               | PUBLIC | get idea by id                  |
+| PATCH  | /api/v1/ideas/:id               | MEMBER | update idea by id               |
+| DELETE | /api/v1/ideas/:id               | SECURE | delete idea by id (soft delete) |
 
 ---
 
