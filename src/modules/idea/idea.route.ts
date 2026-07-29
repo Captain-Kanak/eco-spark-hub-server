@@ -14,7 +14,7 @@ const router: Router = Router();
 
 router.post(
   "/",
-  authMiddleware(),
+  authMiddleware(UserRole.MEMBER),
   multerUpload.single("file"),
   validateRequestBody(IdeaValidation.createIdeaSchema),
   ideaController.createIdea,
@@ -38,7 +38,7 @@ router.get(
 
 router.patch(
   "/:id",
-  authMiddleware(),
+  authMiddleware(UserRole.MEMBER),
   multerUpload.single("file"),
   validateRequestParams(paramsIdSchema),
   validateRequestBody(IdeaValidation.updateIdeaSchema),

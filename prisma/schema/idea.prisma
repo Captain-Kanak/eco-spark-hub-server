@@ -8,9 +8,9 @@ model Idea {
     proposedSolution String     @db.Text
     expectedImpact   String     @db.Text
     location         String     @db.Text
-    estimatedBudget  Decimal    @default(0)
-    fundingGoal      Decimal    @default(0)
-    currentFunding   Decimal    @default(0)
+    estimatedBudget  Decimal    @default(0) @db.Decimal(10, 2)
+    fundingGoal      Decimal    @default(0) @db.Decimal(10, 2)
+    currentFunding   Decimal    @default(0) @db.Decimal(10, 2)
     status           IdeaStatus @default(ON_REVIEW)
     views            Int        @default(0)
     userId           String

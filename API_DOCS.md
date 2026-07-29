@@ -39,7 +39,7 @@
 
 | Method | Endpoint                        | Access | Description                     |
 | ------ | ------------------------------- | ------ | ------------------------------- |
-| POST   | /api/v1/ideas                   | SECURE | create as new idea              |
+| POST   | /api/v1/ideas                   | MEMBER | create as new idea              |
 | GET    | /api/v1/ideas                   | PUBLIC | get all ideas                   |
 | PATCH  | /api/v1/ideas/update-status/:id | SECURE | update idea status by id        |
 | GET    | /api/v1/ideas/:id               | PUBLIC | get idea by id                  |

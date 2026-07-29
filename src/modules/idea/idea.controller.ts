@@ -91,15 +91,16 @@ const updateIdeaById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteIdeaById = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user as User;
   const id = req.params.id;
-  const user = req.user;
 
-  await ideaServices.deleteIdeaById(id as string, user as User);
+  const result = await ideaServices.deleteIdeaById(user, id as string);
 
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
     message: "Idea deleted successfully",
+    data: result,
   });
 });
 

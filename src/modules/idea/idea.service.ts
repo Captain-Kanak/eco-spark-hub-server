@@ -173,7 +173,7 @@ const updateIdeaById = async (
   }
 };
 
-const deleteIdeaById = async (id: string, user: User): Promise<void> => {
+const deleteIdeaById = async (user: User, id: string): Promise<Idea> => {
   try {
     const isAdmin = user.role === UserRole.ADMIN;
 
@@ -192,12 +192,14 @@ const deleteIdeaById = async (id: string, user: User): Promise<void> => {
       );
     }
 
-    await prisma.idea.update({
+    const deletedIdea = await prisma.idea.update({
       where: { id },
       data: {
         deletedAt: new Date(),
       },
     });
+
+    return deletedIdea;
   } catch (error) {
     throw error;
   }
