@@ -6,7 +6,7 @@ model Donation {
     baseCurrency     Currency       @default(USD)
     baseAmount       Decimal        @db.Decimal(10, 2)
     gateway          PaymentGateway
-    paymentMethod    String         @db.VarChar(50)
+    paymentMethod    String?        @db.VarChar(50)
     transactionId    String
     status           PaymentStatus  @default(UNPAID)
     userId           String

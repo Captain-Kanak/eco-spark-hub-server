@@ -6,13 +6,10 @@ import { User } from "@prisma/client";
 import { QueryBuilderParams } from "../../query-builder/query-builder.interface.js";
 
 const createPaymentIntent = catchAsync(async (req: Request, res: Response) => {
-  const payload = req.body;
   const { id } = req.user as User;
+  const payload = req.body;
 
-  const result = await paymentServices.createPaymentIntent(
-    payload,
-    id as string,
-  );
+  const result = await paymentServices.createPaymentIntent(id, payload);
 
   sendResponse(res, {
     statusCode: 200,

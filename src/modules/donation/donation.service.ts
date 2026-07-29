@@ -1,12 +1,13 @@
 import status from "http-status";
 import Stripe from "stripe";
 import AppError from "../../errors/app-error.js";
-import { IConfirmPayment, ICreatePaymentIntent } from "./donation.interface.js";
+import { ConfirmPayment, CreatePaymentIntent } from "./donation.interface.js";
 import { prisma } from "../../lib/prisma.js";
 import { env } from "../../config/env.js";
 import {
   Currency,
   Donation,
+  IdeaStatus,
   PaymentGateway,
   PaymentStatus,
   Prisma,
@@ -20,15 +21,17 @@ import { QueryBuilder } from "../../query-builder/query-builder.js";
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
 const createPaymentIntent = async (
-  payload: ICreatePaymentIntent,
   userId: string,
+  payload: CreatePaymentIntent,
 ): Promise<string> => {
   try {
-    const { ideaId } = payload;
+    const { ideaId, amount, currency } = payload;
 
     const idea = await prisma.idea.findUnique({
       where: {
         id: ideaId,
+        status: IdeaStatus.PUBLISHED,
+        deletedAt: null,
       },
     });
 
@@ -36,8 +39,23 @@ const createPaymentIntent = async (
       throw new AppError("Idea not found", status.NOT_FOUND);
     }
 
+    let exchangeRate = 0;
+    let baseAmount = 0;
+    let amountInCents = 0;
+
+    if (currency === Currency.USD) {
+      exchangeRate = 1;
+      baseAmount = amount;
+      amountInCents = Math.round(amount * 100);
+    } else if (currency === Currency.BDT) {
+      exchangeRate = 122.5;
+      const amountInUSD = amount / exchangeRate;
+      baseAmount = amountInUSD;
+      amountInCents = amountInUSD * 100;
+    }
+
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: 5000,
+      amount: amountInCents,
       currency: "usd",
       automatic_payment_methods: { enabled: true },
       metadata: {
@@ -46,14 +64,30 @@ const createPaymentIntent = async (
       },
     });
 
-    return paymentIntent.client_secret as string;
+    await prisma.donation.create({
+      data: {
+        originalCurrency: currency,
+        originalAmount: new Prisma.Decimal(amount),
+        exchangeRate: exchangeRate,
+        baseAmount: new Prisma.Decimal(baseAmount),
+        gateway: PaymentGateway.STRIPE,
+        transactionId: paymentIntent.id,
+        status: PaymentStatus.UNPAID,
+        userId,
+        ideaId,
+      },
+    });
+
+    const secret = paymentIntent.client_secret as string;
+
+    return secret;
   } catch (error) {
     throw error;
   }
 };
 
 const confirmPayment = async (
-  payload: IConfirmPayment,
+  payload: ConfirmPayment,
   userId: string,
 ): Promise<Donation> => {
   try {
