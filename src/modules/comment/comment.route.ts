@@ -1,7 +1,6 @@
 import { Router } from "express";
-import { CommentControllers } from "./comment.controller.js";
-import { UserRole } from "@prisma/client";
-import { CommentValidations } from "./comment.validation.js";
+import { commentController } from "./comment.controller.js";
+import { commentValidation } from "./comment.validation.js";
 import { authMiddleware } from "../../middlewares/auth-middleware.js";
 import { validateRequestBody } from "../../middlewares/zod-middleware.js";
 
@@ -9,22 +8,18 @@ const router: Router = Router();
 
 router.post(
   "/",
-  authMiddleware(UserRole.MEMBER),
-  validateRequestBody(CommentValidations.createCommentZodSchema),
-  CommentControllers.createComment,
+  authMiddleware(),
+  validateRequestBody(commentValidation.createCommentSchema),
+  commentController.createComment,
 );
 
 router.patch(
   "/:id",
-  authMiddleware(UserRole.MEMBER),
-  validateRequestBody(CommentValidations.updateCommentZodSchema),
-  CommentControllers.updateCommentById,
+  authMiddleware(),
+  validateRequestBody(commentValidation.updateCommentSchema),
+  commentController.updateCommentById,
 );
 
-router.delete(
-  "/:id",
-  authMiddleware(UserRole.MEMBER),
-  CommentControllers.deleteCommentById,
-);
+router.delete("/:id", authMiddleware(), commentController.deleteCommentById);
 
 export { router as CommentRouter };

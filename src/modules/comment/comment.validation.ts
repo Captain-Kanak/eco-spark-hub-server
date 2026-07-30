@@ -1,16 +1,23 @@
 import * as z from "zod";
 
-const createCommentZodSchema = z.object({
-  content: z.string(),
-  ideaId: z.string(),
-  parentId: z.string().optional(),
+const idSchema = z.uuid("Invalid or missing UUID");
+
+const contentSchema = z
+  .string()
+  .min(1, "Content must be at least 1 characters long")
+  .max(3000, "Content can't be more than 3000 characters long");
+
+const createCommentSchema = z.object({
+  ideaId: idSchema,
+  content: contentSchema,
+  parentId: idSchema.optional(),
 });
 
-const updateCommentZodSchema = z.object({
-  content: z.string(),
+const updateCommentSchema = z.object({
+  content: contentSchema,
 });
 
-export const CommentValidations = {
-  createCommentZodSchema,
-  updateCommentZodSchema,
+export const commentValidation = {
+  createCommentSchema,
+  updateCommentSchema,
 };

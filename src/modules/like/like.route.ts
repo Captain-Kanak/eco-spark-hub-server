@@ -5,10 +5,6 @@ import { authMiddleware } from "../../middlewares/auth-middleware.js";
 
 const router: Router = Router();
 
-router.post(
-  "/:ideaId",
-  authMiddleware(UserRole.MEMBER),
-  likeController.likeHandler,
-);
+router.post("/:ideaId", authMiddleware(), likeController.likeHandler);
 
 export { router as LikeRouter };

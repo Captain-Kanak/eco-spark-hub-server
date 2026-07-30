@@ -1,12 +1,16 @@
 import status from "http-status";
 import AppError from "../../errors/app-error.js";
 import { prisma } from "../../lib/prisma.js";
-import { Like } from "@prisma/client";
+import { IdeaStatus, Like } from "@prisma/client";
 
 const likeHandler = async (userId: string, ideaId: string): Promise<Like> => {
   try {
     const idea = await prisma.idea.findUnique({
-      where: { id: ideaId, deletedAt: null },
+      where: {
+        id: ideaId,
+        status: IdeaStatus.PUBLISHED,
+        deletedAt: null,
+      },
     });
 
     if (!idea) {

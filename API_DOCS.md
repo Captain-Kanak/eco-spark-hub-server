@@ -58,18 +58,18 @@
 
 ### Like
 
-| Method | Endpoint      | Access | Description           |
-| ------ | ------------- | ------ | --------------------- |
-| POST   | /api/v1/likes | SECURE | Create Payment Intent |
-| POST   | /api/v1/likes | SECURE | Confirm Payment       |
+| Method | Endpoint              | Access | Description            |
+| ------ | --------------------- | ------ | ---------------------- |
+| POST   | /api/v1/likes/:ideaId | SECURE | like or unlike to idea |
 
 ---
 
 ### Comment
 
-| Method | Endpoint         | Access | Description           |
-| ------ | ---------------- | ------ | --------------------- |
-| POST   | /api/v1/comments | MEMBER | Create Payment Intent |
-| POST   | /api/v1/comments | MEMBER | Confirm Payment       |
+| Method | Endpoint             | Access | Description                        |
+| ------ | -------------------- | ------ | ---------------------------------- |
+| POST   | /api/v1/comments     | SECURE | create new comment to idea         |
+| PATCH  | /api/v1/comments/:id | SECURE | update comment by id               |
+| DELETE | /api/v1/comments/:id | SECURE | delete comment by id (soft delete) |
 
 ---

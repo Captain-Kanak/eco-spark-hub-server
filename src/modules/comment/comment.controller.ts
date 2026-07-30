@@ -3,13 +3,13 @@ import { catchAsync } from "../../utils/catch-async.js";
 import { CommentServices } from "./comment.service.js";
 import { sendResponse } from "../../utils/send-response.js";
 import status from "http-status";
-import { JWTUser } from "../../interfaces/auth.js";
+import { User } from "@prisma/client";
 
 const createComment = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.user as User;
   const payload = req.body;
-  const { id } = req.user as JWTUser;
 
-  const result = await CommentServices.createComment(payload, id as string);
+  const result = await CommentServices.createComment(id, payload);
 
   sendResponse(res, {
     statusCode: status.CREATED,
@@ -20,14 +20,14 @@ const createComment = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateCommentById = catchAsync(async (req: Request, res: Response) => {
+  const { id: userId } = req.user as User;
   const id = req.params.id;
   const payload = req.body;
-  const { id: userId } = req.user as JWTUser;
 
   const result = await CommentServices.updateCommentById(
+    userId,
     id as string,
     payload,
-    userId as string,
   );
 
   sendResponse(res, {
@@ -39,13 +39,10 @@ const updateCommentById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteCommentById = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user as User;
   const id = req.params.id;
-  const { id: userId } = req.user as JWTUser;
 
-  const result = await CommentServices.deleteCommentById(
-    id as string,
-    userId as string,
-  );
+  const result = await CommentServices.deleteCommentById(user, id as string);
 
   sendResponse(res, {
     statusCode: status.OK,
@@ -55,7 +52,7 @@ const deleteCommentById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const CommentControllers = {
+export const commentController = {
   createComment,
   updateCommentById,
   deleteCommentById,
