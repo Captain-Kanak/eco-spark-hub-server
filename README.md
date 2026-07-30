@@ -9,25 +9,42 @@ EcoSpark Hub is a global crowdfunding platform for environmental innovation, whe
 
 ## 📌 Overview
 
-This backend system powers a structured environmental incubator:
+EcoSpark Hub is a crowdfunding platform that empowers innovators to turn environmental ideas into real-world projects. Community members can discover and financially support verified eco-friendly ideas, while creators share implementation progress through project updates until completion.
 
-- Unified Authentication: Powered by Better Auth for secure, session-based identity management.
-- Role-Based Access Control (RBAC): Distinct permissions for ADMIN and MEMBER.
-- Innovation Taxonomy: Only Admins can define the global environmental sectors (Categories).
-- Project Inventory: Innovators (MEMBER) manage their own project blueprints, funding goals, and pricing.
-- Transactional Funding: Atomic "Impact Purchase" process using Prisma Transactions to ensure data integrity between orders and project availability.
-- Clean Architecture: Modular service-controller pattern built with TypeScript and Express.
+The platform provides secure authentication, role-based access control, donation management, project moderation, and progress tracking to ensure transparency throughout the entire project lifecycle.
+
+---
+
+## ✨ Features
+
+- 🔐 Secure authentication using Better Auth
+- 👥 Role-based access control (Admin & Member)
+- 🌱 Submit and manage environmental innovation ideas
+- 🛡️ Admin review and approval workflow
+- 💰 Crowdfunding & donation system with Stripe integration
+- 📈 Funding progress tracking
+- 📝 Project progress updates with image uploads
+- ❤️ Like and comment system
+- 📂 Category management
+- 🔍 Search, filtering, sorting & pagination
+- 📊 Analytics for users and administrators
+- 🗑️ Soft delete support for recoverable resources
 
 ---
 
 ## 🛠 Technology Stack
 
-- Runtime: Node.js
-- Language: TypeScript
-- Framework: Express.js
-- Database: PostgreSQL (Neon DB)
-- ORM: Prisma
-- Authentication: Better Auth & JWT
+| Category       | Technology  |
+| -------------- | ----------- |
+| Runtime        | Node.js     |
+| Language       | TypeScript  |
+| Framework      | Express.js  |
+| Database       | PostgreSQL  |
+| ORM            | Prisma      |
+| Authentication | Better Auth |
+| Validation     | Zod         |
+| Payment        | Stripe      |
+| File Storage   | Cloudinary  |
 
 ---
 
@@ -43,27 +60,79 @@ The system utilizes Better Auth for modern security:
 
 ### Role-Based Access Control (RBAC)
 
-- ADMIN – Manage Eco-Categories, Global User Audit, Platform Analytics, Inventory Oversight.
-- MEMBER – Create/Update/Delete own Ideas, Track Sales/Funding, Manage Project Status.
+**ADMIN**
+
+- Manage users
+- Review and approve ideas
+- Reject inappropriate submissions
+- Manage categories
+- Monitor donations
+- View platform analytics
+
+**MEMBER**
+
+- Create environmental ideas
+- Edit own ideas
+- Receive donations
+- Publish project updates
+- Like and comment on projects
+- Track funding progress
 
 ---
 
 ## 🔒 Security Considerations
 
-- Atomic Transactions: Project capacity is adjusted using prisma.$transaction to prevent over-funding beyond project limits.
-- Price Integrity: Contribution totals are validated against the DB to prevent frontend price manipulation.
-- Unique Constraints: @@unique([name, categoryId]) prevents duplicate innovation entries within the same sector.
-- Security Headers: Better Auth handles secure cookie management and session validation.
+- Session-based authentication using Better Auth
+- Role-based authorization
+- Secure password hashing
+- Protected private routes
+- Input validation using Zod
+- Prisma transactions for payment consistency
+- Soft delete support
+- Environment variable protection
 
 ---
 
-## 🗄️ Database Schema
+## 🏗 Project Structure
+
+The project follows a modular architecture where each feature is organized into its own module.
+
+src/
+├── config/
+├── errors/
+├── interfaces/
+├── lib/
+├── middlewares/
+├── modules/
+├── query-builder/
+├── routes/
+├── seeds/
+├── templates/
+├── types/
+├── utils/
+└── app.ts
+
+---
+
+## 🔄 Project Workflow
+
+1. Member submits an environmental idea.
+2. Admin reviews the submission.
+3. Approved ideas become publicly visible.
+4. Community members donate to support the project.
+5. Creator publishes implementation updates.
+6. Once funding is completed, the project moves into implementation.
+7. Finished projects are archived as completed environmental initiatives.
+
+---
+
+## API & Database
+
+### 🗄️ Database Schema
 
 - **[DATABASE.md](https://github.com/Captain-Kanak/eco-spark-hub-server/blob/main/DATABASE.md)**
 
----
-
-## 🔗 API Endpoints
+### 🔗 API Endpoints
 
 - **[API_DOCS.md](https://github.com/Captain-Kanak/eco-spark-hub-server/blob/main/API_DOCS.md)**
 
@@ -93,28 +162,7 @@ pnpm install
 Environment Variables:
 Create a `.env` file in the root of your project and add the following:
 
-```env
-NODE_ENV="development"
-PORT="5000"
-DATABASE_URL='database-url'
-FRONTEND_URL="http://localhost:3000"
-BETTER_AUTH_URL="http://localhost:5000"
-BETTER_AUTH_SECRET="better-auth-secret"
-BETTER_AUTH_SESSION_EXPIRES_IN="1d"
-BETTER_AUTH_SESSION_UPDATE_AGE="7 days"
-EMAIL_SENDER_SMTP_USER="email-sender-smtp-user"
-EMAIL_SENDER_SMTP_PASS="email-sender-smtp-pass"
-EMAIL_SENDER_SMTP_HOST="smtp.gmail.com"
-EMAIL_SENDER_SMTP_PORT="465"
-EMAIL_SENDER_SMTP_FROM="Eco Spark Hub <email-sender-smtp-user>"
-STRIPE_SECRET_KEY="stripe-secret-key"
-GOOGLE_CLIENT_ID="google-client-id"
-GOOGLE_CLIENT_SECRET="google-client-secret"
-GOOGLE_CALLBACK_URL="http://localhost:5000/api/auth/callback/google"
-CLOUDINARY_CLOUD_NAME="cloudinary-cloud-name"
-CLOUDINARY_API_KEY="cloudinary-api-key"
-CLOUDINARY_API_SECRET="cloudinary-api-secret"
-```
+- **[.env](https://github.com/Captain-Kanak/eco-spark-hub-server/blob/main/.env.example)**
 
 ---
 
@@ -137,11 +185,13 @@ pnpm dev
 
 ## 👤 Author
 
-**Kanak Ray**
+### Kanak Ray
 
-> Software Engineer
+Backend Developer
 
-- (TypeScript | Express.js | PostgreSQL | Docker | GO | Echo)
+**Tech Stack**
+
+TypeScript • Express.js • PostgreSQL • Prisma • Docker • Go
 
 ---
 
