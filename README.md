@@ -93,27 +93,6 @@ The system utilizes Better Auth for modern security:
 
 ---
 
-## 🏗 Project Structure
-
-The project follows a modular architecture where each feature is organized into its own module.
-
-src/
-├── config/
-├── errors/
-├── interfaces/
-├── lib/
-├── middlewares/
-├── modules/
-├── query-builder/
-├── routes/
-├── seeds/
-├── templates/
-├── types/
-├── utils/
-└── app.ts
-
----
-
 ## 🔄 Project Workflow
 
 1. Member submits an environmental idea.
