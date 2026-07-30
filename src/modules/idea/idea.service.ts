@@ -130,6 +130,15 @@ const getIdeaById = async (id: string): Promise<Idea> => {
       throw new AppError("Idea not found", status.NOT_FOUND);
     }
 
+    await prisma.idea.update({
+      where: { id },
+      data: {
+        views: {
+          increment: 1,
+        },
+      },
+    });
+
     return idea;
   } catch (error) {
     throw error;

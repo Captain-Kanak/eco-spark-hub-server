@@ -1,15 +1,12 @@
 import status from "http-status";
 import AppError from "../../errors/app-error.js";
-import { GiveLike } from "./like.interface.js";
 import { prisma } from "../../lib/prisma.js";
 import { Like } from "@prisma/client";
 
-const giveVote = async (userId: string, payload: GiveLike): Promise<Like> => {
+const likeHandler = async (userId: string, ideaId: string): Promise<Like> => {
   try {
-    const { ideaId } = payload;
-
     const idea = await prisma.idea.findUnique({
-      where: { id: ideaId },
+      where: { id: ideaId, deletedAt: null },
     });
 
     if (!idea) {
@@ -17,34 +14,34 @@ const giveVote = async (userId: string, payload: GiveLike): Promise<Like> => {
     }
 
     const result = await prisma.$transaction(async (trx) => {
-      const existingLike = await trx.like.findUnique({
+      const like = await trx.like.findUnique({
         where: {
           ideaId_userId: { ideaId, userId },
         },
       });
 
-      if (existingLike) {
-        await trx.like.delete({
-          where: {
-            ideaId_userId: { ideaId, userId },
+      if (!like) {
+        return await trx.like.create({
+          data: {
+            ideaId,
+            userId,
           },
         });
       }
 
-      return trx.like.create({
-        data: {
-          ideaId,
-          userId,
+      return await trx.like.delete({
+        where: {
+          ideaId_userId: { ideaId, userId },
         },
       });
     });
 
     return result;
-  } catch (error: any) {
+  } catch (error) {
     throw error;
   }
 };
 
-export const voteServices = {
-  giveVote,
+export const likeService = {
+  likeHandler,
 };

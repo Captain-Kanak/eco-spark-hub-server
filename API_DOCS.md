@@ -53,7 +53,6 @@
 | Method | Endpoint                                | Access | Description           |
 | ------ | --------------------------------------- | ------ | --------------------- |
 | POST   | /api/v1/donations/create-payment-intent | MEMBER | Create Payment Intent |
-| POST   | /api/v1/donations/confirm-payment       | MEMBER | Confirm Payment       |
 
 ---
 
@@ -61,8 +60,8 @@
 
 | Method | Endpoint      | Access | Description           |
 | ------ | ------------- | ------ | --------------------- |
-| POST   | /api/v1/likes | MEMBER | Create Payment Intent |
-| POST   | /api/v1/likes | MEMBER | Confirm Payment       |
+| POST   | /api/v1/likes | SECURE | Create Payment Intent |
+| POST   | /api/v1/likes | SECURE | Confirm Payment       |
 
 ---
 
