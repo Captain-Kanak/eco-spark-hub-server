@@ -9,6 +9,7 @@ import {
   QueryBuilderResult,
 } from "../../query-builder/query-builder.interface.js";
 import { QueryBuilder } from "../../query-builder/query-builder.js";
+import { userFilterableFields, userSearchableFields } from "./user.constant.js";
 
 const getUsers = async (
   query: QueryBuilderParams,
@@ -18,7 +19,10 @@ const getUsers = async (
       User,
       Prisma.UserWhereInput,
       Prisma.UserInclude
-    >(prisma.user, query, {});
+    >(prisma.user, query, {
+      searchableFields: userSearchableFields,
+      filterableFields: userFilterableFields,
+    });
 
     const result = await queryBuilder
       .pagination()
