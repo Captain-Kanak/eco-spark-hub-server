@@ -2,17 +2,11 @@ import { User, UserStatus } from "@prisma/client";
 import AppError from "../../errors/app-error.js";
 import { auth } from "../../lib/auth.js";
 import { prisma } from "../../lib/prisma.js";
-import {
-  LoginUser,
-  RegisterUser,
-  authResponse,
-  AuthResponse,
-  VerifyEmail,
-} from "./auth.interface.js";
+import { LoginUser, RegisterUser, VerifyEmail } from "./auth.interface.js";
 import status from "http-status";
 import { Session } from "better-auth";
 
-const registerUser = async (payload: RegisterUser): Promise<AuthResponse> => {
+const registerUser = async (payload: RegisterUser): Promise<User> => {
   try {
     const { name, email, password } = payload;
 
@@ -40,7 +34,7 @@ const registerUser = async (payload: RegisterUser): Promise<AuthResponse> => {
       },
     });
 
-    return authResponse(result.user as User);
+    return result.user as User;
   } catch (error) {
     throw error;
   }
@@ -76,7 +70,7 @@ const loginUser = async (
   redirect: boolean;
   token: string;
   url?: string | undefined;
-  user: AuthResponse;
+  user: User;
 }> => {
   try {
     const { email, password } = payload;
@@ -108,7 +102,7 @@ const loginUser = async (
       redirect: result.redirect,
       token: result.token,
       url: result.url,
-      user: authResponse(result.user as User),
+      user: result.user as User,
     };
   } catch (error) {
     throw error;
