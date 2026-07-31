@@ -16,9 +16,9 @@ model User {
 
     ideas       Idea[]
     likes       Like[]
+    comments    Comment[]
     donations   Donation[]
     ideaUpdates IdeaUpdate[]
-    comments    Comment[]
 
     sessions Session[]
     accounts Account[]

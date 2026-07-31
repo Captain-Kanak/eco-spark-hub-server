@@ -22,9 +22,9 @@ model Idea {
     deletedAt        DateTime?
 
     likes       Like[]
+    comments    Comment[]
     donations   Donation[]
     ideaUpdates IdeaUpdate[]
-    comments    Comment[]
 
     @@unique([slug])
     @@index([deletedAt])
