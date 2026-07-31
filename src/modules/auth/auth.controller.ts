@@ -5,7 +5,6 @@ import status from "http-status";
 import { AuthService } from "./auth.service.js";
 import { tokenUtil } from "../../utils/token.js";
 import { User } from "@prisma/client";
-import { authResponse } from "./auth.interface.js";
 import { env } from "../../config/env.js";
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
@@ -87,7 +86,7 @@ const getMe = catchAsync(async (req: Request, res: Response) => {
     statusCode: status.OK,
     success: true,
     message: "User fetched successfully",
-    data: authResponse(user),
+    data: user,
   });
 });
 
