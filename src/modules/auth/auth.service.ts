@@ -87,6 +87,11 @@ const loginUser = async (
         "Your account has been blocked, please contact support",
         status.BAD_REQUEST,
       );
+    } else if (user && !user.emailVerified) {
+      throw new AppError(
+        "Your account has not been verified, please verify your account",
+        status.FORBIDDEN,
+      );
     } else if (!user) {
       throw new AppError("User not found", status.NOT_FOUND);
     }

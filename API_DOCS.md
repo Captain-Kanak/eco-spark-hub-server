@@ -19,7 +19,7 @@
 | GET    | /api/v1/users                | ADMIN  | get all users                   |
 | PATCH  | /api/v1/users/update-profile | SECURE | update user profile             |
 | PATCH  | /api/v1/users/block/:id      | ADMIN  | block user account              |
-| DELETE | /api/v1/users/:id            | ADMIN  | delete user by id (soft delete) |
+| DELETE | /api/v1/users/delete/:id            | ADMIN  | delete user by id (soft delete) |
 
 ---
 
@@ -48,14 +48,6 @@
 
 ---
 
-### Donation
-
-| Method | Endpoint                                | Access | Description           |
-| ------ | --------------------------------------- | ------ | --------------------- |
-| POST   | /api/v1/donations/create-payment-intent | MEMBER | Create Payment Intent |
-
----
-
 ### Like
 
 | Method | Endpoint              | Access | Description            |
@@ -71,5 +63,13 @@
 | POST   | /api/v1/comments     | SECURE | create new comment to idea         |
 | PATCH  | /api/v1/comments/:id | SECURE | update comment by id               |
 | DELETE | /api/v1/comments/:id | SECURE | delete comment by id (soft delete) |
+
+---
+
+### Donation
+
+| Method | Endpoint                                | Access | Description           |
+| ------ | --------------------------------------- | ------ | --------------------- |
+| POST   | /api/v1/donations/create-payment-intent | MEMBER | Create Payment Intent |
 
 ---

@@ -25,7 +25,7 @@ router.patch(
 );
 
 router.delete(
-  "/:id",
+  "/delete/:id",
   authMiddleware(UserRole.ADMIN),
   userController.deleteUser,
 );
