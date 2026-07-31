@@ -1,4 +1,4 @@
-import { Prisma, User, UserRole, UserStatus } from "@prisma/client";
+import { Prisma, User, UserStatus } from "@prisma/client";
 import { UpdateUser } from "./user.interface.js";
 import AppError from "../../errors/app-error.js";
 import status from "http-status";
