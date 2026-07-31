@@ -32,7 +32,8 @@ const getIdeas = catchAsync(async (req: Request, res: Response) => {
     statusCode: status.OK,
     success: true,
     message: "Ideas fetched successfully",
-    data: result,
+    data: result.data,
+    meta: result.meta,
   });
 });
 
