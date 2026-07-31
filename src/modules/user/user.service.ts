@@ -3,7 +3,6 @@ import { UpdateUser } from "./user.interface.js";
 import AppError from "../../errors/app-error.js";
 import status from "http-status";
 import { prisma } from "../../lib/prisma.js";
-import { AuthResponse, authResponse } from "../auth/auth.interface.js";
 import {
   QueryBuilderParams,
   QueryBuilderResult,
@@ -47,7 +46,7 @@ const getUsers = async (
 const updateProfile = async (
   userId: string,
   payload: UpdateUser,
-): Promise<AuthResponse> => {
+): Promise<User> => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -72,7 +71,7 @@ const updateProfile = async (
       data: payload,
     });
 
-    return authResponse(result);
+    return result;
   } catch (error) {
     throw error;
   }
