@@ -1,7 +1,7 @@
 import status from "http-status";
 import Stripe from "stripe";
 import AppError from "../../errors/app-error.js";
-import { ConfirmPayment, CreatePaymentIntent } from "./donation.interface.js";
+import { CreatePaymentIntent } from "./donation.interface.js";
 import { prisma } from "../../lib/prisma.js";
 import { env } from "../../config/env.js";
 import {

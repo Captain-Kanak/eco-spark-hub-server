@@ -5,9 +5,3 @@ export interface CreatePaymentIntent {
   amount: number;
   currency: Currency;
 }
-
-export interface ConfirmPayment {
-  ideaId: string;
-  transactionId: string;
-  paymentMethod: string;
-}
