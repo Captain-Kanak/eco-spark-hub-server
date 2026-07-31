@@ -13,6 +13,8 @@ const textSchema = z
   .min(10, "Description must be at least 10 characters long")
   .max(5000, "Description can't be more than 5000 characters long");
 
+const impactSchema = z.array(z.string());
+
 const locationSchema = z
   .string("Location is required")
   .trim()
@@ -32,7 +34,7 @@ const createIdeaSchema = z.object({
   description: textSchema,
   problemStatement: textSchema,
   proposedSolution: textSchema,
-  expectedImpact: textSchema,
+  expectedImpact: impactSchema,
   location: locationSchema,
   estimatedBudget: amountSchema,
   fundingGoal: amountSchema,

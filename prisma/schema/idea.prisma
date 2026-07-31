@@ -6,7 +6,7 @@ model Idea {
     description      String     @db.Text
     problemStatement String     @db.Text
     proposedSolution String     @db.Text
-    expectedImpact   String     @db.Text
+    expectedImpact   String[]   @db.Text
     location         String     @db.Text
     estimatedBudget  Decimal    @default(0) @db.Decimal(10, 2)
     fundingGoal      Decimal    @default(0) @db.Decimal(10, 2)
