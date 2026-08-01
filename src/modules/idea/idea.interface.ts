@@ -7,7 +7,7 @@ export interface CreateIdea {
   description: string;
   problemStatement: string;
   proposedSolution: string;
-  expectedImpact: string;
+  expectedImpact: string[];
   location: string;
   estimatedBudget: Decimal;
   fundingGoal: Decimal;
@@ -20,7 +20,7 @@ export interface UpdateIdea {
   description?: string;
   problemStatement?: string;
   proposedSolution?: string;
-  expectedImpact?: string;
+  expectedImpact?: string[];
   location?: string;
   estimatedBudget?: Decimal;
   fundingGoal?: Decimal;
