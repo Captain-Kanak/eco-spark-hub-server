@@ -43,8 +43,9 @@ The platform provides secure authentication, role-based access control, donation
 | ORM            | Prisma      |
 | Authentication | Better Auth |
 | Validation     | Zod         |
-| Payment        | Stripe      |
 | File Storage   | Cloudinary  |
+| Payment        | Stripe      |
+| Deployment     | Vercel      |
 
 ---
 
@@ -128,7 +129,7 @@ Prerequisites:
 Clone Repository:
 
 ```bash
-git clone https://github.com/Captain-Kanak/eco-spark-hub-server
+git clone https://github.com/Captain-Kanak/eco-spark-hub-server.git
 cd eco-spark-hub-server
 ```
 
@@ -166,11 +167,11 @@ pnpm dev
 
 ### Kanak Ray
 
-Backend Developer
+Full Stack Developer
 
 **Tech Stack**
 
-TypeScript • Express.js • PostgreSQL • Prisma • Docker • Go
+TypeScript • Express.js • PostgreSQL • Prisma • Docker • Go • Next.js • React.js
 
 ---
 
