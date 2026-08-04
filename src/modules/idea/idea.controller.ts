@@ -56,10 +56,10 @@ const updateIdeaStatus = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getIdeaById = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+const getBySlug = catchAsync(async (req: Request, res: Response) => {
+  const slug = req.params.slug;
 
-  const result = await ideaServices.getIdeaById(id as string);
+  const result = await ideaServices.getBySlug(slug as string);
 
   sendResponse(res, {
     statusCode: status.OK,
@@ -109,7 +109,7 @@ export const ideaController = {
   createIdea,
   getIdeas,
   updateIdeaStatus,
-  getIdeaById,
+  getBySlug,
   updateIdeaById,
   deleteIdeaById,
 };

@@ -56,6 +56,8 @@ const getIdeas = async (
       .select()
       .include({
         _count: true,
+        category: true,
+        user: true,
       })
       .execute();
 
@@ -119,11 +121,14 @@ const updateIdeaStatus = async (
   }
 };
 
-const getIdeaById = async (id: string): Promise<Idea> => {
+const getBySlug = async (slug: string): Promise<Idea> => {
   try {
     const idea = await prisma.idea.findUnique({
-      where: { id, status: IdeaStatus.PUBLISHED },
-      include: { user: true },
+      where: { slug },
+      include: {
+        _count: true,
+        user: true,
+      },
     });
 
     if (!idea) {
@@ -131,7 +136,7 @@ const getIdeaById = async (id: string): Promise<Idea> => {
     }
 
     await prisma.idea.update({
-      where: { id },
+      where: { id: idea.id },
       data: {
         views: {
           increment: 1,
@@ -218,7 +223,7 @@ export const ideaServices = {
   createIdea,
   getIdeas,
   updateIdeaStatus,
-  getIdeaById,
+  getBySlug,
   updateIdeaById,
   deleteIdeaById,
 };

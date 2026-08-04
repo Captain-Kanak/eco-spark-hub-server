@@ -3,7 +3,6 @@ export const ideaSearchableFields: string[] = [
   "description",
   "problemStatement",
   "proposedSolution",
-  "expectedImpact",
   "location",
 ];
 
@@ -11,5 +10,6 @@ export const ideaFilterableFields: string[] = [
   "status",
   "estimatedBudget",
   "fundingGoal",
+  "userId",
   "categoryId",
 ];

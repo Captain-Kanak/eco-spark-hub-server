@@ -30,11 +30,7 @@ router.patch(
   ideaController.updateIdeaStatus,
 );
 
-router.get(
-  "/:id",
-  validateRequestParams(paramsIdSchema),
-  ideaController.getIdeaById,
-);
+router.get("/:slug", ideaController.getBySlug);
 
 router.patch(
   "/:id",
