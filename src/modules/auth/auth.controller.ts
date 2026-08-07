@@ -19,12 +19,13 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const verifyEmail = catchAsync(async (req: Request, res: Response) => {
-  await AuthService.verifyEmail(req.body);
+  const result = await AuthService.verifyEmail(req.body);
 
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
     message: "Email verified successfully",
+    data: result,
   });
 });
 
@@ -90,6 +91,17 @@ const getMe = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const resendVerification = catchAsync(async (req, res) => {
+  const result = await AuthService.resendVerification(req.body.email);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Verification code sent successfully",
+    data: result,
+  });
+});
+
 export const AuthController = {
   registerUser,
   verifyEmail,
@@ -97,4 +109,5 @@ export const AuthController = {
   googleLogin,
   googleLoginSuccess,
   getMe,
+  resendVerification,
 };

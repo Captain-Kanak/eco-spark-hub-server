@@ -31,6 +31,8 @@ router.get("/google/success", AuthController.googleLoginSuccess);
 
 router.get("/get-me", authMiddleware(), AuthController.getMe);
 
+router.post("/resend-verification", AuthController.resendVerification);
+
 // router.post("/forget-password");
 
 // router.post("/reset-password");

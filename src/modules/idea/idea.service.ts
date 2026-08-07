@@ -124,7 +124,17 @@ const updateIdeaStatus = async (
 const getBySlug = async (slug: string): Promise<Idea> => {
   try {
     const idea = await prisma.idea.findUnique({
-      where: { slug },
+      where: {
+        slug,
+        status: {
+          in: [
+            IdeaStatus.PUBLISHED,
+            IdeaStatus.IN_PROGRESS,
+            IdeaStatus.COMPLETED,
+            IdeaStatus.ARCHIVED,
+          ],
+        },
+      },
       include: {
         _count: true,
         user: true,

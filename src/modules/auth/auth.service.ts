@@ -40,7 +40,9 @@ const registerUser = async (payload: RegisterUser): Promise<User> => {
   }
 };
 
-const verifyEmail = async (payload: VerifyEmail): Promise<void> => {
+const verifyEmail = async (
+  payload: VerifyEmail,
+): Promise<{ status: boolean; token: string | null; user: Partial<User> }> => {
   try {
     const { email, otp } = payload;
 
@@ -59,6 +61,8 @@ const verifyEmail = async (payload: VerifyEmail): Promise<void> => {
         },
       });
     }
+
+    return result;
   } catch (error) {
     throw error;
   }
@@ -86,11 +90,6 @@ const loginUser = async (
       throw new AppError(
         "Your account has been blocked, please contact support",
         status.BAD_REQUEST,
-      );
-    } else if (user && !user.emailVerified) {
-      throw new AppError(
-        "Your account has not been verified, please verify your account",
-        status.FORBIDDEN,
       );
     } else if (!user) {
       throw new AppError("User not found", status.NOT_FOUND);
@@ -140,9 +139,21 @@ const googleLoginSuccess = async (
   }
 };
 
+const resendVerification = async (
+  email: string,
+): Promise<{ success: boolean }> => {
+  return await auth.api.sendVerificationOTP({
+    body: {
+      email,
+      type: "email-verification",
+    },
+  });
+};
+
 export const AuthService = {
   registerUser,
   verifyEmail,
   loginUser,
   googleLoginSuccess,
+  resendVerification,
 };
