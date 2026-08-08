@@ -29,6 +29,17 @@ const verifyEmail = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const resendVerification = catchAsync(async (req, res) => {
+  const result = await AuthService.resendVerification(req.body.email);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Verification code sent successfully",
+    data: result,
+  });
+});
+
 const loginUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.loginUser(req.body);
 
@@ -91,23 +102,12 @@ const getMe = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const resendVerification = catchAsync(async (req, res) => {
-  const result = await AuthService.resendVerification(req.body.email);
-
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: "Verification code sent successfully",
-    data: result,
-  });
-});
-
 export const AuthController = {
   registerUser,
   verifyEmail,
+  resendVerification,
   loginUser,
   googleLogin,
   googleLoginSuccess,
   getMe,
-  resendVerification,
 };

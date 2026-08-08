@@ -2,13 +2,14 @@
 
 ### Authentication (Managed by Better Auth)
 
-| Method | Endpoint                  | Access | Description                    |
-| ------ | ------------------------- | ------ | ------------------------------ |
-| POST   | /api/v1/auth/register     | PUBLIC | register new user              |
-| POST   | /api/v1/auth/verify-email | PUBLIC | verify user email              |
-| POST   | /api/v1/auth/login        | PUBLIC | log in verified user           |
-| GET    | /api/v1/auth/login/google | PUBLIC | google login by api call       |
-| GET    | /api/v1/auth/get-me       | SECURE | get user data by session token |
+| Method | Endpoint                         | Access | Description                    |
+| ------ | -------------------------------- | ------ | ------------------------------ |
+| POST   | /api/v1/auth/register            | PUBLIC | register new user              |
+| POST   | /api/v1/auth/verify-email        | PUBLIC | verify user email              |
+| POST   | /api/v1/auth/resend-verification | PUBLIC | get new verification code      |
+| POST   | /api/v1/auth/login               | PUBLIC | log in verified user           |
+| GET    | /api/v1/auth/login/google        | PUBLIC | google login by api call       |
+| GET    | /api/v1/auth/get-me              | SECURE | get user data by session token |
 
 ---
 
@@ -19,7 +20,7 @@
 | GET    | /api/v1/users                | ADMIN  | get all users                   |
 | PATCH  | /api/v1/users/update-profile | SECURE | update user profile             |
 | PATCH  | /api/v1/users/block/:id      | ADMIN  | block user account              |
-| DELETE | /api/v1/users/delete/:id            | ADMIN  | delete user by id (soft delete) |
+| DELETE | /api/v1/users/delete/:id     | ADMIN  | delete user by id (soft delete) |
 
 ---
 

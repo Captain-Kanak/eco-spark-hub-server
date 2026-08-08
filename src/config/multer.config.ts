@@ -30,7 +30,7 @@ const storage = new CloudinaryStorage({
 
       const imageExtensions = ["jpg", "jpeg", "png", "gif", "webp"];
       const pdfExtensions = ["pdf"];
-      const allowedExtensions = ["jpg", "jpeg", "png", "gif", "webp", "pdf"];
+      const allowedExtensions = [...imageExtensions, ...pdfExtensions];
       let folderName = "";
 
       if (!extension || !allowedExtensions.includes(extension)) {

@@ -68,6 +68,17 @@ const verifyEmail = async (
   }
 };
 
+const resendVerification = async (
+  email: string,
+): Promise<{ success: boolean }> => {
+  return await auth.api.sendVerificationOTP({
+    body: {
+      email,
+      type: "email-verification",
+    },
+  });
+};
+
 const loginUser = async (
   payload: LoginUser,
 ): Promise<{
@@ -139,21 +150,10 @@ const googleLoginSuccess = async (
   }
 };
 
-const resendVerification = async (
-  email: string,
-): Promise<{ success: boolean }> => {
-  return await auth.api.sendVerificationOTP({
-    body: {
-      email,
-      type: "email-verification",
-    },
-  });
-};
-
 export const AuthService = {
   registerUser,
   verifyEmail,
+  resendVerification,
   loginUser,
   googleLoginSuccess,
-  resendVerification,
 };
